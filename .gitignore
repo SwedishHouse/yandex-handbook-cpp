@@ -1,0 +1,14 @@
+*.exe
+*.ilk
+*.pbk
+*.vcxproj
+*.sqlite
+# *.json
+*.wsuo
+*.pdb
+*.sln
+*.filters
+*.user
+.vs
+.vscode
+yandex-handbook-cpp
