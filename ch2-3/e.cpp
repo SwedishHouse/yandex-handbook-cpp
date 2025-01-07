@@ -22,23 +22,13 @@ int main()
 
     std::cin >> weekday >> amount_days;
 
-    // while (--weekday)
-    // {
-    //     std::cout << weekday << std::endl;
-    //     counter++;
-    // }
-    // std::cout.fill(' ');
-    // std::cout.width(3 * 7 + 1);
-    // std::cout.setf(std::ios::left);
-    asm("nop");
     for (int i = 1; i < weekday; i++)
     {
         /* code */
-        std::cout /*<< std::setw(2) << std::right */<< "   ";
+        std::cout << "   ";
         position++;
     }
 
-    // std::cout.setf(std::ios::)
     while (amount_days != counter)
     {   
         std::cout << std::setw(2) << std::right << ++counter << " ";
