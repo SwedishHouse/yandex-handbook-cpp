@@ -27,7 +27,7 @@ r: 6
 
 int main()
 {   
-    std::string word;
+    std::string word, result;
 
     const std::vector<std::vector<char>> letters = {{'b', 'f', 'p', 'v'}, 
                                                 {'c', 'g', 'j', 'k', 'q', 's', 'x', 'z'},
@@ -36,53 +36,47 @@ int main()
                                                 {'m', 'n'},
                                                 {'r'}};
     const std::vector<char> charactersToRemove = {'a', 'e', 'h', 'i', 'o', 'u', 'w'};
-    // std::cout << "Size: "<< letters.size() << std::endl;
 
-    // std::getline(std::cin, word);
     std::cin >> word;
+
+    result.push_back(word[0]);
+
     // Remove characters
     for (size_t i = 1; i != word.size(); ++i)
     {
-        /* code */
         if (std::find(charactersToRemove.begin(), charactersToRemove.end(), word[i]) != charactersToRemove.end())
-        {
-            /* code */
-            word[i] = ' ';
-        }
-        
+            continue;
+        else
+            result.push_back(word[i]);
     }
-    
-    word.erase(std::remove(word.begin() + 1, word.end(), ' '), word.end());
-    // replace characters on digits
-    for (size_t i = 1; i != word.size(); ++i)
+
+    for (size_t i = 1; i != result.size(); ++i)
     {
         for (size_t j = 0; j != letters.size(); ++j)
         {
             /* code */
-            if(std::find(letters[j].begin(), letters[j].end(), word[i]) != letters[j].end())
+            if(std::find(letters[j].begin(), letters[j].end(), result[i]) != letters[j].end())
             {
-                word[i] = static_cast<char>(static_cast<int>('0') + j + 1);
+                // word[i] = static_cast<char>(static_cast<int>('0') + j + 1);
+                result[i] = (static_cast<char>(static_cast<int>('0') + j + 1));
                 break;
             }
         }// end for j
     }// end for i
     
-    // Deleting consecutive characters 
-    
-    auto new_word = std::unique(word.begin(), word.end());
-    word.erase(new_word, word.end());
+    auto new_word = std::unique(result.begin(), result.end());
+    result.erase(new_word, result.end());
 
-    while (word.size() < 4)
+    while (result.size() < 4)
     {
-        word.push_back('0');
+        result.push_back('0');
     }
-    if (word.size() > 4)
+    if (result.size() > 4)
     {
-        word.resize(4);
+        result.resize(4);
     }
     
     
-    
-    std::cout << word << std::endl;
+    std::cout << result << std::endl;
     return 0;
 }
