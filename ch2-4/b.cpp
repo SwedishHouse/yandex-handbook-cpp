@@ -17,6 +17,10 @@ r: 6
 Любая последовательность идущих подряд одинаковых цифр сокращается до одной такой цифры.
 Итоговая строка обрезается до первых четырёх символов.
 Если длина строки получилась меньше четырёх символов, в конце добавляются нули.
+
+Примеры:
+ammonium → ammnm → a5555 → a5 → a500.
+implementation → implmnttn → i51455335 → i514535 → i514.
 */
 
 #include <iostream>
@@ -35,7 +39,7 @@ int main()
                                                 {'l'},
                                                 {'m', 'n'},
                                                 {'r'}};
-    const std::vector<char> charactersToRemove = {'a', 'e', 'h', 'i', 'o', 'u', 'w'};
+    const std::vector<char> charactersToRemove = {'a', 'e', 'h', 'i', 'o', 'u', 'w', 'y'};
 
     std::cin >> word;
 
@@ -44,6 +48,7 @@ int main()
     // Remove characters
     for (size_t i = 1; i != word.size(); ++i)
     {
+
         if (std::find(charactersToRemove.begin(), charactersToRemove.end(), word[i]) != charactersToRemove.end())
             continue;
         else
@@ -57,13 +62,12 @@ int main()
             /* code */
             if(std::find(letters[j].begin(), letters[j].end(), result[i]) != letters[j].end())
             {
-                // word[i] = static_cast<char>(static_cast<int>('0') + j + 1);
                 result[i] = (static_cast<char>(static_cast<int>('0') + j + 1));
                 break;
             }
         }// end for j
     }// end for i
-    
+
     auto new_word = std::unique(result.begin(), result.end());
     result.erase(new_word, result.end());
 
@@ -80,3 +84,4 @@ int main()
     std::cout << result << std::endl;
     return 0;
 }
+
