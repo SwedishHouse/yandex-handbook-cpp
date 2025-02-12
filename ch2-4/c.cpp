@@ -17,9 +17,9 @@ int main()
     std::cin >> amount;
 
     std::vector<unsigned int> input_places, result;
-    input_places.resize(amount + 1);
-    result.resize(amount + 1);
-    
+    input_places.resize(amount);
+    result.resize(amount);
+
     for (size_t i = 0; i != amount; ++i)
     {
         /* code */
