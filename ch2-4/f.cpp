@@ -20,7 +20,7 @@
 
 int main()
 {
-    int n, m, k;
+    size_t n, m, k;
     int row_coord, col_coord, count_of_mines;
     std::cin >> m >> n >> k;
 
@@ -34,7 +34,7 @@ int main()
     }
 
     // Count mines
-    int start_row, start_col, end_row, end_col;
+    size_t start_row, start_col, end_row, end_col;
     for (size_t i = 0; i != field.size(); ++i)
     {
         start_row = i > 0 ? i - 1: i;
@@ -52,10 +52,10 @@ int main()
             count_of_mines = 0;
             start_col = j > 0 ? j - 1: j;
             end_col = j < field[i].size() - 1 ? j + 1 : j;
-            for (size_t row = start_row; row < end_row; ++row) // start counting
+            for (size_t row = start_row; row <= end_row; ++row) // start counting
             {
                 /* code */
-                for (size_t col = start_row; col < end_col; ++col)
+                for (size_t col = start_col; col <= end_col; ++col)
                 {
                     /* code */
                     if ((row == i && col == j) || field[row][col] != '*')
