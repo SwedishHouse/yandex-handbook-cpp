@@ -1,14 +1,65 @@
-*.exe
-*.ilk
-*.pbk
-*.vcxproj
-*.sqlite
-# *.json
-*.wsuo
-*.pdb
-*.sln
-*.filters
+## Игнорировать временные файлы сборки ##
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+bld/
+
+## Игнорировать системные файлы VS ##
+.vs/
+.vscode/
+*.suo
 *.user
-.vs
-.vscode
-yandex-handbook-cpp
+*.userosscache
+*.sln.docstates
+*.ncb
+*.opensdf
+*.sdf
+*.cachefile
+*.VC.db
+
+## Игнорировать временные файлы ##
+*.log
+*.tlog
+*.ilk
+*.pch
+*.pdb
+*.ipch
+*.iobj
+*.ipdb
+*.sbr
+*.idb
+*.exp
+*.lib
+*.txt
+*.xml
+
+## Автогенерируемые файлы ##
+*.autosave
+Thumbs.db
+[Dd]esktop.ini
+
+## Исключения - сохранять важные файлы! ##
+!*.sln         # Файлы решения
+!*.vcxproj     # Файлы проекта
+!*.vcxproj.filters
+!*.props       # Файлы свойств
+!*.targets     # Файлы целей
+!*.rc          # Ресурсные файлы
+
+## Сохранять исходный код ##
+!*.cpp
+!*.h
+!*.hpp
+!*.c
+!*.cc
+!*.cxx
+!*.inl
