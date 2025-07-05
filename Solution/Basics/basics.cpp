@@ -16,3 +16,12 @@ void FirstSteps::b(int a, int b)
 	std::cout << a + b << std::endl;
 }
 
+double DataTypes::a(double cent)
+{
+	return  cent / 2.54;
+}
+
+unsigned long long int DataTypes::b(unsigned long long int n)
+{
+	return n * (n + 1) / 2;
+}

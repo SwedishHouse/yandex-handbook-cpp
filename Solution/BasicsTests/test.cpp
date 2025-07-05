@@ -7,7 +7,7 @@ class MyClassTest : public ::testing::Test {
 protected:
     // Объект класса для тестов
     FirstSteps test_object;
-
+    DataTypes test_data_types;
     // Дополнительные ресурсы
     std::streambuf* original_cout_buf;
     std::stringstream captured_output;
@@ -16,7 +16,7 @@ protected:
     void SetUp() override {
         // Инициализация объекта с параметрами
         test_object = FirstSteps(/* параметры конструктора */);
-
+        test_data_types = DataTypes();
         // Перенаправляем вывод cout
         original_cout_buf = std::cout.rdbuf();
         std::cout.rdbuf(captured_output.rdbuf());
@@ -54,4 +54,15 @@ TEST_F(MyClassTest, TestBasicB)
 
     test_object.b(a, b);
     EXPECT_EQ(captured_output.str(), std::to_string(a + b) + '\n');
+}
+
+TEST_F(MyClassTest, TestDataTypesA)
+{
+    ASSERT_NEAR(test_data_types.a(1.1), 0.433071, 0.0001);
+}
+
+TEST_F(MyClassTest, TestDataTypesB)
+{
+    EXPECT_EQ(test_data_types.b(10), 55);
+    EXPECT_EQ(test_data_types.b(100), 5050);
 }
