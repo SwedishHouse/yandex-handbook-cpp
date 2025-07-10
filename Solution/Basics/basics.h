@@ -49,5 +49,5 @@ public:
 	std::vector<unsigned int> c(const std::vector<unsigned int>&);
 	std::vector<std::string> d(std::vector<std::string>&);
 	const std::string e(const std::string&);
-	const std::string f(size_t, size_t, size_t, const std::vector<std::vector<int>>&);
+	std::string f(size_t, size_t, size_t, const std::vector<std::vector<unsigned int>>&);
 };

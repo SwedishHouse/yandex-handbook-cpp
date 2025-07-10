@@ -165,3 +165,12 @@ TEST_F(MyClassTest, VectorsAndStrings_E)
     input = "never odd or even";
     EXPECT_EQ(testVectorsAndStrings.e(input), "YES");
 }
+
+TEST_F(MyClassTest, VectorsAndStrings_F)
+{
+    const std::vector<std::vector<unsigned int>> input = {
+        {1, 1},
+        {2, 2} };
+    const std::string res = "* 2\n2 *\n1 1\n";
+    EXPECT_EQ(testVectorsAndStrings.f(3, 2, 2, input), res);
+}

@@ -269,14 +269,14 @@ const std::string VectorsAndStrings::e(const std::string& line)
     return yes;
 }
 
-const std::string VectorsAndStrings::f(size_t n, size_t m, size_t k, const std::vector<std::vector<int>>& input)
+std::string VectorsAndStrings::f(size_t n, size_t m, size_t k, const std::vector<std::vector<unsigned int>>& input)
 {
     //int row_coord, col_coord;
 
-    std::vector<std::vector<char>> field(m, std::vector<char>(n));
+    std::vector<std::vector<char>> field(n, std::vector<char>(m));
     // load mines
     for (size_t i = 0; i != k; ++i)
-        field[input[k][0] - 1][input[k][1] - 1] = '*';
+        field[input[i][0] - 1][input[i][1] - 1] = '*';
 
     // Count mines
     for (size_t i = 0; i != field.size(); ++i)
@@ -309,13 +309,14 @@ const std::string VectorsAndStrings::f(size_t n, size_t m, size_t k, const std::
     }
 	std::vector<char> result;
     // output field
-    for (size_t i = 0; i != field.size(); ++i)
+    for (size_t i = 0; i < field.size(); ++i)
     {
-        for (size_t j = 0; j != field[i].size(); ++j)
+        for (size_t j = 0; j < field[i].size() - 1; ++j)
         {
             result.push_back(field[i][j]);
 			result.push_back(' ');
         }
+        result.push_back(field[i][field[i].size() - 1]);
 		result.push_back('\n');
     }
     return std::string(result.begin(), result.end());
