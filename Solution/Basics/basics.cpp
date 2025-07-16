@@ -321,3 +321,110 @@ std::string VectorsAndStrings::f(size_t n, size_t m, size_t k, const std::vector
     }
     return std::string(result.begin(), result.end());
 }
+
+std::pair<size_t, size_t> Functions::MatrixArgMax(const std::vector<std::vector<int>>& matrix)
+{
+    std::pair<size_t, size_t> result = { 0, 0 };
+    size_t counter = 0;
+    int max_value = -2147483647;
+
+    // Find Max value
+    for (size_t i = 0; i != matrix.size(); ++i)
+    {
+        for (size_t j = 0; j < matrix[i].size(); ++j)
+        {
+            if (matrix[i][j] > max_value)
+            {
+                max_value = matrix[i][j];
+
+            }
+        }
+    }
+
+    // find count of max values and save indexes
+    for (size_t i = 0; i != matrix.size(); ++i)
+    {
+        for (size_t j = 0; j < matrix[i].size(); ++j)
+        {
+            if (matrix[i][j] == max_value)
+            {
+                result = { i, j };
+                counter++;
+            }
+        }
+    }
+
+    if (counter > 1)
+    {
+        for (size_t i = 0; i != matrix.size(); ++i)
+        {
+            for (size_t j = 0; j < matrix[i].size(); ++j)
+                if (matrix[i][j] == max_value && 
+                    std::pair<size_t, size_t>(i , j) < result)
+                    result = std::pair<size_t, size_t>(i, j);
+        }
+    }
+
+    return result;
+}
+
+std::string Functions::CommonPrefix(const std::vector<std::string>& words)
+{
+    const std::string answer = "";
+
+    if (words.empty())
+        return answer;
+
+    size_t max_length = UINT32_MAX;
+
+    // проверим, есть ли пустые строки 
+    for (const auto& var : words)
+    {
+        if (var.empty()) return answer;
+        if (var.size() < max_length) max_length = var.size();
+    }
+
+    // Здесь все строки не пустые
+    size_t index = 0;
+    char current_sym = words[0][index];
+    bool is_stopped = false;
+    while (index < max_length && !is_stopped)
+    {
+        for (const auto& var : words)
+        {
+            if (current_sym != var[index])
+            {
+                is_stopped = true;
+                break;
+            }
+        }
+        if (!is_stopped)
+            current_sym = words[0][++index];
+        else
+            break;
+    }
+
+    return std::string(words[0].begin(), words[0].begin() + index);
+}
+
+std::vector<std::string> Functions::Split(const std::string& str, char delimiter)
+{
+    std::vector<std::string> res;
+    std::string::const_iterator left = str.cbegin();
+    
+    for(std::string::const_iterator right = str.cbegin(); right != str.cend(); ++right)
+    {
+        if(*right == delimiter)
+        {
+            res.push_back(std::string(left, right));
+            left = right + 1;
+        }
+    }
+    res.push_back(std::string(left, str.cend()));
+    return res;
+}
+
+std::string Functions::Join(const std::vector<std::string>& tokens, char delimiter)
+{
+    return std::string();
+}

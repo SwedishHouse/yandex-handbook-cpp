@@ -11,7 +11,7 @@ protected:
     DataTypes testDataTypes;
     BranchesAndCycles testBranchesAndCycles;
 	VectorsAndStrings testVectorsAndStrings;
-
+    Functions testFunctions;
     // Дополнительные ресурсы
     std::streambuf* original_cout_buf;
     std::stringstream captured_output;
@@ -24,6 +24,7 @@ protected:
         testDataTypes = DataTypes();
         testBranchesAndCycles = BranchesAndCycles();
 		testVectorsAndStrings = VectorsAndStrings();
+        testFunctions = Functions();
         // Перенаправляем вывод cout
         original_cout_buf = std::cout.rdbuf();
         std::cout.rdbuf(captured_output.rdbuf());
@@ -173,4 +174,56 @@ TEST_F(MyClassTest, VectorsAndStrings_F)
         {2, 2} };
     const std::string res = "* 2\n2 *\n1 1\n";
     EXPECT_EQ(testVectorsAndStrings.f(3, 2, 2, input), res);
+}
+
+TEST_F(MyClassTest, MatrixArgMax)
+{
+    const std::vector<std::vector<int>> case_one = {
+                            {0, 3, 2, 4},
+                            {2, 3, 5, 5},
+                            {5, 1, 2, 3}
+    };
+    const std::pair<size_t, size_t> res_one = { 1,2 };
+    EXPECT_EQ(testFunctions.MatrixArgMax(case_one), res_one);
+
+    const std::vector<std::vector<int>> case_two = {{1}};
+    const std::pair<size_t, size_t> res_two = { 0, 0 };
+    EXPECT_EQ(testFunctions.MatrixArgMax(case_two), res_two);
+
+    const std::vector<std::vector<int>> input = {
+                            {1, 2, 3, 4, 5},
+                            {6, 7, 8, 9, 10},
+                            {11, 12, 13, 14, 15}
+    };
+    const std::pair<size_t, size_t> res = { 2, 4 };
+    EXPECT_EQ(testFunctions.MatrixArgMax(input), res);
+}
+
+TEST_F(MyClassTest, CommonPrefix)
+{
+    const std::vector<std::string> case_one = {
+                            "apple", 
+                            "apricot" ,
+                            "application" 
+    };
+    const std::string res_one = "ap";
+    EXPECT_EQ(testFunctions.CommonPrefix(case_one), res_one);
+
+    const std::vector<std::string> case_two = { };
+    const std::string res_two = "";
+    EXPECT_EQ(testFunctions.CommonPrefix(case_two), res_two);
+}
+
+
+TEST_F(MyClassTest, Split)
+{
+    const std::string case_one = "What_is_your_name?";
+
+    const std::vector<std::string> res_one = { "What",
+                                                "is",
+                                                "your",
+                                                "name?" 
+    };
+    EXPECT_EQ(testFunctions.Split(case_one, '_'), res_one);
+
 }

@@ -51,3 +51,25 @@ public:
 	const std::string e(const std::string&);
 	std::string f(size_t, size_t, size_t, const std::vector<std::vector<unsigned int>>&);
 };
+
+class Functions
+{
+public:
+	//‘ункци€ возвращает пару из индексов максимального элемента в матрице.
+	// ≈сли максимальных элементов несколько, то возвращает наименьшую такую пару.
+	std::pair<size_t, size_t> MatrixArgMax(const std::vector<std::vector<int>>& matrix);
+
+	//Ќапишите функцию дл€ вычислени€ наибольшего общего префикса строк, переданных в векторе words:
+	std::string CommonPrefix(const std::vector<std::string>& words);
+
+	//‘ункци€ должна вернуть вектор строк, полученный разбиением строки str на части по указанному символу-разделителю delimiter.
+	// ≈сли разделитель встретилс€ в начале или в конце строки str, то в начале (соответственно, в конце) вектора с результатом должна быть пуста€ строка.
+	// ≈сли два разделител€ встретились р€дом, то пуста€ строка между ними тоже должна попасть в ответ.
+	// ƒл€ пустой строки надо вернуть вектор, содержащий одну пустую строку.
+	//Ќапример, Split("What_is_your_name?", '_') должна вернуть вектор из строк What, is, your и name ? .
+	std::vector<std::string> Split(const std::string& str, char delimiter);
+
+	//‘ункци€ должна вернуть строку, полученную склейкой элементов вектора через указанный разделитель. 
+	// Ќапример, Join({"What", "is", "your", "name?"}, '_') должна вернуть строку "What_is_your_name?".
+	std::string Join(const std::vector<std::string>& tokens, char delimiter);
+};
