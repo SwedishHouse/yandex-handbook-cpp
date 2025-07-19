@@ -227,3 +227,33 @@ TEST_F(MyClassTest, Split)
     EXPECT_EQ(testFunctions.Split(case_one, '_'), res_one);
 
 }
+
+TEST_F(MyClassTest, Join)
+{
+    const std::vector<std::string> case_one = { "What", "is", "your", "name?"};
+
+    const std::string res_one = "What_is_your_name?";
+    EXPECT_EQ(testFunctions.Join(case_one, '_'), res_one);
+
+}
+
+TEST_F(MyClassTest, Transpose)
+{
+    const std::vector<std::vector<int>> case_one = {{1, 2, 3},
+                                                    {4, 5, 6},
+                                                    {7, 8, 9} };
+
+    const std::vector<std::vector<int>> res_one = { {1, 4, 7},
+                                                    {2, 5, 8},
+                                                    {3, 6, 9} };
+    EXPECT_EQ(testFunctions.Transpose(case_one), res_one);
+
+    const std::vector<std::vector<int>> case_two = { {1, 2, 3},
+                                                    {4, 5, 6},};
+
+    const std::vector<std::vector<int>> res_two = { {1, 4},
+                                                    {2, 5},
+                                                    {3, 6} };
+    EXPECT_EQ(testFunctions.Transpose(case_two), res_two);
+
+}

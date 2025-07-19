@@ -72,4 +72,7 @@ public:
 	//Функция должна вернуть строку, полученную склейкой элементов вектора через указанный разделитель. 
 	// Например, Join({"What", "is", "your", "name?"}, '_') должна вернуть строку "What_is_your_name?".
 	std::string Join(const std::vector<std::string>& tokens, char delimiter);
+
+	// Напишите функцию, которая возвращает транспонированную матрицу:
+	std::vector<std::vector<int>> Transpose(const std::vector<std::vector<int>>& matrix);
 };

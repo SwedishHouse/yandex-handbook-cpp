@@ -426,5 +426,35 @@ std::vector<std::string> Functions::Split(const std::string& str, char delimiter
 
 std::string Functions::Join(const std::vector<std::string>& tokens, char delimiter)
 {
-    return std::string();
+    std::string res = "";
+
+    if (tokens.empty())
+        return res;
+    
+    std::vector<std::string>::const_iterator it = tokens.cbegin();
+
+    res += *it;
+    it++;
+    while (it != tokens.cend())
+    {
+        res.push_back(delimiter);
+        res += *it;
+        it++;
+    }
+
+    return res;
+}
+
+std::vector<std::vector<int>> Functions::Transpose(const std::vector<std::vector<int>>& matrix)
+{
+    std::vector<std::vector<int>> res(matrix[0].size(), std::vector<int>(matrix.size()));
+    for (size_t i = 0; i < res.size(); ++i)
+    {
+        for(size_t j = 0; j < res[0].size(); ++j)
+        {
+            res[i][j] = matrix[j][i];
+        }
+    }
+
+    return res;
 }
