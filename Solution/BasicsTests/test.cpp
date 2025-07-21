@@ -257,3 +257,15 @@ TEST_F(MyClassTest, Transpose)
     EXPECT_EQ(testFunctions.Transpose(case_two), res_two);
 
 }
+
+TEST_F(MyClassTest, Functions_F)
+{
+    std::vector<std::pair<int, int>> coords = { {2 ,3}, {1, 2} };
+
+    std::vector<std::pair<int, int>> res = {  {1, 2} , {2 ,3} };
+
+    testFunctions.F(coords);
+    
+    EXPECT_EQ(coords, res);
+
+}

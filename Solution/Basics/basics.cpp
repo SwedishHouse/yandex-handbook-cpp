@@ -458,3 +458,10 @@ std::vector<std::vector<int>> Functions::Transpose(const std::vector<std::vector
 
     return res;
 }
+
+void Functions::F(std::vector<std::pair<int, int>> &coords)
+{
+    std::sort(coords.begin(), coords.end(), [](const std::pair<int, int> lhs, const std::pair<int, int> rhs){
+        return (lhs.first * lhs.first) + (lhs.second * lhs.second) < (rhs.first * rhs.first) + (rhs.second * rhs.second);
+        });
+}
