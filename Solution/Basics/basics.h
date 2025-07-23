@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <iostream>
+#include <deque>
 
 class Basics
 {
@@ -83,4 +85,35 @@ public:
 	// кажда€ из которых содержит два целых числа Ч координаты точки.
 	// ¬еличина	n не превосходит 100.  оординаты точек по модулю не превосход€т 1000.
 	void F(std::vector<std::pair<int, int>> &coords);
+};
+
+namespace HandbookSTL
+{
+
+	class SequenceContainers
+	{
+	public:
+		template <typename T>
+		void Print(const T& data, const std::string delimiter);
+		// ѕроверка работ
+		std::vector<std::string> B(const std::vector <std::pair<std::string, std::string>> &students, const std::vector<int>& numbers);
+
+	};
+
+	template<typename T>
+	inline void SequenceContainers::Print(const T& data, const std::string delimiter)
+	{
+		auto iter = data.cbegin();
+
+		std::cout << *iter;
+		iter++;
+		while (iter != data.cend())
+		{
+			std::cout << delimiter;
+			std::cout << *iter;
+			iter++;
+		}
+		std::cout << std::endl;
+	}
+
 };

@@ -12,6 +12,7 @@ protected:
     BranchesAndCycles testBranchesAndCycles;
 	VectorsAndStrings testVectorsAndStrings;
     Functions testFunctions;
+    HandbookSTL::SequenceContainers sequenceContaier;
     // Дополнительные ресурсы
     std::streambuf* original_cout_buf;
     std::stringstream captured_output;
@@ -25,6 +26,7 @@ protected:
         testBranchesAndCycles = BranchesAndCycles();
 		testVectorsAndStrings = VectorsAndStrings();
         testFunctions = Functions();
+        sequenceContaier = HandbookSTL::SequenceContainers();
         // Перенаправляем вывод cout
         original_cout_buf = std::cout.rdbuf();
         std::cout.rdbuf(captured_output.rdbuf());
@@ -267,5 +269,37 @@ TEST_F(MyClassTest, Functions_F)
     testFunctions.F(coords);
     
     EXPECT_EQ(coords, res);
+
+}
+
+TEST_F(MyClassTest, SequenceContainers_Print)
+{
+    const std::string case_one = "hello";
+    const std::string delimiter = ", ";
+
+    const std::string res = "h, e, l, l, o\n";
+
+    sequenceContaier.Print(case_one, delimiter);
+    EXPECT_EQ(captured_output.str(), res);
+
+    // Очищаем буфер
+    captured_output.str("");
+    captured_output.clear();
+
+    const std::vector<int> case_two = { 1, 2, 3, 4 };
+
+    const std::string res_two = "1, 2, 3, 4\n";
+
+    sequenceContaier.Print(case_two, delimiter);
+    EXPECT_EQ(captured_output.str(), res_two);
+}
+
+TEST_F(MyClassTest, SequenceContainers_B)
+{
+    const std::vector <std::pair<std::string, std::string>> students_entries = { {"Ivanov", "top"}, {"Petrov", "top"}, {"Sidorov", "bottom"} };
+    const std::vector<int> students_order = { 1, 3 };
+    const std::vector<std::string> result_case_one = { "Petrov", "Sidorov" };
+
+    EXPECT_EQ(sequenceContaier.B(students_entries, students_order), result_case_one);
 
 }

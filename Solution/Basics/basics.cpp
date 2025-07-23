@@ -465,3 +465,24 @@ void Functions::F(std::vector<std::pair<int, int>> &coords)
         return (lhs.first * lhs.first) + (lhs.second * lhs.second) < (rhs.first * rhs.first) + (rhs.second * rhs.second);
         });
 }
+
+std::vector<std::string> HandbookSTL::SequenceContainers::
+B(const std::vector <std::pair<std::string, std::string>>& students,
+    const std::vector<int>& numbers)
+{
+    std::deque<std::string> students_deque;
+    for (const auto &student_record : students)
+    {
+        if (student_record.second == "top")
+            students_deque.push_front(student_record.first);
+        else
+            students_deque.push_back(student_record.first);
+    }
+
+    std::vector<std::string> result(numbers.size());
+
+    for (size_t i = 0; i != result.size(); ++i)
+        result[i] = students_deque[numbers[i] - 1];
+
+    return result;
+}
