@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iostream>
 #include <deque>
+#include <sstream>  // Для std::istringstream
 
 class Basics
 {
@@ -97,7 +98,8 @@ namespace HandbookSTL
 		void Print(const T& data, const std::string delimiter);
 		// Проверка работ
 		std::vector<std::string> B(const std::vector <std::pair<std::string, std::string>> &students, const std::vector<int>& numbers);
-
+		// Вагоны
+		void MakeTrain();
 	};
 
 	template<typename T>

@@ -2,9 +2,9 @@
 
 int main()
 {
-	FirstSteps fs;
+	HandbookSTL::SequenceContainers container;
 
-	fs.a();
+	container.MakeTrain();
 
 	return 0;
 }

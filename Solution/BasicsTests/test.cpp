@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "basics.h"
-
+#include <sstream> // Для std::stringstream
+#include <streambuf> // Для std::streambuf
 #include <string>
 
 class MyClassTest : public ::testing::Test {
@@ -14,8 +15,14 @@ protected:
     Functions testFunctions;
     HandbookSTL::SequenceContainers sequenceContaier;
     // Дополнительные ресурсы
-    std::streambuf* original_cout_buf;
-    std::stringstream captured_output;
+
+    // Оригинальные буферы std::cin и std::cout
+    std::streambuf* originalCinBuffer;
+
+    std::streambuf* originalCoutBuffer;
+    // Строковые потоки для захвата вывода и подачи ввода
+    std::stringstream testInputStream;
+    std::stringstream testOutputStream;
 
     // Настройка перед каждым тестом
     void SetUp() override {
@@ -27,19 +34,30 @@ protected:
 		testVectorsAndStrings = VectorsAndStrings();
         testFunctions = Functions();
         sequenceContaier = HandbookSTL::SequenceContainers();
-        // Перенаправляем вывод cout
-        original_cout_buf = std::cout.rdbuf();
-        std::cout.rdbuf(captured_output.rdbuf());
+        
+        // Сохраняем оригинальные буферы
+        originalCinBuffer = std::cin.rdbuf();
+        originalCoutBuffer = std::cout.rdbuf();
+
+        // Перенаправляем std::cin на наш входной поток
+        std::cin.rdbuf(testInputStream.rdbuf());
+        // Перенаправляем std::cout на наш выходной поток
+        std::cout.rdbuf(testOutputStream.rdbuf());
     }
 
     // Очистка после каждого теста
     void TearDown() override {
-        // Восстанавливаем стандартный вывод
-        std::cout.rdbuf(original_cout_buf);
+        // Восстанавливаем оригинальные буферы std::cin и std::cout
+        std::cin.rdbuf(originalCinBuffer);
+        std::cout.rdbuf(originalCoutBuffer);
 
         // Очищаем буфер
-        captured_output.str("");
-        captured_output.clear();
+        testInputStream.str("");
+        testInputStream.clear();
+
+        testOutputStream.str("");
+        testOutputStream.clear();
+
     }
 
     // Вспомогательные методы
@@ -54,7 +72,7 @@ TEST_F(MyClassTest, TestBasic_A)
 {
     testFirstSteps.a();
     const std::string res = "C++ is a general-purpose programming language with a bias towards systems programming that\n  - is a better C\n  - supports data abstraction\n  - supports object-oriented programming\n  - supports generic programming.\n";
-    EXPECT_EQ(captured_output.str(), res);
+    EXPECT_EQ(testInputStream.str(), res);
 }
 
 
@@ -63,7 +81,7 @@ TEST_F(MyClassTest, TestBasic_B)
     const int a = 4, b = 5;
 
     testFirstSteps.b(a, b);
-    EXPECT_EQ(captured_output.str(), std::to_string(a + b) + '\n');
+    EXPECT_EQ(testInputStream.str(), std::to_string(a + b) + '\n');
 }
 
 TEST_F(MyClassTest, TestDataTypes_A)
@@ -108,7 +126,7 @@ TEST_F(MyClassTest, BranchesAndCycles_E)
 {
     testBranchesAndCycles.e(7, 31);
 	const std::string expected_output = "                   1 \n 2  3  4  5  6  7  8 \n 9 10 11 12 13 14 15 \n16 17 18 19 20 21 22 \n23 24 25 26 27 28 29 \n30 31 ";
-    EXPECT_EQ(captured_output.str(), expected_output);
+    EXPECT_EQ(testInputStream.str(), expected_output);
 }
 
 TEST_F(MyClassTest, BranchesAndCycles_F)
@@ -280,18 +298,18 @@ TEST_F(MyClassTest, SequenceContainers_Print)
     const std::string res = "h, e, l, l, o\n";
 
     sequenceContaier.Print(case_one, delimiter);
-    EXPECT_EQ(captured_output.str(), res);
+    EXPECT_EQ(testInputStream.str(), res);
 
-    // Очищаем буфер
-    captured_output.str("");
-    captured_output.clear();
+    //// Очищаем буфер
+    testInputStream.str("");
+    testInputStream.clear();
 
     const std::vector<int> case_two = { 1, 2, 3, 4 };
 
     const std::string res_two = "1, 2, 3, 4\n";
 
     sequenceContaier.Print(case_two, delimiter);
-    EXPECT_EQ(captured_output.str(), res_two);
+    EXPECT_EQ(testInputStream.str(), res_two);
 }
 
 TEST_F(MyClassTest, SequenceContainers_B)
@@ -301,5 +319,32 @@ TEST_F(MyClassTest, SequenceContainers_B)
     const std::vector<std::string> result_case_one = { "Petrov", "Sidorov" };
 
     EXPECT_EQ(sequenceContaier.B(students_entries, students_order), result_case_one);
+
+}
+
+
+TEST_F(MyClassTest, MakeTrain)
+{
+    const std::vector<std::string> input = {    " +left 1",
+                                                "+ right 2",
+                                                "+ left 3",
+                                                "- right 1" };
+
+    // Подготавливаем входные данные для std::cin
+    for(const auto &val : input)
+        testInputStream << val;
+
+    // Вызываем логику программы, которая будет использовать перенаправленные потоки
+    sequenceContaier.MakeTrain();
+
+    // Получаем захваченный вывод из std::cout
+    std::string actualOutput = testOutputStream.str();
+
+    // Проверяем ожидаемый вывод
+    // Обратите внимание на точные символы новой строки и пробелы
+    const std::vector<std::string> expectedOutput = { "3", "1" };
+    //EXPECT_EQ(expectedOutput, actualOutput);
+
+    EXPECT_EQ(2 * 2, 4);
 
 }

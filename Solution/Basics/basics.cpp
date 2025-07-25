@@ -486,3 +486,59 @@ B(const std::vector <std::pair<std::string, std::string>>& students,
 
     return result;
 }
+
+void HandbookSTL::SequenceContainers::MakeTrain()
+{
+    std::string input_val;
+    std::deque<int> train;
+    
+    while (std::getline(std::cin, input_val)) {
+
+        std::string action;
+        int number;
+
+        std::istringstream iss(input_val); // Создаем istringstream из строки
+
+        iss >> action;
+        iss >> number;
+
+    
+        switch (action[0])
+        {
+        case '+':
+            if (action.substr(1) == "left")
+                train.push_front(number);
+            else
+                train.push_back(number);
+            break;
+
+        case '-':
+            if (action.substr(1) == "left")
+            {
+                while (!train.empty() && number > 0)
+                {
+                    train.pop_front();
+                    number--;
+                }
+                    
+            }
+            else
+            {
+                while (!train.empty() && number > 0)
+                {
+                    train.pop_back();
+                    number--;
+                }
+            }
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    for (const auto & val : train)
+        std::cout << val << " ";
+
+    std::cout << std::endl;
+}
