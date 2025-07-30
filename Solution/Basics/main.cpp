@@ -4,7 +4,6 @@ int main()
 {
 	HandbookSTL::SequenceContainers container;
 
-	container.MakeTrain();
-
+	container.D();
 	return 0;
 }

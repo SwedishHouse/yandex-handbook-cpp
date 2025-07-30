@@ -100,6 +100,9 @@ namespace HandbookSTL
 		std::vector<std::string> B(const std::vector <std::pair<std::string, std::string>> &students, const std::vector<int>& numbers);
 		// Вагоны
 		void MakeTrain();
+		// Ctrl+X, Ctrl+V
+		void D(void);
+
 	};
 
 	template<typename T>

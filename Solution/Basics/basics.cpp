@@ -2,8 +2,8 @@
 
 #include <iostream>
 #include <iomanip> // Äëÿ std::setw
-
-
+#include <list>
+#include <utility>
 
 void FirstSteps::a()
 {
@@ -541,4 +541,61 @@ void HandbookSTL::SequenceContainers::MakeTrain()
         std::cout << val << " ";
 
     std::cout << std::endl;
+}
+
+void HandbookSTL::SequenceContainers::D(void)
+{
+    std::list<std::string> text;
+
+    while(true)
+    {
+        std::string input;
+        std::getline(std::cin, input);
+        if (input.empty())
+            break;
+
+        text.push_back(input);
+    }
+
+    std::string buffer;
+
+    auto it = text.begin();
+    std::string command;
+
+    while (std::cin >> command)
+    {
+        if(command == "Down")
+        {
+            if (it == text.end())
+                continue;
+
+            it++;
+        }
+        else if (command == "Up")
+        {
+            if (it == text.begin())
+                continue;
+            it--;
+        }
+        else if(command == "Ctrl+X")
+        {
+            if (it == text.end())
+                continue;
+
+            buffer = std::move(*it);
+            it = text.erase(it);
+        }
+        else if(command == "Ctrl+V")
+        {
+            if (buffer.empty())
+                continue;
+
+            text.insert(it, buffer);
+        }
+        
+    }// end while
+
+    for (const auto& val : text)
+        std::cout << val << std::endl;
+
 }
