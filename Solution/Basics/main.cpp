@@ -2,8 +2,6 @@
 
 int main()
 {
-	HandbookSTL::SequenceContainers container;
-
-	container.D();
+	throw "Use test for launch!!!";
 	return 0;
 }

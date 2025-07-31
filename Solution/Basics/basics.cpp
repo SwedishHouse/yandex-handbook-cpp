@@ -2,32 +2,32 @@
 
 #include <iostream>
 #include <iomanip> // Для std::setw
-#include <list>
-#include <utility>
 
-void FirstSteps::a()
+
+
+void Basics::FirstSteps::a()
 {
 	std::string s = "C++ is a general-purpose programming language with a bias towards systems programming that\n  - is a better C\n  - supports data abstraction\n  - supports object-oriented programming\n  - supports generic programming.";
 
 	std::cout << s << std::endl;
 }
 
-void FirstSteps::b(int a, int b)
+void Basics::FirstSteps::b(int a, int b)
 {
 	std::cout << a + b << std::endl;
 }
 
-double DataTypes::a(double cent)
+double Basics::DataTypes::a(double cent)
 {
 	return  cent / 2.54;
 }
 
-unsigned long long int DataTypes::b(unsigned long long int n)
+unsigned long long int Basics::DataTypes::b(unsigned long long int n)
 {
 	return n * (n + 1) / 2;
 }
 
-bool BranchesAndCycles::is_a_leap_year(int year)
+bool Basics::BranchesAndCycles::is_a_leap_year(int year)
 {
     if (year % 400 == 0)
         return true;
@@ -39,7 +39,7 @@ bool BranchesAndCycles::is_a_leap_year(int year)
         return false;
 }
 
-std::string BranchesAndCycles::a(int col1, int row1, int col2, int row2)
+std::string Basics::BranchesAndCycles::a(int col1, int row1, int col2, int row2)
 {
     if (row1 == row2 || col1 == col2 || std::abs(col2 - col1) == std::abs(row2 - row1))
        return "YES";
@@ -47,7 +47,7 @@ std::string BranchesAndCycles::a(int col1, int row1, int col2, int row2)
         return "NO";
 }
 
-std::string BranchesAndCycles::b(int num1, int num2, int num3)
+std::string Basics::BranchesAndCycles::b(int num1, int num2, int num3)
 {
     if (num1 + num2 <= num3 ||
         num2 + num3 <= num1 ||
@@ -64,7 +64,7 @@ std::string BranchesAndCycles::b(int num1, int num2, int num3)
     }
 }
 
-std::string BranchesAndCycles::c(int year)
+std::string Basics::BranchesAndCycles::c(int year)
 {
     if (year % 400 == 0)
         return "YES" ;
@@ -76,7 +76,7 @@ std::string BranchesAndCycles::c(int year)
         return "NO" ;
 }
 
-int BranchesAndCycles::d(int month, int year)
+int Basics::BranchesAndCycles::d(int month, int year)
 {
     if (month < 7)
     {
@@ -84,7 +84,7 @@ int BranchesAndCycles::d(int month, int year)
             return 31;
         else if (month != 2)
             return 30;
-        else if (is_a_leap_year(year))
+        else if (Basics::BranchesAndCycles::is_a_leap_year(year))
             return 29;
         else
             return 28;
@@ -98,7 +98,7 @@ int BranchesAndCycles::d(int month, int year)
     }
 }
 
-void BranchesAndCycles::e(int weekday, int amount_days)
+void Basics::BranchesAndCycles::e(int weekday, int amount_days)
 {
     int counter = 0, position = 1;
     for (int i = 1; i < weekday; i++)
@@ -120,7 +120,7 @@ void BranchesAndCycles::e(int weekday, int amount_days)
     }
 }
 
-int BranchesAndCycles::f(int value)
+int Basics::BranchesAndCycles::f(int value)
 {
 	unsigned int result = 0;
     while (value)
@@ -132,7 +132,7 @@ int BranchesAndCycles::f(int value)
 	return result;
 }
 
-double BranchesAndCycles::g(int n)
+double Basics::BranchesAndCycles::g(int n)
 {
     double result = 0;
     while (n)
@@ -143,7 +143,7 @@ double BranchesAndCycles::g(int n)
 	return result;
 }
 
-std::string VectorsAndStrings::a(const std::string& password)
+std::string Basics::VectorsAndStrings::a(const std::string& password)
 {
     bool is_small_letter = false, is_big_letters = false, is_digits = false, is_other_symbols = false;
     unsigned short type_counter = 0;
@@ -183,7 +183,7 @@ std::string VectorsAndStrings::a(const std::string& password)
         return "YES";
 }
 
-std::string VectorsAndStrings::b(const std::string& word)
+std::string Basics::VectorsAndStrings::b(const std::string& word)
 {
     const std::vector<std::vector<char>> letters = { {'b', 'f', 'p', 'v'},
                                                 {'c', 'g', 'j', 'k', 'q', 's', 'x', 'z'},
@@ -229,7 +229,7 @@ std::string VectorsAndStrings::b(const std::string& word)
     return result;
 }
 
-std::vector<unsigned int> VectorsAndStrings::c(const std::vector<unsigned int>& input_places)
+std::vector<unsigned int> Basics::VectorsAndStrings::c(const std::vector<unsigned int>& input_places)
 {
     std::vector<unsigned int>  result(input_places.size());
 
@@ -239,13 +239,13 @@ std::vector<unsigned int> VectorsAndStrings::c(const std::vector<unsigned int>& 
     return result;
 }
 
-std::vector<std::string> VectorsAndStrings::d(std::vector<std::string>& lines)
+std::vector<std::string> Basics::VectorsAndStrings::d(std::vector<std::string>& lines)
 {
     std::sort(lines.rbegin(), lines.rend());
     return lines;
 }
 
-const std::string VectorsAndStrings::e(const std::string& line)
+const std::string Basics::VectorsAndStrings::e(const std::string& line)
 {
 	const std::string yes = "YES", no = "NO";
     
@@ -269,7 +269,7 @@ const std::string VectorsAndStrings::e(const std::string& line)
     return yes;
 }
 
-std::string VectorsAndStrings::f(size_t n, size_t m, size_t k, const std::vector<std::vector<unsigned int>>& input)
+std::string Basics::VectorsAndStrings::f(size_t n, size_t m, size_t k, const std::vector<std::vector<unsigned int>>& input)
 {
     //int row_coord, col_coord;
 
@@ -322,7 +322,7 @@ std::string VectorsAndStrings::f(size_t n, size_t m, size_t k, const std::vector
     return std::string(result.begin(), result.end());
 }
 
-std::pair<size_t, size_t> Functions::MatrixArgMax(const std::vector<std::vector<int>>& matrix)
+std::pair<size_t, size_t> Basics::Functions::MatrixArgMax(const std::vector<std::vector<int>>& matrix)
 {
     std::pair<size_t, size_t> result = { 0, 0 };
     size_t counter = 0;
@@ -368,7 +368,7 @@ std::pair<size_t, size_t> Functions::MatrixArgMax(const std::vector<std::vector<
     return result;
 }
 
-std::string Functions::CommonPrefix(const std::vector<std::string>& words)
+std::string Basics::Functions::CommonPrefix(const std::vector<std::string>& words)
 {
     const std::string answer = "";
 
@@ -407,7 +407,7 @@ std::string Functions::CommonPrefix(const std::vector<std::string>& words)
     return std::string(words[0].begin(), words[0].begin() + index);
 }
 
-std::vector<std::string> Functions::Split(const std::string& str, char delimiter)
+std::vector<std::string> Basics::Functions::Split(const std::string& str, char delimiter)
 {
     std::vector<std::string> res;
     std::string::const_iterator left = str.cbegin();
@@ -424,7 +424,7 @@ std::vector<std::string> Functions::Split(const std::string& str, char delimiter
     return res;
 }
 
-std::string Functions::Join(const std::vector<std::string>& tokens, char delimiter)
+std::string Basics::Functions::Join(const std::vector<std::string>& tokens, char delimiter)
 {
     std::string res = "";
 
@@ -445,7 +445,7 @@ std::string Functions::Join(const std::vector<std::string>& tokens, char delimit
     return res;
 }
 
-std::vector<std::vector<int>> Functions::Transpose(const std::vector<std::vector<int>>& matrix)
+std::vector<std::vector<int>> Basics::Functions::Transpose(const std::vector<std::vector<int>>& matrix)
 {
     std::vector<std::vector<int>> res(matrix[0].size(), std::vector<int>(matrix.size()));
     for (size_t i = 0; i < res.size(); ++i)
@@ -459,7 +459,7 @@ std::vector<std::vector<int>> Functions::Transpose(const std::vector<std::vector
     return res;
 }
 
-void Functions::F(std::vector<std::pair<int, int>> &coords)
+void Basics::Functions::F(std::vector<std::pair<int, int>> &coords)
 {
     std::sort(coords.begin(), coords.end(), [](const std::pair<int, int> lhs, const std::pair<int, int> rhs){
         return (lhs.first * lhs.first) + (lhs.second * lhs.second) < (rhs.first * rhs.first) + (rhs.second * rhs.second);
@@ -492,17 +492,13 @@ void HandbookSTL::SequenceContainers::MakeTrain()
     std::string input_val;
     std::deque<int> train;
     
-    while (std::getline(std::cin, input_val)) {
+    while (std::cin >> input_val) {
 
-        std::string action;
+        std::string action = input_val;
         int number;
 
-        std::istringstream iss(input_val); // Создаем istringstream из строки
+        std::cin >> number;
 
-        iss >> action;
-        iss >> number;
-
-    
         switch (action[0])
         {
         case '+':
@@ -543,11 +539,65 @@ void HandbookSTL::SequenceContainers::MakeTrain()
     std::cout << std::endl;
 }
 
-void HandbookSTL::SequenceContainers::D(void)
+std::list<std::string> HandbookSTL::SequenceContainers::CtrlXV(const std::vector<std::string>& text,
+    const std::vector<std::string> &commands)
+{
+    // Результат после обработки команд 
+    std::list<std::string> text_to_edit;
+
+    // Заполним 
+    for(const auto &val : text)
+        text_to_edit.push_back(val);
+
+    std::string buffer;
+
+    auto it = text_to_edit.begin();
+
+    for (const auto &command : commands)
+    {
+        if (command == "Down")
+        {
+            if (it == text_to_edit.end())
+                continue;
+
+            it++;
+        }
+        else if (command == "Up")
+        {
+            if (it == text_to_edit.begin())
+                continue;
+            it--;
+        }
+        else if (command == "Ctrl+X")
+        {
+            if (it == text_to_edit.end())
+                continue;
+
+            buffer = std::move(*it);
+            it = text_to_edit.erase(it);
+        }
+        else if (command == "Ctrl+V")
+        {
+            if (buffer.empty())
+                continue;
+
+            text_to_edit.insert(it, buffer);
+        }
+        else
+        {
+            assert(command == "Ctrl+V", "No supported cmd");
+        }
+        
+    }// end while
+
+    return text_to_edit;
+}
+
+void HandbookSTL::SequenceContainers::CtrlXV2(void)
 {
     std::list<std::string> text;
 
-    while(true)
+    while (true)
     {
         std::string input;
         std::getline(std::cin, input);
@@ -557,45 +607,103 @@ void HandbookSTL::SequenceContainers::D(void)
         text.push_back(input);
     }
 
-    std::string buffer;
+    std::list<std::string> buffer;
 
     auto it = text.begin();
+    std::list<std::string>::iterator shift_position;
+    enum Actions_e
+    {
+        down,
+        up,
+        cut,
+        insert,
+        shift
+    };
+    const std::unordered_map<std::string, int> actions = { {"Down", down},
+                                                        {"Up", up},
+                                                        {"Ctrl+X", cut},
+                                                        {"Ctrl+V", insert},
+                                                        {"Shift", shift}
+    };
+
+    bool is_shift = false;
     std::string command;
 
-    while (std::cin >> command)
+    while (std::getline(std::cin, command))
     {
-        if(command == "Down")
+        switch (actions.at(command))
         {
-            if (it == text.end())
+        case down:
+            if (it == std::prev(text.end()))
                 continue;
 
-            it++;
-        }
-        else if (command == "Up")
-        {
+            it = std::next(it);
+            break;
+
+        case up:
             if (it == text.begin())
                 continue;
-            it--;
-        }
-        else if(command == "Ctrl+X")
+
+            it = std::prev(it);
+            break;
+
+        case cut:
         {
+            is_shift = false;
             if (it == text.end())
                 continue;
 
-            buffer = std::move(*it);
-            it = text.erase(it);
+            std::list<std::string>::iterator start;
+            const size_t distance = static_cast<size_t>(std::distance(shift_position, it));
+            if (distance >= 0)
+                start = shift_position;
+            else
+                start = it;
+      
+            buffer.clear();
+            for (size_t i = 0; i != distance; ++i)
+            {
+                buffer.push_back(std::move(*start));
+                start = text.erase(start);
+            }
+            it = start;
+            
+            break;
         }
-        else if(command == "Ctrl+V")
+
+        case insert:
         {
+            is_shift = false;
             if (buffer.empty())
                 continue;
 
-            text.insert(it, buffer);
+            std::list<std::string>::iterator start = buffer.begin();
+            
+            
+            for (auto start = buffer.begin(); start != buffer.end();)
+            {
+                text.insert(it, std::move(*start));
+                start = buffer.erase(start);
+            }
+            
+            buffer.clear();
+            
+            break;
         }
-        
+
+        case shift:
+            is_shift = true;
+            shift_position = it;
+
+            break;
+        default:
+            break;
+        }
+
     }// end while
 
     for (const auto& val : text)
         std::cout << val << std::endl;
+
 
 }
