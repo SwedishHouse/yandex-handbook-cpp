@@ -96,6 +96,8 @@ namespace HandbookSTL
 	class SequenceContainers
 	{
 	public:
+		// Шаблонный Print
+		// функция Print, которая умеет печатать в поток std::cout элементы переданного контейнера через указанную строку - разделитель
 		template <typename T>
 		void Print(const T& data, const std::string delimiter);
 		// Проверка работ
