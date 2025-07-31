@@ -124,10 +124,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="basics.h" />
+    <ClInclude Include="handbook_tasks.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="basics.cpp" />
+    <ClCompile Include="handbook_tasks.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

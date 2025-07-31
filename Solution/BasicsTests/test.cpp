@@ -1,8 +1,8 @@
 #include "pch.h"
-#include "basics.h"
+#include "handbook_tasks.h"
+
 #include <sstream> // Äëÿ std::stringstream
 #include <streambuf> // Äëÿ std::streambuf
-#include <string>
 
 class MyClassTest : public ::testing::Test {
 protected:
@@ -81,15 +81,12 @@ namespace TestFirstSteps
 
     };
 
-
     TEST_F(ClassFirstSteps, A)
     {
         test_object.a();
         const std::string res = "C++ is a general-purpose programming language with a bias towards systems programming that\n  - is a better C\n  - supports data abstraction\n  - supports object-oriented programming\n  - supports generic programming.\n";
         EXPECT_EQ(testOutputStream.str(), res);
     }
-
-
     TEST_F(ClassFirstSteps, B)
     {
         const int a = 4, b = 5;
@@ -121,7 +118,6 @@ namespace TestDataTypes
         void TearDown() override {
             MyClassTest::TearDown();
         }
-
     };
 
     TEST_F(ClassDataTypes, A)
