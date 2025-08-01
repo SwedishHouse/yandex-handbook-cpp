@@ -387,6 +387,7 @@ std::string Basics::Functions::CommonPrefix(const std::vector<std::string>& word
     size_t index = 0;
     char current_sym = words[0][index];
     bool is_stopped = false;
+
     while (index < max_length && !is_stopped)
     {
         for (const auto& var : words)
@@ -592,32 +593,32 @@ std::list<std::string> HandbookSTL::SequenceContainers::CtrlXV(const std::vector
     return text_to_edit;
 }
 
-void HandbookSTL::SequenceContainers::CtrlXV2(void)
+std::list<std::string> HandbookSTL::SequenceContainers::CtrlXV2(const std::vector<std::string>& text,
+    const std::vector<std::string>& commands)
 {
-    std::list<std::string> text;
+    // Инициализируем список с обработанным текстом
+    std::list<std::string> edit_text;
 
-    while (true)
+    // Копируем исходный текст до пустой строки
+    for(const auto &val: text)
     {
-        std::string input;
-        std::getline(std::cin, input);
-        if (input.empty())
+        if (val.empty())
             break;
 
-        text.push_back(input);
+        edit_text.push_back(val);
     }
 
-    std::list<std::string> buffer;
-
-    auto it = text.begin();
-    std::list<std::string>::iterator shift_position;
+    // Определяем список действий
     enum Actions_e
     {
-        down,
-        up,
-        cut,
-        insert,
-        shift
+        down,   // Курсор вниз
+        up,     // Вверх
+        cut,    // Вырезать и записать в буфер
+        insert, // Вставить из буфера
+        shift   // Выбрать несколько строк
     };
+
+    // Ставим в соответствие командам действия
     const std::unordered_map<std::string, int> actions = { {"Down", down},
                                                         {"Up", up},
                                                         {"Ctrl+X", cut},
@@ -625,74 +626,96 @@ void HandbookSTL::SequenceContainers::CtrlXV2(void)
                                                         {"Shift", shift}
     };
 
-    bool is_shift = false;
-    std::string command;
+    // Буфер
+    std::list<std::string> buffer;
 
-    while (std::getline(std::cin, command))
+    // Начинаем прохождение по списку с начала
+    auto cursor = edit_text.begin();
+
+    // Переменная для сохранения позици, с которой выделение нескольких строк
+    auto shift_position = edit_text.begin();
+
+    // Флаг для определения, нажат ли Shift
+    bool is_pressed = false;
+
+    // Цикл по всем командам
+    for(const auto &command : commands)
     {
+        // Определяем текущую команду
         switch (actions.at(command))
         {
         case down:
-            if (it == std::prev(text.end()))
+            // Не можем выйти за предел текста
+            if (cursor == edit_text.end())
                 continue;
 
-            it = std::next(it);
+            // Инкрементируем позицию
+            cursor = std::next(cursor);
             break;
-
+        
         case up:
-            if (it == text.begin())
+            // Не можем выйти за предел текста
+            if (cursor == edit_text.begin())
                 continue;
 
-            it = std::prev(it);
+            // Декрементируем позицию
+            cursor = std::prev(cursor);
             break;
 
         case cut:
         {
-            is_shift = false;
-            if (it == text.end())
-                continue;
-
-            std::list<std::string>::iterator start;
-            const size_t distance = static_cast<size_t>(std::distance(shift_position, it));
-            if (distance >= 0)
-                start = shift_position;
-            else
-                start = it;
-      
+            // Операция приводит к перезаписи буфера
             buffer.clear();
+
+            // 
+            if (!is_pressed)
+                shift_position = cursor;
+
+            // Помним про условме задачи:
+            // Если курсор находится на строке n, то после операций Shift, Down, Down выделенными окажутся строки n и n + 1
+            // Определяем начало и конец отрезка для вырезания и сохранения в буфер
+            int distance = static_cast<int>(std::distance(shift_position, cursor));
+
+            if (distance < 0)
+            {
+                std::swap(shift_position, cursor);
+                distance = std::abs(distance);
+            }
+      
             for (size_t i = 0; i != distance; ++i)
             {
-                buffer.push_back(std::move(*start));
-                start = text.erase(start);
+                buffer.push_back(std::move(*shift_position));
+                shift_position = edit_text.erase(shift_position);
             }
-            it = start;
+            cursor = shift_position;
             
+            // Сброс флага
+            is_pressed = false;
+
             break;
         }
 
         case insert:
         {
-            is_shift = false;
+            // Сброс флага
+            is_pressed = false;
+
+            // Не может происходить вставки из пустого буфера
             if (buffer.empty())
                 continue;
-
-            std::list<std::string>::iterator start = buffer.begin();
             
-            
-            for (auto start = buffer.begin(); start != buffer.end();)
-            {
-                text.insert(it, std::move(*start));
-                start = buffer.erase(start);
-            }
-            
-            buffer.clear();
+            for (const auto &value : buffer)
+                edit_text.insert(cursor, std::move(value));
             
             break;
         }
 
         case shift:
-            is_shift = true;
-            shift_position = it;
+            // Сохраняем текущее положение курсора
+            shift_position = cursor;
+
+            // Обновляем состояние флага
+            is_pressed = true;
 
             break;
         default:
@@ -701,8 +724,5 @@ void HandbookSTL::SequenceContainers::CtrlXV2(void)
 
     }// end while
 
-    for (const auto& val : text)
-        std::cout << val << std::endl;
-
-
+    return edit_text;
 }

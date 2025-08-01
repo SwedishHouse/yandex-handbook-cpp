@@ -97,22 +97,27 @@ namespace HandbookSTL
 	{
 	public:
 		// Шаблонный Print
-		// функция Print, которая умеет печатать в поток std::cout элементы переданного контейнера через указанную строку - разделитель
+		// функция Print, которая умеет печатать в поток std::cout элементы 
+		// переданного контейнера через указанную строку - разделитель
 		template <typename T>
 		void Print(const T& data, const std::string delimiter);
 		// Проверка работ
-		std::vector<std::string> B(const std::vector <std::pair<std::string, std::string>> &students, const std::vector<int>& numbers);
+		std::vector<std::string> B(const std::vector <std::pair<std::string,
+			std::string>> &students, const std::vector<int>& numbers);
 		// Вагоны
 		void MakeTrain();
 		// Ctrl+X, Ctrl+V
-		std::list<std::string> CtrlXV(const std::vector<std::string> &text, const std::vector<std::string> &commands);
+		std::list<std::string> CtrlXV(const std::vector<std::string> &text, 
+			const std::vector<std::string> &commands);
 		// Ctrl+X, Ctrl+V - 2
-		void CtrlXV2(void);
+		std::list<std::string> CtrlXV2(const std::vector<std::string>& text,
+			const std::vector<std::string>& commands);
 
 	};
 
 	template<typename T>
-	inline void SequenceContainers::Print(const T& data, const std::string delimiter)
+	inline void SequenceContainers::Print(const T& data,
+		const std::string delimiter)
 	{
 		auto iter = data.cbegin();
 

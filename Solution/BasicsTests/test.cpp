@@ -527,4 +527,94 @@ namespace TestSequenceContainers
             case_two_result);
     }
 
+    TEST_F(ClassSequenceContainers, CtrlXV2)
+    {
+
+        typedef struct test_case
+        {
+            std::vector<std::string> text;
+            std::vector<std::string> commands;
+            std::list<std::string> result;
+        }test_case_t;
+
+        std::vector<test_case_t> cases =
+        {
+            {.text = {      "My",
+                            "program",
+                            "is",
+                            "awful",
+                            "bad",
+                            "poor",
+                            "wrong",
+                            "awesome" },
+
+            .commands = {   "Down",
+                            "Down",
+                            "Down",
+                            "Shift",
+                            "Down",
+                            "Down",
+                            "Down",
+                            "Down",
+                            "Ctrl+X" },
+
+            . result = {    "My",
+                            "program",
+                            "is",
+                            "awesome" }
+            },
+            {.text = {      "program",
+                            "is awesome",
+                            "My",
+                            "is awful" },
+
+            .commands = {  "Down",
+                            "Down",
+                            "Down",
+                            "Ctrl+X",
+                            "Up",
+                            "Ctrl+X",
+                            "Up",
+                            "Up",
+                            "Ctrl+V" },
+
+            . result = {   "My",
+                            "program",
+                            "is awesome" },
+            },
+            {.text = {      "a",
+                            "b",
+                            "c",
+                            "d",
+                            "e",
+                            "f",
+                            "g"},
+
+            .commands = {   "Down",
+                            "Shift",
+                            "Down",
+                            "Down",
+                            "Ctrl+X",
+                            "Down",
+                            "Shift",
+                            "Down",
+                            "Down",
+                            "Down",
+                            "Ctrl+V" },
+
+            . result = {    "a",
+                            "d",
+                            "b",
+                            "c",},
+            }
+        };
+        size_t counter = 0;
+        for(const auto &test_case : cases)
+        {
+            EXPECT_EQ(test_object.CtrlXV2(test_case.text, test_case.commands),
+                test_case.result) << "Data set number: " << counter << std::endl;
+            counter++;
+        }
+
+    }
 }
