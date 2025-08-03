@@ -110,7 +110,7 @@ namespace HandbookSTL
 		std::list<std::string> CtrlXV(const std::vector<std::string> &text, 
 			const std::vector<std::string> &commands);
 		// Ctrl+X, Ctrl+V - 2
-		std::list<std::string> CtrlXV2(const std::vector<std::string>& text,
+		static std::list<std::string> CtrlXV2(const std::vector<std::string>& text,
 			const std::vector<std::string>& commands);
 
 	};

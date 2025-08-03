@@ -539,73 +539,88 @@ namespace TestSequenceContainers
 
         std::vector<test_case_t> cases =
         {
-            {.text = {      "My",
-                            "program",
-                            "is",
-                            "awful",
-                            "bad",
-                            "poor",
-                            "wrong",
-                            "awesome" },
-
-            .commands = {   "Down",
-                            "Down",
-                            "Down",
-                            "Shift",
-                            "Down",
-                            "Down",
-                            "Down",
-                            "Down",
-                            "Ctrl+X" },
-
-            . result = {    "My",
-                            "program",
-                            "is",
-                            "awesome" }
+            {
+                .text = {
+                    "My",
+                    "program",
+                    "is",
+                    "awful",
+                    "bad",
+                    "poor",
+                    "wrong",
+                    "awesome" 
+                },
+                .commands = {
+                    "Down",
+                    "Down",
+                    "Down",
+                    "Shift",
+                    "Down",
+                    "Down",
+                    "Down",
+                    "Down",
+                    "Ctrl+X" 
+                },
+                .result = { 
+                    "My",
+                    "program",
+                    "is",
+                    "awesome" 
+                }
             },
-            {.text = {      "program",
-                            "is awesome",
-                            "My",
-                            "is awful" },
-
-            .commands = {  "Down",
-                            "Down",
-                            "Down",
-                            "Ctrl+X",
-                            "Up",
-                            "Ctrl+X",
-                            "Up",
-                            "Up",
-                            "Ctrl+V" },
-
-            . result = {   "My",
-                            "program",
-                            "is awesome" },
+            {
+                .text = {   
+                    "program",
+                    "is awesome",
+                    "My",
+                    "is awful" 
+                },
+                .commands = {  
+                    "Down",
+                    "Down",
+                    "Down",
+                    "Ctrl+X",
+                    "Up",
+                    "Ctrl+X",
+                    "Up",
+                    "Up",
+                    "Ctrl+V" 
+                },
+                .result = {
+                    "My",
+                    "program",
+                    "is awesome"
+                },
             },
-            {.text = {      "a",
-                            "b",
-                            "c",
-                            "d",
-                            "e",
-                            "f",
-                            "g"},
-
-            .commands = {   "Down",
-                            "Shift",
-                            "Down",
-                            "Down",
-                            "Ctrl+X",
-                            "Down",
-                            "Shift",
-                            "Down",
-                            "Down",
-                            "Down",
-                            "Ctrl+V" },
-
-            . result = {    "a",
-                            "d",
-                            "b",
-                            "c",},
+            {
+                .text = {  
+                    "a",
+                    "b",
+                    "c",
+                    "d",
+                    "e",
+                    "f",
+                    "g"
+                },
+                .commands = {  
+                    "Down",
+                    "Shift",
+                    "Down",
+                    "Down",
+                    "Ctrl+X",
+                    "Down",
+                    "Shift",
+                    "Down",
+                    "Down",
+                    "Down",
+                    "Ctrl+V" 
+                },
+                .result = {
+                    "a",
+                    "d",
+                    "b",
+                    "c"
+                },
             }
         };
         size_t counter = 0;

@@ -668,45 +668,72 @@ std::list<std::string> HandbookSTL::SequenceContainers::CtrlXV2(const std::vecto
             buffer.clear();
 
             // 
-            if (!is_pressed)
-                shift_position = cursor;
-
-            // Помним про условме задачи:
-            // Если курсор находится на строке n, то после операций Shift, Down, Down выделенными окажутся строки n и n + 1
-            // Определяем начало и конец отрезка для вырезания и сохранения в буфер
-            int distance = static_cast<int>(std::distance(shift_position, cursor));
-
-            if (distance < 0)
+            if (is_pressed)
             {
-                std::swap(shift_position, cursor);
-                distance = std::abs(distance);
-            }
-      
-            for (size_t i = 0; i != distance; ++i)
-            {
-                buffer.push_back(std::move(*shift_position));
-                shift_position = edit_text.erase(shift_position);
-            }
-            cursor = shift_position;
-            
-            // Сброс флага
-            is_pressed = false;
+                // Помним про условме задачи:
+                // Если курсор находится на строке n, то после операций Shift, Down, Down выделенными окажутся строки n и n + 1
+                // Определяем начало и конец отрезка для вырезания и сохранения в буфер
+                int distance = static_cast<int>(std::distance(shift_position, cursor)); 
 
+                if (distance < 0)
+                {
+                    std::swap(shift_position, cursor);
+                    distance = std::abs(distance);
+                }
+
+                while (shift_position != edit_text.end() && shift_position != cursor)
+                {
+
+                    buffer.push_back(std::move(*shift_position));
+                    shift_position = edit_text.erase(shift_position);
+                }
+
+                cursor = shift_position;
+
+                // Сброс флага
+                is_pressed = false;
+
+            }
+            else
+            {
+                buffer.push_back(std::move(*cursor));
+                cursor = edit_text.erase(cursor);
+            }
             break;
         }
 
         case insert:
         {
+            
+            if (is_pressed)
+            {
+                // Помним про условме задачи:
+                // Если курсор находится на строке n, то после операций Shift, Down, Down выделенными окажутся строки n и n + 1
+                // Определяем начало и конец отрезка для вырезания и сохранения в буфер
+                int distance = static_cast<int>(std::distance(shift_position, cursor));
+
+                if (distance < 0)
+                {
+                    std::swap(shift_position, cursor);
+                    distance = std::abs(distance);
+                }
+                while (shift_position != cursor)
+                {
+                    shift_position = edit_text.erase(shift_position);
+                }
+
+            }
+
+            // Не может происходить вставки из пустого буфера
+            //if (buffer.empty())
+            //    continue;
+            
+            for (const auto& value : buffer)
+                edit_text.insert(cursor, value);
+
             // Сброс флага
             is_pressed = false;
 
-            // Не может происходить вставки из пустого буфера
-            if (buffer.empty())
-                continue;
-            
-            for (const auto &value : buffer)
-                edit_text.insert(cursor, std::move(value));
-            
             break;
         }
 
