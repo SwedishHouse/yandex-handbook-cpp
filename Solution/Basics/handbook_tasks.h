@@ -99,8 +99,23 @@ namespace HandbookSTL
 		// Шаблонный Print
 		// функция Print, которая умеет печатать в поток std::cout элементы 
 		// переданного контейнера через указанную строку - разделитель
-		template <typename T>
-		void Print(const T& data, const std::string delimiter);
+		template<typename T>
+		inline void Print(const T& data,
+			const std::string delimiter)
+		{
+			auto iter = data.cbegin();
+
+			std::cout << *iter;
+			iter++;
+			while (iter != data.cend())
+			{
+				std::cout << delimiter;
+				std::cout << *iter;
+				iter++;
+			}
+			std::cout << std::endl;
+		}
+
 		// Проверка работ
 		std::vector<std::string> B(const std::vector <std::pair<std::string,
 			std::string>> &students, const std::vector<int>& numbers);
@@ -112,24 +127,16 @@ namespace HandbookSTL
 		// Ctrl+X, Ctrl+V - 2
 		static std::list<std::string> CtrlXV2(const std::vector<std::string>& text,
 			const std::vector<std::string>& commands);
-
 	};
 
-	template<typename T>
-	inline void SequenceContainers::Print(const T& data,
-		const std::string delimiter)
+	class AssociationContainers
 	{
-		auto iter = data.cbegin();
-
-		std::cout << *iter;
-		iter++;
-		while (iter != data.cend())
-		{
-			std::cout << delimiter;
-			std::cout << *iter;
-			iter++;
-		}
-		std::cout << std::endl;
-	}
+	public:
+		// На вход подаётся последовательность целых чисел. 
+		// Для каждого числа выведите в отдельной строке слово YES,
+		// если это число ранее встречалось в последовательности,
+		// и NO, если не встречалось.
+		std::vector<std::string> A(const std::vector<int>& arr);
+	};
 
 };

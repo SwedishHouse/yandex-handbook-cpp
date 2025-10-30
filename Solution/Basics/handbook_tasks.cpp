@@ -1,4 +1,5 @@
 #include "handbook_tasks.h"
+#include <map>
 
 #include <iomanip> // Äëÿ std::setw
 
@@ -752,4 +753,26 @@ std::list<std::string> HandbookSTL::SequenceContainers::CtrlXV2(const std::vecto
     }// end while
 
     return edit_text;
+}
+
+std::vector<std::string> HandbookSTL::AssociationContainers::A(const std::vector<int>& arr)
+{
+    std::map<int, bool> keeper;
+    std::vector<std::string> result;
+
+    for (auto val : arr)
+    {
+        if (auto it = keeper.find(val); it != keeper.end())
+        {
+            result.push_back("YES");
+        }
+        else
+        {
+            keeper[val] = true;
+            result.push_back("NO");
+        }
+            
+
+    }
+    return result;
 }

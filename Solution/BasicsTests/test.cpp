@@ -633,3 +633,34 @@ namespace TestSequenceContainers
 
     }
 }
+
+namespace TestAssociationContainers
+{
+    class ClassAssociationContainers : public MyClassTest
+    {
+    protected:
+
+        // Объект класса для тестов
+        HandbookSTL::AssociationContainers test_object;
+
+        // Настройка перед каждым тестом
+        void SetUp() override {
+            // Инициализация объекта с параметрами
+            test_object = HandbookSTL::AssociationContainers();
+            MyClassTest::SetUp();
+
+        }
+
+        // Очистка после каждого теста
+        void TearDown() override {
+            MyClassTest::TearDown();
+        }
+    };
+
+    TEST_F(ClassAssociationContainers, A)
+    {
+        const std::vector<int> case_one = { 1, 2, 1, 2, 2, 1, 6 };
+        const std::vector<std::string> expected_one = { "NO", "NO", "YES", "YES", "YES", "YES", "NO" };
+        EXPECT_EQ(test_object.A(case_one), expected_one);
+    }
+}
