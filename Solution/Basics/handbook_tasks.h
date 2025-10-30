@@ -137,6 +137,10 @@ namespace HandbookSTL
 		// если это число ранее встречалось в последовательности,
 		// и NO, если не встречалось.
 		std::vector<std::string> A(const std::vector<int>& arr);
+
+		// ¬ам даны слова. ¬ыведите в алфавитном пор€дке список общих букв всех слов.
+		std::string B(const std::vector<std::string>& words);
+
 	};
 
 };

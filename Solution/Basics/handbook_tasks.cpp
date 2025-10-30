@@ -1,6 +1,6 @@
 #include "handbook_tasks.h"
 #include <map>
-
+#include <set>
 #include <iomanip> // Äëÿ std::setw
 
 
@@ -774,5 +774,38 @@ std::vector<std::string> HandbookSTL::AssociationContainers::A(const std::vector
             
 
     }
+    return result;
+}
+
+std::string HandbookSTL::AssociationContainers::B(const std::vector<std::string>& words)
+{
+    const size_t COUNT = words.size();
+
+    if(COUNT == 0)
+        return "";
+
+    std::map<char, int> letters;
+    for (const auto& word : words)
+    {
+        const std::set<char> word_letter(word.cbegin(), word.cend());
+
+        for (const auto letter : word_letter)
+        {
+            ++letters[letter];
+        }
+
+    }
+
+    std::string result;
+
+    for (const auto &[letter, freq] : letters)
+    {
+        if (freq == COUNT)
+        {
+            result.push_back(letter);
+        }
+    }
+    std::sort(result.begin(), result.end());
+    
     return result;
 }

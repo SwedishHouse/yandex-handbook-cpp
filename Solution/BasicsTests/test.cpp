@@ -663,4 +663,11 @@ namespace TestAssociationContainers
         const std::vector<std::string> expected_one = { "NO", "NO", "YES", "YES", "YES", "YES", "NO" };
         EXPECT_EQ(test_object.A(case_one), expected_one);
     }
+
+    TEST_F(ClassAssociationContainers, B)
+    {
+        const std::vector<std::string> case_one = { "apple", "peach" };
+        
+        EXPECT_EQ(test_object.B(case_one), "aep");
+    }
 }
