@@ -10,6 +10,8 @@
 #include <unordered_map>
 #include <iterator>
 #include <cassert>
+#include <set>
+#include <map>
 
 namespace Basics
 {
@@ -114,7 +116,7 @@ namespace HandbookSTL
 				iter++;
 			}
 			std::cout << std::endl;
-		}
+		};
 
 		// Проверка работ
 		std::vector<std::string> B(const std::vector <std::pair<std::string,
@@ -141,6 +143,16 @@ namespace HandbookSTL
 		// Вам даны слова. Выведите в алфавитном порядке список общих букв всех слов.
 		std::string B(const std::vector<std::string>& words);
 
+		//Дан список всех файлов в некоторой файловой системе.
+		// Необходимо вывести все непустые директории этой файловой системы в лексикографическом порядке.
+		std::set<std::string> C(const std::vector<std::string> &pathes);
+
+		// Профессор написал научную книгу и составил для неё предметный указатель.
+		// Это список ключевых слов, для каждого из которых указана страница, на которой это слово встречается.
+		// Теперь профессор хочет для каждой страницы выписать в алфавитном порядке все ключевые слова, 
+		// которые на эту страницу попали (если такие вообще есть). 
+		// Помогите профессору решить эту задачу.
+		std::map<int, std::set<std::string>> D(const std::vector< std::pair<int, std::string>>& input);
 	};
 
 };

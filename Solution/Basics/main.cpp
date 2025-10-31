@@ -1,42 +1,51 @@
 #include "handbook_tasks.h"
+#include <iostream>
+#include <set>
+#include <vector>
+#include <string>
+#include <map>
+#include <utility>
 
+
+std::map<int, std::set<std::string>> D(const std::vector<std::pair<int, std::string>>& input)
+{
+    std::map<int, std::set<std::string>> result;
+
+    for (const auto& line : input)
+    {
+        int page = line.first;
+        std::string word = line.second;
+        result[page].insert(word);
+    }
+
+    return result;
+}
 int main()
 {
-	//throw "Use test for launch!!!";
+    int number_lines;
 
-    struct test_case
+    std::cin >> number_lines;
+
+    std::vector<std::pair<int, std::string>> lines;
+    lines.reserve(number_lines);
+
+    for (int i = 0; i < number_lines; ++i)
     {
-        std::vector<std::string> text;
-        std::vector<std::string> commands;
-        std::list<std::string> result;
-    };
+        std::pair<int, std::string> inp;
 
-    test_case t;
-
-    std::string input;
-    while (true)
-    {
-        std::getline(std::cin, input);
-
-        if (input.empty())
-            break;
-
-        t.text.push_back(input);
+        std::cin >> inp.second >> inp.first;
+        lines.push_back(inp);
     }
 
-    while (std::cin >> input)
-    {
-        if (input.empty())
-            break;
+    const std::map<int, std::set<std::string>> result = D(lines);
 
-        t.commands.push_back(input);
+    for (const auto& [index, values] : result)
+    {
+        std::cout << index;
+        for (const auto& value : values)
+            std::cout << ' ' << value;
+        std::cout << '\n';
     }
 
-    t.result = HandbookSTL::SequenceContainers::CtrlXV2(t.text, t.commands);
-
-    for (const auto &val : t.result)
-        std::cout << val << std::endl;
-
-
-	return 0;
+    return 0;
 }

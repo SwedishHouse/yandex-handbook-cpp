@@ -670,4 +670,35 @@ namespace TestAssociationContainers
         
         EXPECT_EQ(test_object.B(case_one), "aep");
     }
+
+    TEST_F(ClassAssociationContainers, C)
+    {
+        const std::vector<std::string> case_one = { "/docs/README.txt",
+                                                    "/docs/LICENSE.txt",
+                                                    "/boot/grub",
+                                                    "/init" };
+
+        std::set<std::string> answer_one = {  "/",
+                                                    "/boot/",
+                                                    "/docs/" };
+
+        EXPECT_EQ(test_object.C(case_one), answer_one);
+    }
+
+    TEST_F(ClassAssociationContainers, D)
+    {
+        const std::vector<std::pair<int, std::string>> case_one = { {10, "derivative"},
+                                                    {2, "function"},
+                                                    {10, "function"},
+                                                    {10, "function"},
+                                                    {7, "limit"} 
+        };
+
+        const std::map<int, std::set<std::string>> answer_one = { {2, {"function"} },
+                                                        {7, {"limit"}},
+                                                        {10, {"derivative", "function"} }
+        };
+
+        EXPECT_EQ(test_object.D(case_one), answer_one);
+    }
 }

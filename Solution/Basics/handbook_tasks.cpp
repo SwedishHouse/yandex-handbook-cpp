@@ -2,6 +2,7 @@
 #include <map>
 #include <set>
 #include <iomanip> // Äëÿ std::setw
+#include <numeric> // Äëÿ std::accumulate
 
 
 
@@ -807,5 +808,35 @@ std::string HandbookSTL::AssociationContainers::B(const std::vector<std::string>
     }
     std::sort(result.begin(), result.end());
     
+    return result;
+}
+
+std::set<std::string> HandbookSTL::AssociationContainers::C(const std::vector<std::string>& pathes)
+{
+    std::set<std::string> directories;
+
+    for (const auto & path : pathes)
+    {
+        for (size_t i = 0; i < path.size(); i++)
+        {
+            if (path[i] == '/')
+                directories.insert(path.substr(0, i + 1));
+        }
+    }
+
+    return directories;
+}
+
+std::map<int, std::set<std::string>> HandbookSTL::AssociationContainers::D(const std::vector<std::pair<int, std::string>>& input)
+{
+    std::map<int, std::set<std::string>> result;
+
+    for (const auto& line : input)
+    {
+        int page = line.first;
+        std::string word = line.second;
+        result[page].insert(word);
+    }
+
     return result;
 }
