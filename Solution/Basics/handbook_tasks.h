@@ -161,4 +161,19 @@ namespace HandbookSTL
 
 	};
 
+	class Algorithms
+	{
+	public:
+		template <typename T>
+		void Duplicate(std::vector<T>& v) {
+			const size_t size = v.size();
+			v.reserve(2 * size);
+			auto start = v.cbegin();
+			auto end = start + size;
+			for (auto it = start; it != end; ++it) {
+				v.push_back(*it);
+			}
+		}
+	};
+
 };
