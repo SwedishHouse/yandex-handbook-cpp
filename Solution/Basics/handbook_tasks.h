@@ -12,6 +12,7 @@
 #include <cassert>
 #include <set>
 #include <map>
+#include <unordered_map>
 
 namespace Basics
 {
@@ -153,6 +154,11 @@ namespace HandbookSTL
 		// которые на эту страницу попали (если такие вообще есть). 
 		// Помогите профессору решить эту задачу.
 		std::map<int, std::set<std::string>> D(const std::vector< std::pair<int, std::string>>& input);
+
+		// Будем называть символьной n - граммой последовательность из n последовательно идущих символов в одном слове в тексте.
+		// Для данного числа n подсчитайте суммарное количество каждой n - граммы в тексте.
+		std::vector<std::pair<std::string, int>> E(const std::vector<std::string> &words, const int gramm_length);
+
 	};
 
 };

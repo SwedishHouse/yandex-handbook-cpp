@@ -1,51 +1,54 @@
 #include "handbook_tasks.h"
+#include <algorithm>
 #include <iostream>
-#include <set>
-#include <vector>
 #include <string>
-#include <map>
+#include <tuple>
+#include <unordered_map>
 #include <utility>
+#include <vector>
 
 
-std::map<int, std::set<std::string>> D(const std::vector<std::pair<int, std::string>>& input)
+std::vector<std::pair<std::string, int>> E(const std::vector<std::string>& words, const int gramm_length)
 {
-    std::map<int, std::set<std::string>> result;
+    std::unordered_map<std::string, int> freq;
 
-    for (const auto& line : input)
+    for (const std::string& word : words)
     {
-        int page = line.first;
-        std::string word = line.second;
-        result[page].insert(word);
+        for (size_t i = gramm_length; i <= word.size(); i++)
+        {
+            ++freq[word.substr(i - gramm_length, gramm_length)];
+        }
     }
 
-    return result;
+    std::vector<std::pair<std::string, int>> sorted(freq.begin(), freq.end());
+
+    std::sort(sorted.begin(), sorted.end(), [](const auto& p1, const auto& p2) {
+        return std::tie(p2.second, p1.first) < std::tie(p1.second, p2.first);
+        });
+
+    return sorted;
 }
+
 int main()
 {
-    int number_lines;
+    int m, n;
 
-    std::cin >> number_lines;
+    std::cin >> m >> n;
 
-    std::vector<std::pair<int, std::string>> lines;
-    lines.reserve(number_lines);
+    std::vector<std::string> words;
+    words.reserve(m);
+    std::string word;
 
-    for (int i = 0; i < number_lines; ++i)
+    for (int i = 0; i < m; i++)
     {
-        std::pair<int, std::string> inp;
-
-        std::cin >> inp.second >> inp.first;
-        lines.push_back(inp);
+        std::cin >> word;
+        words.push_back(word);
     }
 
-    const std::map<int, std::set<std::string>> result = D(lines);
+    std::vector<std::pair<std::string, int>> result = E(words, n);
 
-    for (const auto& [index, values] : result)
-    {
-        std::cout << index;
-        for (const auto& value : values)
-            std::cout << ' ' << value;
-        std::cout << '\n';
-    }
+    for (const auto& value : result)
+        std::cout << value.first << " - " << value.second << std::endl;
 
     return 0;
 }

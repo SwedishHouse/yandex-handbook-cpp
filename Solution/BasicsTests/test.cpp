@@ -701,4 +701,20 @@ namespace TestAssociationContainers
 
         EXPECT_EQ(test_object.D(case_one), answer_one);
     }
+
+    TEST_F(ClassAssociationContainers, E)
+    {
+        const std::vector<std::string> case_one = { "to", "be", "or", "not", "to", "be"};
+
+        const int NUMBER = 2;
+
+        const std::vector<std::pair<std::string, int>> answer_one = { {"be", 2},
+                                                        {"to", 2},
+                                                        { "no", 1 },
+                                                        { "or", 1 },
+                                                        { "ot", 1 } 
+        };
+
+        EXPECT_EQ(test_object.E(case_one, NUMBER), answer_one);
+    }
 }
