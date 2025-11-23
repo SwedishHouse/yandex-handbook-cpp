@@ -718,3 +718,36 @@ namespace TestAssociationContainers
         EXPECT_EQ(test_object.E(case_one, NUMBER), answer_one);
     }
 }
+
+namespace TestAlgorithms
+{
+    class ClassAlgorithms : public MyClassTest
+    {
+    protected:
+
+        // Объект класса для тестов
+        HandbookSTL::Algorithms test_object;
+
+        // Настройка перед каждым тестом
+        void SetUp() override {
+            // Инициализация объекта с параметрами
+            test_object = HandbookSTL::Algorithms();
+            MyClassTest::SetUp();
+
+        }
+
+        // Очистка после каждого теста
+        void TearDown() override {
+            MyClassTest::TearDown();
+        }
+    };
+
+    TEST_F(ClassAlgorithms, Unique)
+    {
+        std::vector<int> example    = { 5, 5, 3, 2, 2, 5, 9, 1 };
+        std::vector<int> reference  = { 5, 3, 2, 5, 9, 1, 9, 1 };
+        auto it = test_object.Unique(example.begin(), example.end());
+
+        EXPECT_EQ(*it, *(reference.cend() - 2));
+    };
+}

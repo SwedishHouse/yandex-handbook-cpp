@@ -13,6 +13,7 @@
 #include <set>
 #include <map>
 #include <unordered_map>
+#include <algorithm>
 
 namespace Basics
 {
@@ -173,7 +174,27 @@ namespace HandbookSTL
 			for (auto it = start; it != end; ++it) {
 				v.push_back(*it);
 			}
-		}
+		};
+
+		template <typename Iter>
+		Iter Unique(Iter first, Iter last)
+		{
+			auto it1 = first, it2 = first;
+			while (it2 != last)
+			{
+				if (it1 != it2)
+					*it1 = std::move(*it2);
+				
+				++it1;
+
+				const auto& value = *it2;
+				while (it2 != last && *it2 == value)
+					++it2;
+ 			}
+			return it1;
+		};
 	};
+
+	
 
 };
