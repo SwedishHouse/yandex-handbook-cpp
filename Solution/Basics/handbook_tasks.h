@@ -193,6 +193,48 @@ namespace HandbookSTL
  			}
 			return it1;
 		};
+
+		// Реализуйте функцию SetDifference, которая принимает на вход два отсортированных по возрастанию диапазона
+		template <typename InIter1, typename InIter2, typename OutIter>
+		OutIter SetDifference(InIter1 first1, InIter1 last1,
+			InIter2 first2, InIter2 last2,
+			OutIter out)
+		{
+			while (first1 != last1)
+			{
+				if (first2 == last2)
+				{
+					*out = *first1;
+					out++;
+					first1++;
+					continue;
+				}
+				
+				if (*first1 < *first2)
+				{
+					// Данное значение точно есть в первом множестве
+					*out = *first1;
+					out++;
+					first1++;	
+					continue;
+				}
+
+				if (*first2 < *first1)
+				{
+					// Значения из второго множества точно нет в первом
+					first2++;
+					continue;
+				}
+
+				if (*first1 == *first2)				
+				{
+					// Данную пару не рассматриваем для записи
+					first1++;
+					first2++;
+				}
+			}
+			return out;
+		}
 	};
 
 	
