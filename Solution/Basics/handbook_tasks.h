@@ -15,6 +15,8 @@
 #include <unordered_map>
 #include <stdexcept>
 #include <cassert>
+#include <stack>
+
 
 namespace Basics
 {
@@ -272,6 +274,17 @@ namespace HandbookSTL
 			else
 				return value_left;
 		}
+	};
+
+	class Adapters
+	{
+	public:
+		// На вход подаётся скобочная последовательность — строка, которая состоит из скобок ()[]{}.
+		// Вам нужно определить, является ли она правильной. 
+		// В правильной скобочной последовательности каждой открывающей скобке соответствует закрывающая и 
+		// пары скобок корректно вложены друг в друга.
+		std::string A(const std::string line);
+		
 	};
 
 };

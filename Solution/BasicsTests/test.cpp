@@ -824,3 +824,47 @@ namespace TestAlgorithms
         
     };
 }
+
+namespace TestAdapters
+{
+    class ClassAdapters : public MyClassTest
+    {
+    protected:
+
+        // Объект класса для тестов
+        HandbookSTL::Adapters test_object;
+
+        // Настройка перед каждым тестом
+        void SetUp() override {
+            // Инициализация объекта с параметрами
+            test_object = HandbookSTL::Adapters();
+            MyClassTest::SetUp();
+
+        }
+
+        // Очистка после каждого теста
+        void TearDown() override {
+            MyClassTest::TearDown();
+        }
+    };
+
+    TEST_F(ClassAdapters, A)
+    {
+        {
+            const std::string line = "({{{[]})";
+            EXPECT_EQ(test_object.A(line), "NO");
+        }
+
+        {
+            const std::string line = "}()[]{";
+            EXPECT_EQ(test_object.A(line), "NO");
+        }
+
+        {
+            const std::string line = "{(())()}[]";
+            EXPECT_EQ(test_object.A(line), "YES");
+        }
+
+
+    }
+}

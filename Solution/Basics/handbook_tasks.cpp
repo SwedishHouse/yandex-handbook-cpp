@@ -861,3 +861,41 @@ std::vector<std::pair<std::string, int>> HandbookSTL::AssociationContainers::E(c
 
     return sorted;
 }
+
+std::string HandbookSTL::Adapters::A(const std::string line)
+{
+    const std::string   line_wrong = "NO",
+                        line_ok = "YES";
+    if (line.empty())
+        return line_wrong;
+
+
+    std::stack<char> st;
+    const static std::map<char, char> curves = { {'}', '{'}, {']', '['}, {')', '('} };
+
+    for (auto sym : line)
+    {
+        if (curves.find(sym) != curves.end())
+        {
+            if (st.empty() || st.top() != curves.at(sym))
+                return line_wrong;
+
+            st.pop();
+            continue;
+        }
+
+        bool is_find = false;
+        for (const auto& [key, value] : curves)
+        {
+            is_find = value == sym;
+            if (is_find)
+            {
+                st.push(sym);
+                break;
+            }
+        }
+        if (!is_find) return line_wrong;
+    }
+
+    return st.empty() ? line_ok : line_wrong;
+}
