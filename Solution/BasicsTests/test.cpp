@@ -750,4 +750,77 @@ namespace TestAlgorithms
 
         EXPECT_EQ(*it, *(reference.cend() - 2));
     };
+
+
+    TEST_F(ClassAlgorithms, D)
+    {
+        // First test from examples
+        {
+            std::vector<int> sorted_arr = { 1, 3, 5, 7, 9 };
+            std::vector<int> values = { 2, 4, 8, 1, 6 };
+
+            std::vector<int> result;
+            std::vector<int> reference = { 1, 3, 7, 1, 5 };
+
+            for (auto value : values)
+            {
+                int res = test_object.D(sorted_arr.begin(), sorted_arr.end(), value);
+                result.push_back(res);
+            }
+
+            EXPECT_EQ(result, reference);
+        }
+        
+        // Modified first test
+        {
+            std::vector<int> sorted_arr = { 1, 3, 5, 7, 9 };
+            std::vector<int> values = { 2, 4, 8, 1, 60 };
+
+            std::vector<int> result;
+            std::vector<int> reference = { 1, 3, 7, 1, 9 };
+
+            for (auto value : values)
+            {
+                int res = test_object.D(sorted_arr.begin(), sorted_arr.end(), value);
+                result.push_back(res);
+            }
+
+            EXPECT_EQ(result, reference);
+        }
+
+        // Second test from examples
+        {
+            std::vector<int> sorted_arr = { 1, 1, 4, 4, 8, 120 };
+            std::vector<int> values = { 1, 2, 3, 4, 5, 6, 7, 8, 63, 64, 65 };
+
+            std::vector<int> result;
+            std::vector<int> reference = { 1, 1, 4, 4, 4, 4, 8, 8, 8, 8, 120 };
+
+            for (auto value : values)
+            {
+                int res = test_object.D(sorted_arr.begin(), sorted_arr.end(), value);
+                result.push_back(res);
+            }
+
+            EXPECT_EQ(result, reference);
+        }
+
+        // Third test
+        {
+            std::vector<int> sorted_arr = { -5, 1, 1, 3, 5, 5, 8, 12, 13, 16 };
+            std::vector<int> values = { 0, 3, 7, -17, 23, 11, 0, 11, 15, 7 };
+
+            std::vector<int> result;
+            std::vector<int> reference = { 1, 3, 8, -5, 16, 12, 1, 12, 16, 8 };
+
+            for (auto value : values)
+            {
+                int res = test_object.D(sorted_arr.begin(), sorted_arr.end(), value);
+                result.push_back(res);
+            }
+
+            EXPECT_EQ(result, reference);
+        }
+        
+    };
 }
