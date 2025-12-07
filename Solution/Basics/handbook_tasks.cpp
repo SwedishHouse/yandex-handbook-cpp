@@ -986,3 +986,22 @@ std::string HandbookSTL::Adapters::C(const std::string line)
 
     return std::string();
 }
+
+bool HandbookSTL::Adapters::NextToken(std::string_view& sv, const char del, std::string_view &out)
+{
+    if (sv.size() == 0) return false;
+
+    size_t right = 0;
+
+    while (right < sv.size() && sv[right] != del)
+        right++;
+
+    out = std::string_view(sv.begin(), sv.begin() + right);
+
+    if (right != sv.size())
+        right++;
+
+    sv.remove_prefix(right);
+
+    return true;
+}

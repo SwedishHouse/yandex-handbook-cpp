@@ -16,6 +16,7 @@
 #include <stdexcept>
 #include <cassert>
 #include <stack>
+#include <string_view>
 
 
 namespace Basics
@@ -288,6 +289,10 @@ namespace HandbookSTL
 		std::vector<int> B(const std::vector<int> &values, size_t k);
 
 		std::string C(const std::string line);
+
+		//Вам надо написать функцию NextToken для выделения очередного токена в строке.
+		//Токеном считается последовательность символов до указанного символа-разделителя (или до конца строки).
+		bool NextToken(std::string_view& sv, const char del, std::string_view &out);
 		
 	};
 

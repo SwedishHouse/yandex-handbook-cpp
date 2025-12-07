@@ -962,4 +962,52 @@ namespace TestAdapters
         }
 
     }
+
+    TEST_F(ClassAdapters, D)
+    {
+        {
+            std::string_view sv = "Hello world and good bye";
+
+            std::vector<std::string_view> reference = { "Hello",
+                                                        "world",
+                                                        "and",
+                                                        "good",
+                                                        "bye" };
+
+            std::vector<std::string_view> results;
+
+            const char delimiter = ' ';
+            std::string_view token;
+
+            // Делим строку на токены по разделителю и перебираем эти токены:
+            while (test_object.NextToken(sv, delimiter, token)) {
+                // обрабатываем очередной token
+                // например, печатаем его на экране:
+                results.push_back(token);
+            }
+
+            EXPECT_EQ(reference, results);
+        }
+
+        {
+            std::string_view sv = "";
+
+            std::vector<std::string_view> reference = { };
+
+            std::vector<std::string_view> results;
+
+            const char delimiter = ' ';
+            std::string_view token;
+
+            // Делим строку на токены по разделителю и перебираем эти токены:
+            while (test_object.NextToken(sv, delimiter, token)) {
+                // обрабатываем очередной token
+                // например, печатаем его на экране:
+                results.push_back(token);
+            }
+
+            EXPECT_EQ(reference, results);
+        }
+
+    }
 }
