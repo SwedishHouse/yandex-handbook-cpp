@@ -867,4 +867,99 @@ namespace TestAdapters
 
 
     }
+
+    TEST_F(ClassAdapters, B)
+    {
+        {
+            const std::vector<int> values = { 1, 3, 2, 4, 5, 3, 1 };
+            const size_t k = 3;
+            const std::vector<int> result = { 1, 2, 2, 3, 1 };
+            const std::vector<int> out = test_object.B(values, k);
+            EXPECT_EQ(out.size(), values.size() - k + 1);
+            EXPECT_EQ(out, result);
+        }
+
+        {
+            const std::vector<int> values = { 1, 3, 2, 4, 5, 3, 1 };
+            const size_t k = values.size();
+            const std::vector<int> result = { 1 };
+            const std::vector<int> out = test_object.B(values, k);
+            EXPECT_EQ(out.size(), values.size() - k + 1);
+            EXPECT_EQ(out, result);
+        }
+
+        {
+            const std::vector<int> values = { 1, 3, 2, 4, 5, 3, 1 };
+            const size_t k = 1;
+            const std::vector<int> result = { 1, 3, 2, 4, 5, 3, 1 };
+            const std::vector<int> out = test_object.B(values, k);
+            EXPECT_EQ(out.size(), values.size() - k + 1);
+            EXPECT_EQ(out, result);
+        }
+
+        {
+            const std::vector<int> values = { 1, 3, 2, 4, 5, 3, 1 };
+            const size_t k = 0;
+            const std::vector<int> result = { };
+            const std::vector<int> out = test_object.B(values, k);
+            /*EXPECT_EQ(out.size(), values.size() - k + 1);*/
+            EXPECT_EQ(out, result);
+        }
+
+        {
+            const std::vector<int> values = { };
+            const size_t k = 5;
+            const std::vector<int> result = { };
+            const std::vector<int> out = test_object.B(values, k);
+            /*EXPECT_EQ(out.size(), values.size() - k + 1);*/
+            EXPECT_EQ(out, result);
+        }
+
+        // Empty case
+        {
+            const std::vector<int> values = {};
+            const size_t k = 0;
+            const std::vector<int> result = { };
+            EXPECT_EQ(test_object.B(values, k), result);
+        }
+
+
+    }
+
+    TEST_F(ClassAdapters, C)
+    {
+        {
+            const std::vector<std::string> lines = { "ADD 192168812",
+                                                        "ADD 125",
+                                                        "ADD 321",
+                                                        "EXTRACT",
+                                                        "EXTRACT",
+                                                        "CLEAR",
+                                                        "ADD 7",
+                                                        "ADD 555",
+                                                        "EXTRACT",
+                                                        "EXTRACT",
+                                                        "EXTRACT" };
+
+            std::vector<std::string> results;
+
+            for (const auto & line: lines)
+            {
+                std::string res = test_object.C(line);
+
+                if (!res.empty())
+                    results.push_back(res);
+
+            }
+
+            const std::vector<std::string> reference = { "192168812",
+                                                            "321",
+                                                            "555",
+                                                            "7",
+                                                            "CANNOT" };
+
+            EXPECT_EQ(reference, results);
+        }
+
+    }
 }

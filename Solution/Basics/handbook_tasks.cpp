@@ -3,6 +3,8 @@
 #include <set>
 #include <iomanip> // Для std::setw
 #include <numeric> // Для std::accumulate
+#include <queue>
+#include <string_view>
 
 
 
@@ -898,4 +900,89 @@ std::string HandbookSTL::Adapters::A(const std::string line)
     }
 
     return st.empty() ? line_ok : line_wrong;
+}
+
+
+std::vector<int> HandbookSTL::Adapters::B(const std::vector<int> &values, size_t k)
+{
+
+    std::vector<int> res;
+
+    if (k == 0)
+        return res;
+
+    std::multiset<int> window;
+    
+    // Заполним окно
+    for (size_t i = 1; i <= values.size(); ++i)
+    {
+        window.insert(values[i - 1]);
+        if (i >= k)
+        {
+            res.push_back(*window.cbegin());
+            auto it = window.find(values[i - k]);
+            if(it != window.end())
+                window.erase(it);
+        }
+    }
+
+    return res;
+}
+
+std::string HandbookSTL::Adapters::C(const std::string line)
+{
+    static enum commands_e
+    {
+        CLEAR,
+        ADD,
+        EXTRACT
+    };
+
+    static const std::unordered_map<std::string, int> COMMADS = { {"CLEAR", CLEAR}, {"ADD", ADD}, {"EXTRACT", EXTRACT} };
+    static std::priority_queue<int> pq;
+
+    for (const auto& cmd : COMMADS)
+    {
+        // Ищем команду
+        if (line.find(cmd.first) == std::string::npos)
+            continue;
+
+        // В цикле ее обработаем и выйдем
+        switch (cmd.second)
+        {
+        case CLEAR:
+            while (!pq.empty())
+                pq.pop();
+            break;
+
+        case ADD:
+        {
+            int value = std::stoi(line.substr(cmd.first.size() + 1));
+
+            pq.push(value);
+        }
+            
+            break;
+
+        case EXTRACT:
+            if (pq.empty())
+                return "CANNOT";
+
+            {
+                int value = pq.top();
+                pq.pop();
+                return std::to_string(value);
+            }
+
+            break;
+
+        default:
+            assert(false);
+            break;
+        }
+
+        break; // for break
+    }
+
+    return std::string();
 }

@@ -284,6 +284,10 @@ namespace HandbookSTL
 		// В правильной скобочной последовательности каждой открывающей скобке соответствует закрывающая и 
 		// пары скобок корректно вложены друг в друга.
 		std::string A(const std::string line);
+
+		std::vector<int> B(const std::vector<int> &values, size_t k);
+
+		std::string C(const std::string line);
 		
 	};
 
