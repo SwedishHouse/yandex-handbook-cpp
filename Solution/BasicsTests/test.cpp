@@ -1010,4 +1010,20 @@ namespace TestAdapters
         }
 
     }
+
+    TEST_F(ClassAdapters, E)
+    {
+        {
+            const std::vector<std::string> words{ "to", "be", "or", "not", "to", "be",
+                                                    "that", "is", "the", "question" };
+
+            const int k = 3;
+
+            std::vector<std::pair<int, std::string>> result = { {2, "be"},{2, "to"}, {1, "is"}};
+
+            EXPECT_EQ(test_object.E(words, k), result);
+        }
+
+
+    }
 }

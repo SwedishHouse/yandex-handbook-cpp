@@ -1005,3 +1005,42 @@ bool HandbookSTL::Adapters::NextToken(std::string_view& sv, const char del, std:
 
     return true;
 }
+
+std::vector<std::pair<int, std::string>> HandbookSTL::Adapters::E(const std::vector<std::string>& input, const int k)
+{
+    using TPair = std::pair<int, std::string>;
+
+    std::unordered_map<std::string, int> words;
+
+    // Сохраним значения частот
+    for (auto word : input)
+    {
+        ++words[word];
+    }
+
+    std::priority_queue<TPair> pq;
+
+    for (const auto& [word, freq] : words)
+    {
+        pq.push({ -freq, word });
+        if (pq.size() > k)
+            pq.pop();
+    }
+
+    // Копирование из очереди
+    std::vector<TPair> result;
+
+    result.reserve(k);
+
+    while (!pq.empty())
+    {
+        const auto& [freq, word] = pq.top();
+        result.push_back({-freq, word});
+        pq.pop();
+    }
+
+    // Переворачиваем вектор
+    std::reverse(result.begin(), result.end());
+
+    return result;
+}

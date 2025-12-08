@@ -294,6 +294,9 @@ namespace HandbookSTL
 		//Токеном считается последовательность символов до указанного символа-разделителя (или до конца строки).
 		bool NextToken(std::string_view& sv, const char del, std::string_view &out);
 		
+		// Выведите k самых частотных слов текста и их частоты.
+		std::vector<std::pair<int, std::string>> E(const std::vector<std::string>& lines, const int k);
+		
 	};
 
 };
