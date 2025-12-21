@@ -300,3 +300,71 @@ namespace HandbookSTL
 	};
 
 };
+
+
+namespace HandbookIdioms
+{
+	namespace Classes
+	{
+		class Date
+		{
+		private:
+
+			typedef enum : int
+			{
+				JANUARY = 1,
+				FEBRARY,
+				MARCH,
+				APRIL,
+				MAY,
+				JUNE,
+				JULY,
+				AUGUST,
+				SEPTEMBER,
+				OCTOBER,
+				NOVEMBER,
+				DECEMBER
+			} months_e;
+
+			int year;
+			months_e month;
+			int day;
+
+			// Определяет, високосный ли год
+			bool is_a_leap_year(int year);
+			// Ставит дату по умолчанию
+			void set_default_date(void);
+			// Определяет количество дней в месяце
+			int get_a_days_in_month(months_e m, bool is_leap);
+			// Определяет количество дней в году
+			int days_in_a_year(int year);
+
+			// Определяем количество дней с начала года
+			int days_from_year_start(int year, months_e month, int day);
+
+		public:
+			Date();
+			Date(int year, int month, int day);
+			~Date();
+
+			// Public getters
+			int GetDay() const { return day; };
+			int GetMonth() const { return static_cast<int>(month); };
+			int GetYear() const { return year; };
+
+			// Operators
+			Date operator +(const int days);
+
+			// Public constants
+			static const int YEAR_MIN = 1970;
+			static const int YEAR_MAX = 2099;
+			static const int DAY_MIN = 1;
+			static const int DAY_FEBRUARY_USUAL = 28;
+			static const int DAY_FEBRUARY_LEAP = 29;
+			static const int DAY_MAX = 31;
+
+		};
+
+	};
+
+};

@@ -1027,3 +1027,105 @@ namespace TestAdapters
 
     }
 }
+
+
+namespace IdiomsCppTest
+{
+    // 4.1 Классы
+    namespace ClassesTest
+    {
+        namespace DateTest
+        {
+            
+
+            class DateTest : public MyClassTest
+            {
+            protected:
+
+                // Объект класса для тестов
+                //HandbookIdioms::Classes::Date date;
+
+                // Настройка перед каждым тестом
+                void SetUp() override {
+                    // Инициализация объекта с параметрами
+                    MyClassTest::SetUp();
+
+                }
+
+                // Очистка после каждого теста
+                void TearDown() override {
+                    MyClassTest::TearDown();
+                }
+            }; // End Fate Class
+
+            // Starts Tests
+            using namespace HandbookIdioms::Classes;
+
+            TEST(Construction, ValidInit)
+            {
+                {
+                    Date date(2025, 12, 21);
+
+                    // Get day
+                    ASSERT_EQ(date.GetDay(), 21);
+                    // Get month
+                    ASSERT_EQ(date.GetMonth(), 12);
+                    // Get year
+                    ASSERT_EQ(date.GetYear(), 2025);
+                }
+
+                // Default construction
+                {
+                    Date date;
+
+                    // Get day
+                    ASSERT_EQ(date.GetDay(), 1);
+                    // Get month
+                    ASSERT_EQ(date.GetMonth(), 1);
+                    // Get year
+                    ASSERT_EQ(date.GetYear(), 1970);
+                }
+
+                // Most possible date
+                {
+                    const int year = 2099,
+                        month = 12,
+                        day = 31;
+
+                    Date date(year, month, day);
+
+                    // Get day
+                    ASSERT_EQ(date.GetDay(), day);
+                    // Get month
+                    ASSERT_EQ(date.GetMonth(), month);
+                    // Get year
+                    ASSERT_EQ(date.GetYear(), year);
+                }
+
+                // Leap year
+                {
+                    const int year = 2024,
+                        month = 2,
+                        day = 29;
+
+                    Date date(year, month, day);
+
+                    // Get day
+                    ASSERT_EQ(date.GetDay(), day);
+                    // Get month
+                    ASSERT_EQ(date.GetMonth(), month);
+                    // Get year
+                    ASSERT_EQ(date.GetYear(), year);
+                }
+
+
+                
+
+            }
+
+        }; // End Date namespace
+        
+    }; // End Classes namespace
+
+
+}; // End IdiomsCpp namespace
