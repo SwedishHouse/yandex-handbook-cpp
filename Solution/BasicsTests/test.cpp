@@ -1036,7 +1036,13 @@ namespace IdiomsCppTest
     {
         namespace DateTest
         {
-            
+            typedef struct
+            {
+                const int year;
+                const int month;
+                const int day;
+                
+            } date_test_t;
 
             class DateTest : public MyClassTest
             {
@@ -1063,16 +1069,6 @@ namespace IdiomsCppTest
 
             TEST(Construction, ValidInit)
             {
-                {
-                    Date date(2025, 12, 21);
-
-                    // Get day
-                    ASSERT_EQ(date.GetDay(), 21);
-                    // Get month
-                    ASSERT_EQ(date.GetMonth(), 12);
-                    // Get year
-                    ASSERT_EQ(date.GetYear(), 2025);
-                }
 
                 // Default construction
                 {
@@ -1086,40 +1082,95 @@ namespace IdiomsCppTest
                     ASSERT_EQ(date.GetYear(), 1970);
                 }
 
-                // Most possible date
+                const date_test_t dates[] = 
                 {
-                    const int year = 2099,
-                        month = 12,
-                        day = 31;
+                    // День создания теста
+                    {.year = 2025,              .month = 12,                .day = 21},
+                    // Most possible date
+                    {.year = Date::YEAR_MAX,    .month = Date::DECEMBER,    .day = Date::DAY_MAX},
+                    // Leap year
+                    {.year = 2024,              .month = Date::FEBRARY,     .day = Date::DAY_FEBRUARY_LEAP},
 
-                    Date date(year, month, day);
+                };
+
+                for (const auto& d : dates)
+                {
+                    Date date(d.year, d.month, d.day);
 
                     // Get day
-                    ASSERT_EQ(date.GetDay(), day);
+                    ASSERT_EQ(date.GetDay(),    d.day);
                     // Get month
-                    ASSERT_EQ(date.GetMonth(), month);
+                    ASSERT_EQ(date.GetMonth(),  d.month);
                     // Get year
-                    ASSERT_EQ(date.GetYear(), year);
+                    ASSERT_EQ(date.GetYear(),   d.year);
                 }
 
-                // Leap year
-                {
-                    const int year = 2024,
-                        month = 2,
-                        day = 29;
+            }
 
-                    Date date(year, month, day);
+            TEST(Construction, NoValidDate)
+            {
+                // Все даты должны быть данными значениями
+                const int   day     = Date::DAY_MIN,
+                            month   = Date::JANUARY,
+                            year    = Date::YEAR_MIN;
 
-                    // Get day
-                    ASSERT_EQ(date.GetDay(), day);
-                    // Get month
-                    ASSERT_EQ(date.GetMonth(), month);
-                    // Get year
-                    ASSERT_EQ(date.GetYear(), year);
-                }
-
-
+                const int MILENIUM_YEAR = 2000;
                 
+                // Зададим структуру для работы с датой
+                const date_test_t unvalid_dates[] =
+                {
+                    // *** Проверяем установку года ***
+                    // Год меньше минимального
+                    {.year = 1095,                  .month = Date::MAY,             .day = 16},                  // В этот год начался первый крестовый поход
+                    {.year = Date::YEAR_MIN - 1,    .month = Date::MAY,             .day = 16},
+                    {.year = Date::YEAR_MIN - 32,   .month = Date::MAY,             .day = 16},
+                    {.year = INT_MIN,               .month = Date::MAY,             .day = 16},
+                    {.year = 0,                     .month = Date::MAY,             .day = 16},
+                    {.year = -1,                    .month = Date::MAY,             .day = 16},
+                    {.year = -3000,                 .month = Date::MAY,             .day = 16},
+                    // Год больше максимально допустимого
+                    {.year = Date::YEAR_MAX + 1,    .month = Date::MAY,             .day = 16},
+                    {.year = Date::YEAR_MAX + 32,   .month = Date::MAY,             .day = 16},
+                    {.year = Date::YEAR_MAX + 3200, .month = Date::MAY,             .day = 16},
+                    {.year = INT_MAX,               .month = Date::MAY,             .day = 16},
+       
+                    // *** Проверяем установку месяца ***
+                    // Маленькое значение месяца
+                    {.year = MILENIUM_YEAR,         .month = 0,                     .day = 16},
+                    {.year = MILENIUM_YEAR,         .month = Date::JANUARY - 1,     .day = 16},
+                    {.year = MILENIUM_YEAR,         .month = Date::JANUARY - 100,   .day = 16},
+                    {.year = MILENIUM_YEAR,         .month = -37,                   .day = 16},
+                    {.year = MILENIUM_YEAR,         .month = INT_MIN,               .day = 16},
+                    // Большое значения месяца
+                    {.year = MILENIUM_YEAR,         .month = Date::DECEMBER + 1,    .day = 16},
+                    {.year = MILENIUM_YEAR,         .month = Date::DECEMBER + 100,  .day = 16},
+                    {.year = MILENIUM_YEAR,         .month = 100,                   .day = 16},
+                    {.year = MILENIUM_YEAR,         .month = INT_MAX,               .day = 16},
+                    // *** Проверяем установку дня ***
+                    // Маленькое значение
+                    {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = 0},
+                    {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MIN - 1},
+                    {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MIN - 32},
+                    {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MIN - 1000},
+                    {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = INT_MIN},
+                    // Большое значение
+                    {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MAX + 1},
+                };
+
+                // Не должен быть пустой этот массив
+                assert(sizeof(unvalid_dates) / sizeof(unvalid_dates[0]) != 0);
+
+                for (const auto& un : unvalid_dates)
+                {
+                    Date date(un.year, un.month, un.day);
+
+                    // Get day
+                    ASSERT_EQ(date.GetDay(),    day);
+                    // Get month
+                    ASSERT_EQ(date.GetMonth(),  month);
+                    // Get year
+                    ASSERT_EQ(date.GetYear(),   year);
+                }
 
             }
 
