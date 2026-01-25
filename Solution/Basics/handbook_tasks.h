@@ -308,28 +308,8 @@ namespace HandbookIdioms
 	{
 		class Date
 		{
-
 		public:
-			Date();
-			Date(int year, int month, int day);
-			~Date();
-
-			// Public getters
-			int GetDay() const { return day; };
-			int GetMonth() const { return static_cast<int>(month); };
-			int GetYear() const { return year; };
-
-			// Operators
-			Date operator +(const int days);
-
-			// Public constants
-			static const int YEAR_MIN = 1970;
-			static const int YEAR_MAX = 2099;
-			static const int DAY_MIN = 1;
-			static const int DAY_FEBRUARY_USUAL = 28;
-			static const int DAY_FEBRUARY_LEAP = 29;
-			static const int DAY_MAX = 31;
-
+			// Перечисление месяцев
 			typedef enum : int
 			{
 				JANUARY = 1,
@@ -345,27 +325,195 @@ namespace HandbookIdioms
 				NOVEMBER,
 				DECEMBER
 			} months_e;
-			
-		private:
 
+			// Конструктор по умолчанию
+			Date()
+			{
+				set_from_days(this->DAY_MIN);
+			};
+
+			// Конструктор с параметрами
+			Date(int day, int month, int year) : Date()
+			{
+				// Проверяем полученные значения на попадания в диапазон
+				if (!is_coorect_date(year, month, day))
+					return;
+
+				// Дополнительная проверка для високосного года
+				if (day == this->FEBRARY && day > get_days_in_february(year))
+					return;
+
+				// Обновим значения
+				this->day = day;
+				this->month = month;
+				this->year = year;
+			}
+		
+
+			// Public getters
+			int GetDay() const { return day; };
+			int GetMonth() const { return static_cast<int>(month); };
+			int GetYear() const { return year; };
+
+			// Operators
+			Date operator+ (int days) const
+			{
+				Date res(*this);
+
+				res.set_from_days(res.get_days_count() + days);
+
+				return res;
+			}
+
+			Date operator - (int k) const {
+				Date result(*this);
+				result.set_from_days(result.get_days_count() - k);
+				return result;
+			}
+
+			int operator - (const Date& other) const {
+				return get_days_count() - other.get_days_count();
+			}
+
+			// Public constants
+			static const int YEAR_MIN = 1970;
+			static const int YEAR_MAX = 2099;
+			static const int DAY_MIN = 1;
+			static const int DAY_FEBRUARY_USUAL = 28;
+			static const int DAY_FEBRUARY_LEAP = DAY_FEBRUARY_USUAL + 1;
+			static const int DAY_MAX = 31;
+			static const int DAYS_IN_YEAR_WITHOUT_FEB = 337;
+
+		private:
+			
+
+			// Переменная для хранения текущего года
 			int year;
-			months_e month;
+			// Текущий месяц
+			int month;
+			// Текущий день
 			int day;
 
 			// Определяет, високосный ли год
-			bool is_a_leap_year(int year);
-			// Ставит дату по умолчанию
-			void set_default_date(void);
+			bool is_a_leap_year(int year) const
+			{
+				if (year % 400 == 0)
+					return true;
+				else if (year % 100 == 0)
+					return false;
+				else if (year % 4 == 0)
+					return true;
+				else
+					return false;
+			}
+
+			// Ставит дату по количеству дней
+			void set_from_days(int in_days)
+			{
+				// Установим значения года и месяца по умолчанию
+				this->year = this->YEAR_MIN;
+				this->month = JANUARY;
+
+				// Обрабатываем случай превышения входного количества дней 
+				// по сравнению в количеством дней в году
+				while (in_days > days_in_a_year(this->GetYear()))
+				{
+					// Уменьшим входное количество дней
+					in_days -= days_in_a_year(this->GetYear());
+					// Инкремент года
+					this->year++;
+				}
+
+				// Обрабатываем случай превышения входного количества дней 
+				// по сравнению в количеством дней в месяце
+				while (in_days > days_passed_to_month(this->GetYear(), this->GetMonth() + 1))
+				{
+					// Инкремент месяца
+					this->month++;
+				}
+
+				// Обновим количество дней
+				this->day = in_days - days_passed_to_month(this->GetYear(), this->GetMonth());
+			}
+
+			
+
+			bool is_coorect_date(int year, int month, int day) const
+			{
+				return	year >= this->YEAR_MIN && year <= this->YEAR_MAX &&
+					month >= JANUARY && month <= DECEMBER &&
+					day >= this->DAY_MIN && day <= this->DAY_MAX;
+			}
+
+			// Опредлеяпет коилчество дней в феврале
+			int get_days_in_february(int year) const
+			{
+				if (is_a_leap_year(year))
+					return this->DAY_FEBRUARY_LEAP;
+
+				return this->DAY_FEBRUARY_USUAL;
+			}
+
 			// Определяет количество дней в месяце
-			int get_a_days_in_month(months_e m, bool is_leap);
+			int get_days_in_month(int year, int m) const
+			{
+				switch (m)
+				{
+				case FEBRARY:
+					return get_days_in_february(year);
+
+				case JANUARY:
+				case MARCH:
+				case MAY:
+				case JULY:
+				case AUGUST:
+				case OCTOBER:
+				case DECEMBER:
+					return 31;
+
+				default:
+					return 30;
+				}
+			}
+
+			// Определим количество дней с начала года в целых месяцах
+			int days_passed_to_month(int year, int month) const
+			{
+				int days = 0;
+				for (int i = JANUARY; i < month; ++i)
+				{
+					// Прибавляем количество дней месяца 
+					days += get_days_in_month(year, i);
+				}
+
+				// Возвращаем результат
+				return days;
+			}
+
 			// Определяет количество дней в году
-			int days_in_a_year(int year);
+			int days_in_a_year(int year) const
+			{
+				return DAYS_IN_YEAR_WITHOUT_FEB + get_days_in_february(year);
+			}
+			
+			// Определяем количество дней с начальной даты
+			int get_days_count() const
+			{
+				int result = 0;
 
-			// Определяем количество дней с начала года
-			int days_from_year_start(int year, months_e month, int day);
+				for (int i = this->YEAR_MIN; i < GetYear(); ++i)
+				{
+					result += days_in_a_year(i);
+				}
+				
+				return this->day + result + days_passed_to_month(GetYear(), GetMonth());
+			}
 
-		};
+		}; // End Class Date
 
-	};
+		
+
+
+	}; // End namespace
 
 };

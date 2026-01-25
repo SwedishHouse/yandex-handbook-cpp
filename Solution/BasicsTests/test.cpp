@@ -1023,8 +1023,6 @@ namespace TestAdapters
 
             EXPECT_EQ(test_object.E(words, k), result);
         }
-
-
     }
 }
 
@@ -1036,6 +1034,7 @@ namespace IdiomsCppTest
     {
         namespace DateTest
         {
+            // Определим структуру для хранения даты
             typedef struct
             {
                 const int year;
@@ -1043,6 +1042,14 @@ namespace IdiomsCppTest
                 const int day;
                 
             } date_test_t;
+
+            // Определим структуру для работы с операциями сложения и вычитания
+            typedef struct
+            {
+                const date_test_t start;
+                const int days;
+                const date_test_t result;
+            } date_oper_test_t;
 
             class DateTest : public MyClassTest
             {
@@ -1069,6 +1076,15 @@ namespace IdiomsCppTest
 
             TEST(Construction, ValidInit)
             {
+                // Проверка, изменились ли дефолтные константы
+                {
+                    // День
+                    ASSERT_EQ(Date::DAY_MIN, 1);
+                    // Месяц
+                    ASSERT_EQ(Date::JANUARY, 1);
+                    // Год
+                    ASSERT_EQ(Date::YEAR_MIN, 1970);
+                }
 
                 // Default construction
                 {
@@ -1088,14 +1104,16 @@ namespace IdiomsCppTest
                     {.year = 2025,              .month = 12,                .day = 21},
                     // Most possible date
                     {.year = Date::YEAR_MAX,    .month = Date::DECEMBER,    .day = Date::DAY_MAX},
-                    // Leap year
+                    // Вискокосный год, февраль
                     {.year = 2024,              .month = Date::FEBRARY,     .day = Date::DAY_FEBRUARY_LEAP},
+                    // Вискокосный год, январь
+                    {.year = 2024,              .month = Date::JANUARY,     .day = Date::DAY_MAX},
 
                 };
 
                 for (const auto& d : dates)
                 {
-                    Date date(d.year, d.month, d.day);
+                    Date date(d.day, d.month, d.year);
 
                     // Get day
                     ASSERT_EQ(date.GetDay(),    d.day);
@@ -1104,7 +1122,6 @@ namespace IdiomsCppTest
                     // Get year
                     ASSERT_EQ(date.GetYear(),   d.year);
                 }
-
             }
 
             TEST(Construction, NoValidDate)
@@ -1155,6 +1172,12 @@ namespace IdiomsCppTest
                     {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = INT_MIN},
                     // Большое значение
                     {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MAX + 1},
+                    // *** Все поля невалидные ***
+                    {.year = Date::YEAR_MAX + 5,    .month = Date::DECEMBER + 5,    .day = Date::DAY_MAX + 1},
+                    {.year = Date::YEAR_MIN - 5,    .month = Date::DECEMBER + 5,    .day = Date::DAY_MAX + 1},
+                    {.year = 0,                     .month = 0,                     .day = 0},
+                    {.year = -5,                    .month = -1,                    .day = Date::DAY_MAX},
+                    {.year = -8,                    .month = Date::DECEMBER,        .day = -1},
                 };
 
                 // Не должен быть пустой этот массив
@@ -1162,7 +1185,7 @@ namespace IdiomsCppTest
 
                 for (const auto& un : unvalid_dates)
                 {
-                    Date date(un.year, un.month, un.day);
+                    Date date(un.day, un.month, un.year);
 
                     // Get day
                     ASSERT_EQ(date.GetDay(),    day);
@@ -1170,6 +1193,120 @@ namespace IdiomsCppTest
                     ASSERT_EQ(date.GetMonth(),  month);
                     // Get year
                     ASSERT_EQ(date.GetYear(),   year);
+                }
+
+            }
+
+            // Данный тест нужен для проверки правильной установки данных в пределах одного месяца
+            TEST(SumOper, ValidSumChangeDay)
+            {
+                const date_oper_test_t dates[] =
+                {
+                    {
+                        .start = {.year = Date::YEAR_MIN, .month = Date::JANUARY, .day = Date::DAY_MIN},
+                        .days = 1,
+                        .result = {.year = Date::YEAR_MIN, .month = Date::JANUARY, .day = Date::DAY_MIN + 1}
+                    },
+                    {
+                        .start = {.year = Date::YEAR_MIN, .month = Date::JANUARY, .day = Date::DAY_MIN},
+                        .days = 15,
+                        .result = {.year = Date::YEAR_MIN, .month = Date::JANUARY, .day = Date::DAY_MIN + 15}
+                    },
+                    {
+                        .start = {.year = Date::YEAR_MIN, .month = Date::JANUARY, .day = Date::DAY_MIN},
+                        .days = 30,
+                        .result = {.year = Date::YEAR_MIN, .month = Date::JANUARY, .day = Date::DAY_MIN + 30}
+                    },
+                    {
+                        .start = {.year = Date::YEAR_MIN, .month = Date::FEBRARY, .day = Date::DAY_MIN},
+                        .days = 1,
+                        .result = {.year = Date::YEAR_MIN, .month = Date::FEBRARY, .day = Date::DAY_MIN + 1}
+                    },
+                    // Февраль (28 дней)
+                    {
+                        .start = {.year = Date::YEAR_MIN, .month = Date::FEBRARY, .day = Date::DAY_MIN},
+                        .days = 27,
+                        .result = {.year = Date::YEAR_MIN, .month = Date::FEBRARY, .day = Date::DAY_MIN + 27}
+                    },
+                    // Февраль (Високосый год)
+                    {
+                        .start = {.year = 2024, .month = Date::FEBRARY, .day = Date::DAY_MIN},
+                        .days = 28,
+                        .result = {.year = 2024, .month = Date::FEBRARY, .day = Date::DAY_MIN + 28}
+                    },
+                    // Апрель (30 дней)
+                    {
+                        .start = {.year = Date::YEAR_MIN, .month = Date::APRIL, .day = Date::DAY_MIN},
+                        .days = 29,
+                        .result = {.year = Date::YEAR_MIN, .month = Date::APRIL, .day = Date::DAY_MIN + 29}
+                    },
+                    // Последний год
+                    {
+                        .start = {.year = Date::YEAR_MAX, .month = Date::DECEMBER, .day = Date::DAY_MIN},
+                        .days = 10,
+                        .result = {.year = Date::YEAR_MAX, .month = Date::DECEMBER, .day = Date::DAY_MIN + 10}
+                    },
+
+                };
+
+                for (const auto& d : dates)
+                {
+                    Date start(d.start.day, d.start.month, d.start.year);
+                    const auto res = start + d.days;
+
+                    // Проверка дня
+                    ASSERT_EQ(res.GetDay(), d.result.day);
+
+                    // Месяца
+                    ASSERT_EQ(res.GetMonth(), d.result.month);
+
+                    // Года
+                    ASSERT_EQ(res.GetYear(), d.result.year);
+                }
+            }
+
+            // *** Добавляем в пределах нескольких месяцев ***
+            TEST(SumOper, ValidSumChangeMonth)
+            {
+                const date_oper_test_t dates[] =
+                {
+                    {
+                        .start = {.year = Date::YEAR_MIN, .month = Date::JANUARY, .day = 31},
+                        .days = 1,
+                        .result = {.year = Date::YEAR_MIN, .month = Date::FEBRARY, .day = Date::DAY_MIN}
+                    },
+                    {
+                        .start = {.year = Date::YEAR_MIN, .month = Date::JANUARY, .day = Date::DAY_MIN},
+                        .days = 31,
+                        .result = {.year = Date::YEAR_MIN, .month = Date::FEBRARY, .day = Date::DAY_MIN}
+                    },
+                    {
+                        .start = {.year = Date::YEAR_MIN, .month = Date::JANUARY, .day = Date::DAY_MIN},
+                        .days = 89,
+                        .result = {.year = Date::YEAR_MIN, .month = Date::MARCH, .day = 31}
+                    },
+                    {
+                        .start = {.year = Date::YEAR_MIN, .month = Date::JANUARY, .day = Date::DAY_MIN},
+                        .days = 69, // ^_~
+                        .result = {.year = Date::YEAR_MIN, .month = Date::MARCH, .day = 11}
+                    },
+                    
+
+                };
+
+                for (const auto& d : dates)
+                {
+                    Date start(d.start.day, d.start.month, d.start.year);
+                    const auto res = start + d.days;
+
+                    // Проверка дня
+                    ASSERT_EQ(res.GetDay(), d.result.day);
+
+                    // Месяца
+                    ASSERT_EQ(res.GetMonth(), d.result.month);
+
+                    // Года
+                    ASSERT_EQ(res.GetYear(), d.result.year);
                 }
 
             }

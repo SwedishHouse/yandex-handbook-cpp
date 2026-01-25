@@ -589,7 +589,7 @@ std::list<std::string> HandbookSTL::SequenceContainers::CtrlXV(const std::vector
         }
         else
         {
-            assert(command == "Ctrl+V", "No supported cmd");
+            assert(command == "Ctrl+V");
         }
         
     }// end while
@@ -931,7 +931,7 @@ std::vector<int> HandbookSTL::Adapters::B(const std::vector<int> &values, size_t
 
 std::string HandbookSTL::Adapters::C(const std::string line)
 {
-    static enum commands_e
+    enum commands_e
     {
         CLEAR,
         ADD,
@@ -1043,127 +1043,4 @@ std::vector<std::pair<int, std::string>> HandbookSTL::Adapters::E(const std::vec
     std::reverse(result.begin(), result.end());
 
     return result;
-}
-
-bool HandbookIdioms::Classes::Date::is_a_leap_year(int year)
-{
-    if (year % 400 == 0)
-        return true;
-    else if (year % 100 == 0)
-        return false;
-    else if (year % 4 == 0)
-        return true;
-    else
-        return false;
-}
-
-
-void HandbookIdioms::Classes::Date::set_default_date()
-{
-    this->year = this->YEAR_MIN;
-    this->month = JANUARY;
-    this->day = this->DAY_MIN;
-}
-
-HandbookIdioms::Classes::Date::Date(int year, int month, int day)
-{
-    // ѕровер€ем полученные значени€ на попадани€ в диапазон
-    if (year < this->YEAR_MIN ||
-        year > this->YEAR_MAX ||
-        month < JANUARY ||
-        month > DECEMBER ||
-        day < this->DAY_MIN ||
-        day > this->DAY_MAX)
-    {
-        set_default_date();
-        return;
-    }
-
-    // ƒополнительна€ проверка дл€ високосного года
-    if (this->is_a_leap_year(year) && day > this->DAY_FEBRUARY_LEAP)
-    {
-        set_default_date();
-        return;
-    }
-
-    this->day = day;
-    this->month = static_cast<months_e>(month);
-    this->year = year;
-
-}
-
-int HandbookIdioms::Classes::Date::get_a_days_in_month(months_e m, bool is_leap)
-{
-    switch (m)
-    {
-    case FEBRARY:
-        if (is_leap)
-            return this->DAY_FEBRUARY_LEAP;
-        else
-            return this->DAY_FEBRUARY_USUAL;
-        break;
-
-    case JANUARY:
-    case MARCH:
-    case MAY:
-    case JULY:
-    case AUGUST:
-    case OCTOBER:
-    case DECEMBER:
-        return 31;
-        break;
-
-    default:
-        return 30;
-        break;
-    }
-}
-
-HandbookIdioms::Classes::Date::Date()
-{
-    set_default_date();
-};
-
-HandbookIdioms::Classes::Date::~Date() {}
-
-
-
-inline HandbookIdioms::Classes::Date HandbookIdioms::Classes::Date::operator+(const int days)
-{
-    // ѕроверим, находитс€ ли нова€ дата в пределах текущей
-    const int now_count_of_days = get_a_days_in_month(this->month, is_a_leap_year(this->year));
-
-    if (days + this->day <= now_count_of_days)
-        return Date(this->year, this->month, days + this->day);
-
-    // ќпределим, попадаем ли мы в этот год
-    const int days_from = days_from_year_start(this->year, this->month, this->day);
-    if (days_from + days <= days_in_a_year(this->year))
-    {
-
-    }
-
-
-    return Date();
-}
-
-inline int HandbookIdioms::Classes::Date::days_from_year_start(int year, HandbookIdioms::Classes::Date::months_e month, int day)
-{
-    int result = 0;
-    const bool is_leap = is_a_leap_year(year);
-
-    for (int i = static_cast<int>(JANUARY); i < month; i++)
-    {
-        result += get_a_days_in_month(static_cast<months_e>(i), is_leap);
-    }
-
-    return result + day;
-}
-
-inline int HandbookIdioms::Classes::Date::days_in_a_year(int year)
-{
-    if (is_a_leap_year(year))
-        return 366;
-
-    return 365;
 }
