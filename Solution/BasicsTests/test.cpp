@@ -1336,53 +1336,53 @@ namespace IdiomsCppTest
                 const date_test_t result;
             } date_oper_test_t;
 
-            class DateTest2 : public MyClassTest
-            {
-            protected:
+            class DateTest2 : public ::testing::Test { }; // End Fate Class
 
-                // Объект класса для тестов
-                //HandbookIdioms::Classes::Date date;
-
-                // Настройка перед каждым тестом
-                void SetUp() override {
-                    // Инициализация объекта с параметрами
-                    MyClassTest::SetUp();
-
-                }
-
-                // Очистка после каждого теста
-                void TearDown() override {
-                    MyClassTest::TearDown();
-                }
-            }; // End Fate Class
-
-            // Starts Tests
+            // ИСпользуем пространство для второго задания
             using namespace HandbookIdioms::TaskB;
 
-            TEST(ConstructionFor2, ValidInit)
+            // Проверка, изменились ли дефолтные константы
+            TEST(Constants, Valid)
             {
-                // Проверка, изменились ли дефолтные константы
-                {
-                    // День
-                    ASSERT_EQ(Date::DAY_MIN, 1);
-                    // Месяц
-                    ASSERT_EQ(Date::JANUARY, 1);
-                    // Год
-                    ASSERT_EQ(Date::YEAR_MIN, 1970);
-                }
+                // День
+                EXPECT_EQ(Date::DAY_MIN, 1);
+                // 
+                EXPECT_EQ(Date::DAY_MAX, 31);
+                // Месяц
+                EXPECT_EQ(Date::JANUARY, 1);
+                EXPECT_EQ(Date::DECEMBER, 12);
+                // Год
+                EXPECT_EQ(Date::YEAR_MIN, 1970);
+                EXPECT_EQ(Date::YEAR_MAX, 2099);
+            }
 
-                // Default construction
-                {
-                    Date date;
+            TEST(Constants, NoValid)
+            {
+                // День
+                EXPECT_NE(Date::DAY_MIN, 0);
+                // Месяц
+                EXPECT_NE(Date::JANUARY, 0);
+                // Год
+                EXPECT_NE(Date::YEAR_MIN, 2000);
+            }
 
-                    // Get day
-                    ASSERT_EQ(date.GetDay(), 1);
-                    // Get month
-                    ASSERT_EQ(date.GetMonth(), 1);
-                    // Get year
-                    ASSERT_EQ(date.GetYear(), 1970);
-                }
+            // Конструкторы по умолчанию
+            TEST(DefaultConstruction, Valid)
+            {
+                Date date;
+                // Так написан тест на константы, 
+                // можем ссылаться на константы тестируемого класса
+                // Get day
+                EXPECT_EQ(date.GetDay(), Date::DAY_MIN);
+                // Get month
+                EXPECT_EQ(date.GetMonth(), Date::JANUARY);
+                // Get year
+                EXPECT_EQ(date.GetYear(), Date::YEAR_MIN);
+            }
 
+            // 
+            TEST(ConstructionWithParams, ValidInit)
+            {
                 const date_test_t dates[] =
                 {
                     // День создания теста
@@ -1391,6 +1391,10 @@ namespace IdiomsCppTest
                     {.year = Date::YEAR_MAX,    .month = Date::DECEMBER,    .day = Date::DAY_MAX},
                     // Вискокосный год, февраль
                     {.year = 2024,              .month = Date::FEBRARY,     .day = Date::DAY_FEBRUARY_LEAP},
+                    // Вискокосный год, март 31
+                    {.year = 2024,              .month = Date::MARCH,       .day = Date::DAY_MAX},
+                    // Вискокосный год, март 30
+                    {.year = 2024,              .month = Date::MARCH,       .day = 30},
                     // Вискокосный год, январь
                     {.year = 2024,              .month = Date::JANUARY,     .day = Date::DAY_MAX},
 
@@ -1401,23 +1405,19 @@ namespace IdiomsCppTest
                     Date date(d.day, d.month, d.year);
 
                     // Get day
-                    ASSERT_EQ(date.GetDay(), d.day);
+                    EXPECT_EQ(date.GetDay(), d.day);
                     // Get month
-                    ASSERT_EQ(date.GetMonth(), d.month);
+                    EXPECT_EQ(date.GetMonth(), d.month);
                     // Get year
-                    ASSERT_EQ(date.GetYear(), d.year);
+                    EXPECT_EQ(date.GetYear(), d.year);
                 }
             }
 
-            TEST(ConstructionFor2, NoValidDate)
+            // *** Проверки конструктора с невалидноыми датами
+
+            // Невалидный год 
+            TEST(ConstructionWithParams, NoValidYear)
             {
-                // Все даты должны быть данными значениями
-                const int   day = Date::DAY_MIN,
-                    month = Date::JANUARY,
-                    year = Date::YEAR_MIN;
-
-                const int MILENIUM_YEAR = 2000;
-
                 // Зададим структуру для работы с датой
                 const date_test_t unvalid_dates[] =
                 {
@@ -1436,6 +1436,37 @@ namespace IdiomsCppTest
                     {.year = Date::YEAR_MAX + 3200, .month = Date::MAY,             .day = 16},
                     {.year = INT_MAX,               .month = Date::MAY,             .day = 16},
 
+                };
+
+                // Не должен быть пустой этот массив
+                EXPECT_NE(sizeof(unvalid_dates) / sizeof(unvalid_dates[0]), 0);
+
+                // проитерируем по данным
+                for (const auto& un : unvalid_dates)
+                {
+                    //Построим объект
+                    Date date(un.day, un.month, un.year);
+
+                    // Get day
+                    EXPECT_EQ(date.GetDay(), Date::DAY_MIN);
+                    // Get month
+                    EXPECT_EQ(date.GetMonth(), Date::JANUARY);
+                    // Get year
+                    EXPECT_EQ(date.GetYear(), Date::YEAR_MIN);
+                }
+
+            }
+
+            // Итерируем по месяцам
+            TEST(ConstructionWithParams, NoValidMonth)
+            {
+                // Некий дефолтный год
+                const int MILENIUM_YEAR = 2000;
+
+                // Зададим структуру для работы с датой
+                const date_test_t unvalid_dates[] =
+                {
+
                     // *** Проверяем установку месяца ***
                     // Маленькое значение месяца
                     {.year = MILENIUM_YEAR,         .month = 0,                     .day = 16},
@@ -1448,36 +1479,101 @@ namespace IdiomsCppTest
                     {.year = MILENIUM_YEAR,         .month = Date::DECEMBER + 100,  .day = 16},
                     {.year = MILENIUM_YEAR,         .month = 100,                   .day = 16},
                     {.year = MILENIUM_YEAR,         .month = INT_MAX,               .day = 16},
-                    // *** Проверяем установку дня ***
-                    // Маленькое значение
-                    {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = 0},
-                    {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MIN - 1},
-                    {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MIN - 32},
-                    {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MIN - 1000},
-                    {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = INT_MIN},
-                    // Большое значение
-                    {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MAX + 1},
-                    // *** Все поля невалидные ***
-                    {.year = Date::YEAR_MAX + 5,    .month = Date::DECEMBER + 5,    .day = Date::DAY_MAX + 1},
-                    {.year = Date::YEAR_MIN - 5,    .month = Date::DECEMBER + 5,    .day = Date::DAY_MAX + 1},
-                    {.year = 0,                     .month = 0,                     .day = 0},
-                    {.year = -5,                    .month = -1,                    .day = Date::DAY_MAX},
-                    {.year = -8,                    .month = Date::DECEMBER,        .day = -1},
                 };
 
                 // Не должен быть пустой этот массив
-                assert(sizeof(unvalid_dates) / sizeof(unvalid_dates[0]) != 0);
+                EXPECT_NE(sizeof(unvalid_dates) / sizeof(unvalid_dates[0]), 0);
 
+                // проитерируем по данным
                 for (const auto& un : unvalid_dates)
                 {
                     Date date(un.day, un.month, un.year);
 
                     // Get day
-                    ASSERT_EQ(date.GetDay(), day);
+                    EXPECT_EQ(date.GetDay(), Date::DAY_MIN);
                     // Get month
-                    ASSERT_EQ(date.GetMonth(), month);
+                    EXPECT_EQ(date.GetMonth(), Date::JANUARY);
                     // Get year
-                    ASSERT_EQ(date.GetYear(), year);
+                    EXPECT_EQ(date.GetYear(), Date::YEAR_MIN);
+                }
+
+            }
+
+            // Итерируем по дням
+            TEST(ConstructionWithParams, NoValidDay)
+            {
+                // Некий дефолтный год
+                const int MILENIUM_YEAR = 2000;
+
+                // Зададим структуру для работы с датой
+                const date_test_t unvalid_dates[] =
+                {
+                    // *** Проверяем установку дня ***
+                    // Маленькое значение
+                    {.year = MILENIUM_YEAR, .month = Date::MAY, .day = 0 },
+                    {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MIN - 1 },
+                    {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MIN - 32 },
+                    {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MIN - 1000 },
+                    {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = INT_MIN },
+                    // Большое значение
+                    {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MAX + 1 },
+                    // *** Все поля невалидные ***
+                    {.year = Date::YEAR_MAX + 5,    .month = Date::DECEMBER + 5,    .day = Date::DAY_MAX + 1 },
+                    {.year = Date::YEAR_MIN - 5,    .month = Date::DECEMBER + 5,    .day = Date::DAY_MAX + 1 },
+                    {.year = 0,                     .month = 0,                     .day = 0 },
+                    {.year = -5,                    .month = -1,                    .day = Date::DAY_MAX },
+                    {.year = -8,                    .month = Date::DECEMBER},
+                };
+
+                // Не должен быть пустой этот массив
+                EXPECT_NE(sizeof(unvalid_dates) / sizeof(unvalid_dates[0]), 0);
+
+                // проитерируем по данным
+                for (const auto& un : unvalid_dates)
+                {
+                    Date date(un.day, un.month, un.year);
+
+                    // Get day
+                    EXPECT_EQ(date.GetDay(), Date::DAY_MIN);
+                    // Get month
+                    EXPECT_EQ(date.GetMonth(), Date::JANUARY);
+                    // Get year
+                    EXPECT_EQ(date.GetYear(), Date::YEAR_MIN);
+                }
+
+            }
+
+            // Все поля невалидные
+            TEST(ConstructionWithParams, NoValidAllFields)
+            {
+                // Некий дефолтный год
+                const int MILENIUM_YEAR = 2000;
+
+                // Зададим структуру для работы с датой
+                const date_test_t unvalid_dates[] =
+                {
+                    // *** Все поля невалидные ***
+                    {.year = Date::YEAR_MAX + 5,    .month = Date::DECEMBER + 5,    .day = Date::DAY_MAX + 1 },
+                    {.year = Date::YEAR_MIN - 5,    .month = Date::DECEMBER + 5,    .day = Date::DAY_MAX + 1 },
+                    {.year = 0,                     .month = 0,                     .day = 0 },
+                    {.year = -5,                    .month = -1,                    .day = Date::DAY_MAX },
+                    {.year = -8,                    .month = Date::DECEMBER},
+                };
+
+                // Не должен быть пустой этот массив
+                EXPECT_NE(sizeof(unvalid_dates) / sizeof(unvalid_dates[0]), 0);
+
+                // проитерируем по данным
+                for (const auto& un : unvalid_dates)
+                {
+                    Date date(un.day, un.month, un.year);
+
+                    // Get day
+                    EXPECT_EQ(date.GetDay(), Date::DAY_MIN);
+                    // Get month
+                    EXPECT_EQ(date.GetMonth(), Date::JANUARY);
+                    // Get year
+                    EXPECT_EQ(date.GetYear(), Date::YEAR_MIN);
                 }
 
             }
