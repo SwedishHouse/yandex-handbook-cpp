@@ -1053,25 +1053,7 @@ namespace IdiomsCppTest
                 const date_test_t result;
             } date_oper_test_t;
 
-            class DateTest : public MyClassTest
-            {
-            protected:
-
-                // Объект класса для тестов
-                //HandbookIdioms::Classes::Date date;
-
-                // Настройка перед каждым тестом
-                void SetUp() override {
-                    // Инициализация объекта с параметрами
-                    MyClassTest::SetUp();
-
-                }
-
-                // Очистка после каждого теста
-                void TearDown() override {
-                    MyClassTest::TearDown();
-                }
-            }; // End Fate Class
+            class DateTest : public ::testing::Test { }; // End Fate Class
 
             // Starts Tests
             using namespace HandbookIdioms::TaskA;
@@ -1366,18 +1348,74 @@ namespace IdiomsCppTest
                 EXPECT_NE(Date::YEAR_MIN, 2000);
             }
 
-            // Конструкторы по умолчанию
-            TEST(DefaultConstruction, Valid)
+            // *** Конструкторы по умолчанию ***
+            // Так написан тест на константы, 
+            // можем ссылаться на константы тестируемого класса
+
+            // Получаем из дефолтного объекта год
+            TEST(DefaultConstruction, ValidGetterYear)
             {
                 Date date;
-                // Так написан тест на константы, 
-                // можем ссылаться на константы тестируемого класса
-                // Get day
-                EXPECT_EQ(date.GetDay(), Date::DAY_MIN);
+
+                EXPECT_EQ(date.GetYear(), Date::YEAR_MIN);
+            }
+
+            // Получаем из дефолтного объекта месяц
+            TEST(DefaultConstruction, ValidGetterMonth)
+            {
+                Date date;
+                
                 // Get month
                 EXPECT_EQ(date.GetMonth(), Date::JANUARY);
-                // Get year
-                EXPECT_EQ(date.GetYear(), Date::YEAR_MIN);
+            }
+
+            // Получаем из дефолтного объекта день
+            TEST(DefaultConstruction, ValidGetterDay)
+            {
+                Date date;
+
+                EXPECT_EQ(date.GetDay(), Date::DAY_MIN);
+            }
+
+            // Протестируем геттер при фиксированных других значениях
+            // Для года
+            TEST(GetterWithFixedAnotherFields, Year)
+            {
+                const date_test_t d = { .year = 2025, .month = 12, .day = 21 };
+
+                for (int i = Date::YEAR_MIN; i <= Date::YEAR_MAX; i++)
+                {
+                    Date date(d.day, d.month, i);
+                    // Get year
+                    EXPECT_EQ(date.GetYear(), i);
+                }
+            }
+
+            // Для месяца
+            TEST(GetterWithFixedAnotherFields, Month)
+            {
+                const date_test_t d = { .year = 2025, .month = 12, .day = 21 };
+
+                for (int i = Date::JANUARY; i <= Date::DECEMBER; i++)
+                {
+                    Date date(d.day, i, d.year);
+                    // Get month
+                    EXPECT_EQ(date.GetMonth(), i);
+                }
+            }
+
+            // Для дня
+            TEST(GetterWithFixedAnotherFields, Day)
+            {
+                // В декабре точно все эти дни есть
+                const date_test_t d = { .year = 2025, .month = Date::DECEMBER, .day = 21 };
+
+                for (int i = Date::DAY_MIN; i <= Date::DAY_MAX; i++)
+                {
+                    Date date(i, d.month, d.year);
+                    // Get month
+                    EXPECT_EQ(date.GetDay(), i);
+                }
             }
 
             // 

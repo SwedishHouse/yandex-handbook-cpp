@@ -560,18 +560,18 @@ namespace HandbookIdioms
 			} months_e;
 
 			// Конструктор по умолчанию
-			Date(void) : days(0) {}
+			Date(void) : days(1) {}
 
 			// Конструктор с параметрами
 			Date(int day, int month, int year) : days(0)
 			{
 				// Проверяем полученные значения на попадания в диапазон
 				if (!is_coorect_date(year, month, day))
-					return;
-
-				// Дополнительная проверка для високосного года
-				if (day == this->FEBRARY && day > get_days_in_february(year))
-					return;
+				{
+					day = 1;
+					month = this->JANUARY;
+					year = this->YEAR_MIN;
+				}
 
 				// Проитерируем по годам
 				for (int i = this->YEAR_MIN; i < year; i++)
@@ -593,9 +593,57 @@ namespace HandbookIdioms
 
 
 			// Public getters
-			int GetDay() const { return 0; };
-			int GetMonth() const { return static_cast<int>(0); };
-			int GetYear() const { return 0; };
+			int GetDay() const 
+			{ 
+				int days = this->days;
+
+				int year = this->GetYear();
+
+				for (int i = this->YEAR_MIN; i < year; i++)
+				{
+					days -= days_in_a_year(i);
+				}
+
+				return days -= days_passed_to_month(year, this->GetMonth());
+			};
+
+			int GetMonth() const 
+			{ 
+				int days = this->days;
+
+				int year = this->GetYear();
+
+				for (int i = this->YEAR_MIN; i < year; i++)
+				{
+					days -= days_in_a_year(i);
+				}
+
+				for (int i = this->JANUARY; i < this->DECEMBER; i++)
+				{
+					const int in_m = days_passed_to_month(year, i + 1);
+					if (days <= in_m)
+						return i;
+				}
+
+				return this->DECEMBER;
+			};
+
+			int GetYear() const 
+			{ 
+				int days_count = this->days;
+
+				for (int i = this->YEAR_MIN; i < this->YEAR_MAX; i++)
+				{
+					const int in_a_year = this->days_in_a_year(i);
+
+					if (days_count <= in_a_year)
+						return i;
+
+					days_count -= in_a_year;
+				}
+
+				return this->YEAR_MAX;
+			};
 
 			// Operators
 			Date operator+ (int days) const
@@ -681,7 +729,7 @@ namespace HandbookIdioms
 					return false;
 
 				// Проверка, попадаем ли в диапазон месяцев
-				if (month < JANUARY && month > DECEMBER)
+				if (month < JANUARY || month > DECEMBER)
 					return false;
 
 				// Проверка на нулевое количество дней
