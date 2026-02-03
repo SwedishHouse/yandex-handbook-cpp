@@ -632,7 +632,7 @@ namespace HandbookIdioms
 			{ 
 				int days_count = this->days;
 
-				for (int i = this->YEAR_MIN; i < this->YEAR_MAX; i++)
+				for (int i = this->YEAR_MIN; i <= this->YEAR_MAX; i++)
 				{
 					const int in_a_year = this->days_in_a_year(i);
 
@@ -642,28 +642,35 @@ namespace HandbookIdioms
 					days_count -= in_a_year;
 				}
 
-				return this->YEAR_MAX;
+				return this->YEAR_MAX + 1;
 			};
 
 			// Operators
 			Date operator+ (int days) const
 			{
-				Date res(*this);
+				Date res;
 
-				//res.set_from_days(res.get_days_count() + days);
+				res.days = this->days + days;
 
-				return res;
+				if (is_coorect_date(res.GetYear(), res.GetMonth(), res.GetDay()))
+					return res;
+
+				return Date();
 			}
 
 			Date operator - (int k) const {
-				Date result(*this);
-				/*result.set_from_days(result.get_days_count() - k);*/
-				return result;
+				Date res;
+
+				res.days = this->days - k;
+
+				if (is_coorect_date(res.GetYear(), res.GetMonth(), res.GetDay()))
+					return res;
+
+				return Date();
 			}
 
 			int operator - (const Date& other) const {
-				//return get_days_count() - other.get_days_count();
-				return 0;
+				return this->days - other.days;
 			}
 
 			// Public constants
@@ -690,35 +697,6 @@ namespace HandbookIdioms
 					return true;
 				else
 					return false;
-			}
-
-			// Ставит дату по количеству дней
-			void set_from_days(int in_days)
-			{
-				//// Установим значения года и месяца по умолчанию
-				//this->year = this->YEAR_MIN;
-				//this->month = JANUARY;
-
-				//// Обрабатываем случай превышения входного количества дней 
-				//// по сравнению в количеством дней в году
-				//while (in_days > days_in_a_year(this->GetYear()))
-				//{
-				//	// Уменьшим входное количество дней
-				//	in_days -= days_in_a_year(this->GetYear());
-				//	// Инкремент года
-				//	this->year++;
-				//}
-
-				//// Обрабатываем случай превышения входного количества дней 
-				//// по сравнению в количеством дней в месяце
-				//while (in_days > days_passed_to_month(this->GetYear(), this->GetMonth() + 1))
-				//{
-				//	// Инкремент месяца
-				//	this->month++;
-				//}
-
-				//// Обновим количество дней
-				//this->day = in_days - days_passed_to_month(this->GetYear(), this->GetMonth());
 			}
 
 			// Проверка корректности кода 

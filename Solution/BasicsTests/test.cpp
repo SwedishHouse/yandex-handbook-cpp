@@ -1301,6 +1301,9 @@ namespace IdiomsCppTest
         // Тесты для задания B 
         namespace DateTest2
         {
+            // ИСпользуем пространство для второго задания
+            using namespace HandbookIdioms::TaskB;
+
             // Определим структуру для хранения даты
             typedef struct
             {
@@ -1318,10 +1321,7 @@ namespace IdiomsCppTest
                 const date_test_t result;
             } date_oper_test_t;
 
-            class DateTest2 : public ::testing::Test { }; // End Fate Class
-
-            // ИСпользуем пространство для второго задания
-            using namespace HandbookIdioms::TaskB;
+            class DateTest2 : public ::testing::Test { }; // End Date Class
 
             // Проверка, изменились ли дефолтные константы
             TEST(Constants, Valid)
@@ -1617,9 +1617,9 @@ namespace IdiomsCppTest
             }
 
             // Данный тест нужен для проверки правильной установки данных в пределах одного месяца
-            TEST(SumOperFor2, ValidSumChangeDay)
+            TEST(SumOperForDateB, ValidChangeDay)
             {
-                const date_oper_test_t dates[] =
+                const date_oper_test_t validSumsChangeDay[] =
                 {
                     {
                         .start = {.year = Date::YEAR_MIN, .month = Date::JANUARY, .day = Date::DAY_MIN},
@@ -1668,25 +1668,23 @@ namespace IdiomsCppTest
 
                 };
 
-                for (const auto& d : dates)
+                for (const auto& d : validSumsChangeDay)
                 {
                     Date start(d.start.day, d.start.month, d.start.year);
                     const auto res = start + d.days;
 
                     // Проверка дня
-                    ASSERT_EQ(res.GetDay(), d.result.day);
+                    EXPECT_EQ(res.GetDay(), d.result.day);
 
-                    // Месяца
-                    ASSERT_EQ(res.GetMonth(), d.result.month);
+                    EXPECT_EQ(res.GetMonth(), d.result.month);
 
-                    // Года
-                    ASSERT_EQ(res.GetYear(), d.result.year);
+                    EXPECT_EQ(res.GetYear(), d.result.year);
                 } //end for
 
             }
 
             // *** Добавляем в пределах нескольких месяцев ***
-            TEST(SumOperFor2, ValidSumChangeMonth)
+            TEST(SumOperForDateB, ValidChangeMonth)
             {
                 const date_oper_test_t dates[] =
                 {
