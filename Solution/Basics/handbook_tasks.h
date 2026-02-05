@@ -774,7 +774,153 @@ namespace HandbookIdioms
 		}; // End Class Date
 	} // End namespace for Task B
 
+	// Задача C: Rational
+	// https://new.contest.yandex.ru/contests/42158/problems?id=40119%2F2022_10_30%2FLJjNoDCHJX
+	// Напишите класс Rational(рациональное число).
+	// Конструктор класса должен получать на вход два числа типа int(числитель и знаменатель).
+	// Считайте, что по умолчанию числитель равен 0, а знаменатель — 1.
+	// Переопределите бинарные операторы сложения, вычитания, умножения и 
+	// деления(работающие в том числе и с аргументами типа int), 
+	// унарные плюс и минус.
+	// Предусмотрите функции - члены Numerator и Denominator для получения числителя и 
+	// знаменателя несократимого представления этой дроби(знаменатель должен быть положительным).
+	// Переопределите также операторы +=, -=, *= и /= .Не забудьте определить операторы == и != .
+	// Используйте функцию std::gcd стандартной библиотеки.
+	class Rational
+	{
+	private:
+		int denominator;
+		int numerator;
 
+	public:
+		Rational() : numerator(0), denominator(1) {}
+
+		Rational(int num, int den) :numerator(0), denominator(1)
+		{
+			if (den == 0)
+				return;
+
+			numerator = num;
+			denominator = den;
+		}
+
+		// Свойства геттеры
+		int Numerator(void) { return numerator; }
+		int Denominator(void) { return denominator; }
+
+		// Операторы сложения
+		Rational operator + (int val)
+		{
+			return Rational();
+		}
+
+		Rational operator + (Rational val)
+		{
+			return Rational();
+		}
+
+		// Сложение с присвоением
+
+		Rational operator += (int val)
+		{
+			return *this;
+		}
+
+		Rational operator += (Rational val)
+		{
+			return *this;
+		}
+
+		// Операторы вычитания
+		Rational operator - (int val)
+		{
+			return Rational();
+		}
+
+		Rational operator - (Rational val)
+		{
+			return Rational();
+		}
+
+		// Вычитание с присвоением
+		Rational operator -= (int val)
+		{
+			return *this;
+		}
+
+		Rational operator -= (Rational val)
+		{
+			return *this;
+		}
+
+		// Операторы умножения
+		Rational operator * (int val)
+		{
+			return Rational();
+		}
+
+		Rational operator * (Rational val)
+		{
+			return Rational();
+		}
+
+		// Умножение с присвоением
+		Rational operator *= (int val)
+		{
+			return *this;
+		}
+
+		Rational operator *= (Rational val)
+		{
+			return *this;
+		}
+
+		// Операторы денления
+		Rational operator / (int val)
+		{
+			return Rational();
+		}
+
+		Rational operator / (Rational val)
+		{
+			return Rational();
+		}
+
+		// Деление с присвоением
+		Rational operator /= (int val)
+		{
+			return *this;
+		}
+
+		Rational operator /= (Rational val)
+		{
+			return *this;
+		}
+
+		// Унарные операторы
+
+		Rational operator+()
+		{
+			return Rational();
+		}
+
+		Rational operator-()
+		{
+			return Rational();
+		}
+
+		// Опреаторы сравнения
+		Rational operator==(Rational other)
+		{
+			return Rational();
+		}
+
+		Rational operator!=(Rational other)
+		{
+			return Rational();
+		}
+
+	};
 	
 
 };
