@@ -17,6 +17,7 @@
 #include <cassert>
 #include <stack>
 #include <string_view>
+#include <numeric>
 
 
 namespace Basics
@@ -792,6 +793,17 @@ namespace HandbookIdioms
 		int denominator;
 		int numerator;
 
+		void Reduce(void)
+		{
+			if (numerator == 0)
+				return;
+
+			const int gcd = std::gcd<int64_t>(numerator, denominator);
+
+			numerator /= gcd;
+			denominator /= gcd;
+		}
+
 	public:
 		Rational() : numerator(0), denominator(1) {}
 
@@ -800,8 +812,17 @@ namespace HandbookIdioms
 			if (den == 0)
 				return;
 
+			// Обработаем знаки входных чисел
+			if (den < 0)
+			{
+				num = -num;
+				den = -den;
+			}
+
 			numerator = num;
 			denominator = den;
+
+			Reduce();
 		}
 
 		// Свойства геттеры

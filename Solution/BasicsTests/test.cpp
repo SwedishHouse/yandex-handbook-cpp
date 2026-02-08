@@ -1,47 +1,48 @@
-#include "pch.h"
+п»ї#include "pch.h"
 #include "handbook_tasks.h"
 
-#include <sstream> // Для std::stringstream
-#include <streambuf> // Для std::streambuf
+#include <sstream> // Р”Р»СЏ std::stringstream
+#include <streambuf> // Р”Р»СЏ std::streambuf
+#include <array>
 
 class MyClassTest : public ::testing::Test {
 protected:
 
-    // Объект класса для тестов
+    // РћР±СЉРµРєС‚ РєР»Р°СЃСЃР° РґР»СЏ С‚РµСЃС‚РѕРІ
 
-    // Дополнительные ресурсы
+    // Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ СЂРµСЃСѓСЂСЃС‹
 
-    // Оригинальные буферы std::cin и std::cout
+    // РћСЂРёРіРёРЅР°Р»СЊРЅС‹Рµ Р±СѓС„РµСЂС‹ std::cin Рё std::cout
     std::streambuf* originalCinBuffer;
 
     std::streambuf* originalCoutBuffer;
-    // Строковые потоки для захвата вывода и подачи ввода
+    // РЎС‚СЂРѕРєРѕРІС‹Рµ РїРѕС‚РѕРєРё РґР»СЏ Р·Р°С…РІР°С‚Р° РІС‹РІРѕРґР° Рё РїРѕРґР°С‡Рё РІРІРѕРґР°
     std::stringstream testInputStream;
     std::stringstream testOutputStream;
 
-    // Настройка перед каждым тестом
+    // РќР°СЃС‚СЂРѕР№РєР° РїРµСЂРµРґ РєР°Р¶РґС‹Рј С‚РµСЃС‚РѕРј
     void SetUp() override {
 
-        // Инициализация объекта с параметрами
+        // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕР±СЉРµРєС‚Р° СЃ РїР°СЂР°РјРµС‚СЂР°РјРё
 
         
-        // Сохраняем оригинальные буферы
+        // РЎРѕС…СЂР°РЅСЏРµРј РѕСЂРёРіРёРЅР°Р»СЊРЅС‹Рµ Р±СѓС„РµСЂС‹
         originalCinBuffer = std::cin.rdbuf();
         originalCoutBuffer = std::cout.rdbuf();
 
-        // Перенаправляем std::cin на наш входной поток
+        // РџРµСЂРµРЅР°РїСЂР°РІР»СЏРµРј std::cin РЅР° РЅР°С€ РІС…РѕРґРЅРѕР№ РїРѕС‚РѕРє
         std::cin.rdbuf(testInputStream.rdbuf());
-        // Перенаправляем std::cout на наш выходной поток
+        // РџРµСЂРµРЅР°РїСЂР°РІР»СЏРµРј std::cout РЅР° РЅР°С€ РІС‹С…РѕРґРЅРѕР№ РїРѕС‚РѕРє
         std::cout.rdbuf(testOutputStream.rdbuf());
     }
 
-    // Очистка после каждого теста
+    // РћС‡РёСЃС‚РєР° РїРѕСЃР»Рµ РєР°Р¶РґРѕРіРѕ С‚РµСЃС‚Р°
     void TearDown() override {
-        // Восстанавливаем оригинальные буферы std::cin и std::cout
+        // Р’РѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµРј РѕСЂРёРіРёРЅР°Р»СЊРЅС‹Рµ Р±СѓС„РµСЂС‹ std::cin Рё std::cout
         std::cin.rdbuf(originalCinBuffer);
         std::cout.rdbuf(originalCoutBuffer);
 
-        // Очищаем буфер
+        // РћС‡РёС‰Р°РµРј Р±СѓС„РµСЂ
         testInputStream.str("");
         testInputStream.clear();
 
@@ -50,11 +51,11 @@ protected:
 
     }
 
-    // Вспомогательные методы
+    // Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
     void simulate_input(const std::string& input) {
         std::istringstream test_input(input);
         std::streambuf* orig_cin = std::cin.rdbuf(test_input.rdbuf());
-        // Ввод будет автоматически использован в тесте
+        // Р’РІРѕРґ Р±СѓРґРµС‚ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РёСЃРїРѕР»СЊР·РѕРІР°РЅ РІ С‚РµСЃС‚Рµ
     }
 };
 
@@ -63,18 +64,18 @@ namespace TestFirstSteps
     class ClassFirstSteps : public MyClassTest {
     protected:
 
-        // Объект класса для тестов
+        // РћР±СЉРµРєС‚ РєР»Р°СЃСЃР° РґР»СЏ С‚РµСЃС‚РѕРІ
         Basics::FirstSteps test_object;
 
-        // Настройка перед каждым тестом
+        // РќР°СЃС‚СЂРѕР№РєР° РїРµСЂРµРґ РєР°Р¶РґС‹Рј С‚РµСЃС‚РѕРј
         void SetUp() override {
-            // Инициализация объекта с параметрами
+            // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕР±СЉРµРєС‚Р° СЃ РїР°СЂР°РјРµС‚СЂР°РјРё
             test_object = Basics::FirstSteps();
             MyClassTest::SetUp();
             
         }
 
-        // Очистка после каждого теста
+        // РћС‡РёСЃС‚РєР° РїРѕСЃР»Рµ РєР°Р¶РґРѕРіРѕ С‚РµСЃС‚Р°
         void TearDown() override {
             MyClassTest::TearDown();
         }
@@ -103,18 +104,18 @@ namespace TestDataTypes
     class ClassDataTypes : public MyClassTest {
     protected:
 
-        // Объект класса для тестов
+        // РћР±СЉРµРєС‚ РєР»Р°СЃСЃР° РґР»СЏ С‚РµСЃС‚РѕРІ
         Basics::DataTypes test_object;
 
-        // Настройка перед каждым тестом
+        // РќР°СЃС‚СЂРѕР№РєР° РїРµСЂРµРґ РєР°Р¶РґС‹Рј С‚РµСЃС‚РѕРј
         void SetUp() override {
-            // Инициализация объекта с параметрами
+            // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕР±СЉРµРєС‚Р° СЃ РїР°СЂР°РјРµС‚СЂР°РјРё
             test_object = Basics::DataTypes();
             MyClassTest::SetUp();
 
         }
 
-        // Очистка после каждого теста
+        // РћС‡РёСЃС‚РєР° РїРѕСЃР»Рµ РєР°Р¶РґРѕРіРѕ С‚РµСЃС‚Р°
         void TearDown() override {
             MyClassTest::TearDown();
         }
@@ -138,18 +139,18 @@ namespace TestBranchesAndCycles
     class ClassBranchesAndCycles : public MyClassTest {
     protected:
 
-        // Объект класса для тестов
+        // РћР±СЉРµРєС‚ РєР»Р°СЃСЃР° РґР»СЏ С‚РµСЃС‚РѕРІ
         Basics::BranchesAndCycles test_object;
 
-        // Настройка перед каждым тестом
+        // РќР°СЃС‚СЂРѕР№РєР° РїРµСЂРµРґ РєР°Р¶РґС‹Рј С‚РµСЃС‚РѕРј
         void SetUp() override {
-            // Инициализация объекта с параметрами
+            // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕР±СЉРµРєС‚Р° СЃ РїР°СЂР°РјРµС‚СЂР°РјРё
             test_object = Basics::BranchesAndCycles();
             MyClassTest::SetUp();
 
         }
 
-        // Очистка после каждого теста
+        // РћС‡РёСЃС‚РєР° РїРѕСЃР»Рµ РєР°Р¶РґРѕРіРѕ С‚РµСЃС‚Р°
         void TearDown() override {
             MyClassTest::TearDown();
         }
@@ -208,18 +209,18 @@ namespace TestVectorsAndStrings
     class ClassVectorsAndStrings : public MyClassTest {
     protected:
 
-        // Объект класса для тестов
+        // РћР±СЉРµРєС‚ РєР»Р°СЃСЃР° РґР»СЏ С‚РµСЃС‚РѕРІ
         Basics::VectorsAndStrings test_object;
 
-        // Настройка перед каждым тестом
+        // РќР°СЃС‚СЂРѕР№РєР° РїРµСЂРµРґ РєР°Р¶РґС‹Рј С‚РµСЃС‚РѕРј
         void SetUp() override {
-            // Инициализация объекта с параметрами
+            // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕР±СЉРµРєС‚Р° СЃ РїР°СЂР°РјРµС‚СЂР°РјРё
             test_object = Basics::VectorsAndStrings();
             MyClassTest::SetUp();
 
         }
 
-        // Очистка после каждого теста
+        // РћС‡РёСЃС‚РєР° РїРѕСЃР»Рµ РєР°Р¶РґРѕРіРѕ С‚РµСЃС‚Р°
         void TearDown() override {
             MyClassTest::TearDown();
         }
@@ -287,18 +288,18 @@ namespace TestFunctions
     class ClassFunctions : public MyClassTest {
     protected:
 
-        // Объект класса для тестов
+        // РћР±СЉРµРєС‚ РєР»Р°СЃСЃР° РґР»СЏ С‚РµСЃС‚РѕРІ
         Basics::Functions test_object;
 
-        // Настройка перед каждым тестом
+        // РќР°СЃС‚СЂРѕР№РєР° РїРµСЂРµРґ РєР°Р¶РґС‹Рј С‚РµСЃС‚РѕРј
         void SetUp() override {
-            // Инициализация объекта с параметрами
+            // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕР±СЉРµРєС‚Р° СЃ РїР°СЂР°РјРµС‚СЂР°РјРё
             test_object = Basics::Functions();
             MyClassTest::SetUp();
 
         }
 
-        // Очистка после каждого теста
+        // РћС‡РёСЃС‚РєР° РїРѕСЃР»Рµ РєР°Р¶РґРѕРіРѕ С‚РµСЃС‚Р°
         void TearDown() override {
             MyClassTest::TearDown();
         }
@@ -406,18 +407,18 @@ namespace TestSequenceContainers
     class ClassSequenceContainers : public MyClassTest {
     protected:
 
-        // Объект класса для тестов
+        // РћР±СЉРµРєС‚ РєР»Р°СЃСЃР° РґР»СЏ С‚РµСЃС‚РѕРІ
         HandbookSTL::SequenceContainers test_object;
 
-        // Настройка перед каждым тестом
+        // РќР°СЃС‚СЂРѕР№РєР° РїРµСЂРµРґ РєР°Р¶РґС‹Рј С‚РµСЃС‚РѕРј
         void SetUp() override {
-            // Инициализация объекта с параметрами
+            // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕР±СЉРµРєС‚Р° СЃ РїР°СЂР°РјРµС‚СЂР°РјРё
             test_object = HandbookSTL::SequenceContainers();
             MyClassTest::SetUp();
 
         }
 
-        // Очистка после каждого теста
+        // РћС‡РёСЃС‚РєР° РїРѕСЃР»Рµ РєР°Р¶РґРѕРіРѕ С‚РµСЃС‚Р°
         void TearDown() override {
             MyClassTest::TearDown();
         }
@@ -434,7 +435,7 @@ namespace TestSequenceContainers
         test_object.Print(case_one, delimiter);
         EXPECT_EQ(testOutputStream.str(), res);
 
-        //// Очищаем буфер
+        //// РћС‡РёС‰Р°РµРј Р±СѓС„РµСЂ
         testOutputStream.str("");
         testOutputStream.clear();
 
@@ -464,18 +465,18 @@ namespace TestSequenceContainers
                                                     "+left 3",
                                                     "-right 1" };
 
-        // Подготавливаем входные данные для std::cin
+        // РџРѕРґРіРѕС‚Р°РІР»РёРІР°РµРј РІС…РѕРґРЅС‹Рµ РґР°РЅРЅС‹Рµ РґР»СЏ std::cin
         for (const auto& val : input)
             testInputStream << val;
 
-        // Вызываем логику программы, которая будет использовать перенаправленные потоки
+        // Р’С‹Р·С‹РІР°РµРј Р»РѕРіРёРєСѓ РїСЂРѕРіСЂР°РјРјС‹, РєРѕС‚РѕСЂР°СЏ Р±СѓРґРµС‚ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РїРµСЂРµРЅР°РїСЂР°РІР»РµРЅРЅС‹Рµ РїРѕС‚РѕРєРё
         test_object.MakeTrain();
 
-        // Получаем захваченный вывод из std::cout
+        // РџРѕР»СѓС‡Р°РµРј Р·Р°С…РІР°С‡РµРЅРЅС‹Р№ РІС‹РІРѕРґ РёР· std::cout
         std::string actualOutput = testOutputStream.str();
 
-        // Проверяем ожидаемый вывод
-        // Обратите внимание на точные символы новой строки и пробелы
+        // РџСЂРѕРІРµСЂСЏРµРј РѕР¶РёРґР°РµРјС‹Р№ РІС‹РІРѕРґ
+        // РћР±СЂР°С‚РёС‚Рµ РІРЅРёРјР°РЅРёРµ РЅР° С‚РѕС‡РЅС‹Рµ СЃРёРјРІРѕР»С‹ РЅРѕРІРѕР№ СЃС‚СЂРѕРєРё Рё РїСЂРѕР±РµР»С‹
         const std::string expectedOutput = "3 1 \n";
         EXPECT_EQ(expectedOutput, actualOutput);
     }
@@ -640,18 +641,18 @@ namespace TestAssociationContainers
     {
     protected:
 
-        // Объект класса для тестов
+        // РћР±СЉРµРєС‚ РєР»Р°СЃСЃР° РґР»СЏ С‚РµСЃС‚РѕРІ
         HandbookSTL::AssociationContainers test_object;
 
-        // Настройка перед каждым тестом
+        // РќР°СЃС‚СЂРѕР№РєР° РїРµСЂРµРґ РєР°Р¶РґС‹Рј С‚РµСЃС‚РѕРј
         void SetUp() override {
-            // Инициализация объекта с параметрами
+            // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕР±СЉРµРєС‚Р° СЃ РїР°СЂР°РјРµС‚СЂР°РјРё
             test_object = HandbookSTL::AssociationContainers();
             MyClassTest::SetUp();
 
         }
 
-        // Очистка после каждого теста
+        // РћС‡РёСЃС‚РєР° РїРѕСЃР»Рµ РєР°Р¶РґРѕРіРѕ С‚РµСЃС‚Р°
         void TearDown() override {
             MyClassTest::TearDown();
         }
@@ -725,18 +726,18 @@ namespace TestAlgorithms
     {
     protected:
 
-        // Объект класса для тестов
+        // РћР±СЉРµРєС‚ РєР»Р°СЃСЃР° РґР»СЏ С‚РµСЃС‚РѕРІ
         HandbookSTL::Algorithms test_object;
 
-        // Настройка перед каждым тестом
+        // РќР°СЃС‚СЂРѕР№РєР° РїРµСЂРµРґ РєР°Р¶РґС‹Рј С‚РµСЃС‚РѕРј
         void SetUp() override {
-            // Инициализация объекта с параметрами
+            // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕР±СЉРµРєС‚Р° СЃ РїР°СЂР°РјРµС‚СЂР°РјРё
             test_object = HandbookSTL::Algorithms();
             MyClassTest::SetUp();
 
         }
 
-        // Очистка после каждого теста
+        // РћС‡РёСЃС‚РєР° РїРѕСЃР»Рµ РєР°Р¶РґРѕРіРѕ С‚РµСЃС‚Р°
         void TearDown() override {
             MyClassTest::TearDown();
         }
@@ -831,18 +832,18 @@ namespace TestAdapters
     {
     protected:
 
-        // Объект класса для тестов
+        // РћР±СЉРµРєС‚ РєР»Р°СЃСЃР° РґР»СЏ С‚РµСЃС‚РѕРІ
         HandbookSTL::Adapters test_object;
 
-        // Настройка перед каждым тестом
+        // РќР°СЃС‚СЂРѕР№РєР° РїРµСЂРµРґ РєР°Р¶РґС‹Рј С‚РµСЃС‚РѕРј
         void SetUp() override {
-            // Инициализация объекта с параметрами
+            // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕР±СЉРµРєС‚Р° СЃ РїР°СЂР°РјРµС‚СЂР°РјРё
             test_object = HandbookSTL::Adapters();
             MyClassTest::SetUp();
 
         }
 
-        // Очистка после каждого теста
+        // РћС‡РёСЃС‚РєР° РїРѕСЃР»Рµ РєР°Р¶РґРѕРіРѕ С‚РµСЃС‚Р°
         void TearDown() override {
             MyClassTest::TearDown();
         }
@@ -979,10 +980,10 @@ namespace TestAdapters
             const char delimiter = ' ';
             std::string_view token;
 
-            // Делим строку на токены по разделителю и перебираем эти токены:
+            // Р”РµР»РёРј СЃС‚СЂРѕРєСѓ РЅР° С‚РѕРєРµРЅС‹ РїРѕ СЂР°Р·РґРµР»РёС‚РµР»СЋ Рё РїРµСЂРµР±РёСЂР°РµРј СЌС‚Рё С‚РѕРєРµРЅС‹:
             while (test_object.NextToken(sv, delimiter, token)) {
-                // обрабатываем очередной token
-                // например, печатаем его на экране:
+                // РѕР±СЂР°Р±Р°С‚С‹РІР°РµРј РѕС‡РµСЂРµРґРЅРѕР№ token
+                // РЅР°РїСЂРёРјРµСЂ, РїРµС‡Р°С‚Р°РµРј РµРіРѕ РЅР° СЌРєСЂР°РЅРµ:
                 results.push_back(token);
             }
 
@@ -999,10 +1000,10 @@ namespace TestAdapters
             const char delimiter = ' ';
             std::string_view token;
 
-            // Делим строку на токены по разделителю и перебираем эти токены:
+            // Р”РµР»РёРј СЃС‚СЂРѕРєСѓ РЅР° С‚РѕРєРµРЅС‹ РїРѕ СЂР°Р·РґРµР»РёС‚РµР»СЋ Рё РїРµСЂРµР±РёСЂР°РµРј СЌС‚Рё С‚РѕРєРµРЅС‹:
             while (test_object.NextToken(sv, delimiter, token)) {
-                // обрабатываем очередной token
-                // например, печатаем его на экране:
+                // РѕР±СЂР°Р±Р°С‚С‹РІР°РµРј РѕС‡РµСЂРµРґРЅРѕР№ token
+                // РЅР°РїСЂРёРјРµСЂ, РїРµС‡Р°С‚Р°РµРј РµРіРѕ РЅР° СЌРєСЂР°РЅРµ:
                 results.push_back(token);
             }
 
@@ -1029,14 +1030,14 @@ namespace TestAdapters
 
 namespace IdiomsCppTest
 {
-    // 4.1 Классы
-    // Тестирование задач из раздела https://education.yandex.ru/handbook/cpp/article/classes
+    // 4.1 РљР»Р°СЃСЃС‹
+    // РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ Р·Р°РґР°С‡ РёР· СЂР°Р·РґРµР»Р° https://education.yandex.ru/handbook/cpp/article/classes
     namespace ClassesTest
     {
-        // Тесты для задания А 
+        // РўРµСЃС‚С‹ РґР»СЏ Р·Р°РґР°РЅРёСЏ Рђ 
         namespace DateTest
         {
-            // Определим структуру для хранения даты
+            // РћРїСЂРµРґРµР»РёРј СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РґР°С‚С‹
             typedef struct
             {
                 const int year;
@@ -1045,7 +1046,7 @@ namespace IdiomsCppTest
                 
             } date_test_t;
 
-            // Определим структуру для работы с операциями сложения и вычитания
+            // РћРїСЂРµРґРµР»РёРј СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РѕРїРµСЂР°С†РёСЏРјРё СЃР»РѕР¶РµРЅРёСЏ Рё РІС‹С‡РёС‚Р°РЅРёСЏ
             typedef struct
             {
                 const date_test_t start;
@@ -1060,13 +1061,13 @@ namespace IdiomsCppTest
 
             TEST(ConstructionFor1, ValidInit)
             {
-                // Проверка, изменились ли дефолтные константы
+                // РџСЂРѕРІРµСЂРєР°, РёР·РјРµРЅРёР»РёСЃСЊ Р»Рё РґРµС„РѕР»С‚РЅС‹Рµ РєРѕРЅСЃС‚Р°РЅС‚С‹
                 {
-                    // День
+                    // Р”РµРЅСЊ
                     ASSERT_EQ(Date::DAY_MIN, 1);
-                    // Месяц
+                    // РњРµСЃСЏС†
                     ASSERT_EQ(Date::JANUARY, 1);
-                    // Год
+                    // Р“РѕРґ
                     ASSERT_EQ(Date::YEAR_MIN, 1970);
                 }
 
@@ -1084,13 +1085,13 @@ namespace IdiomsCppTest
 
                 const date_test_t dates[] = 
                 {
-                    // День создания теста
+                    // Р”РµРЅСЊ СЃРѕР·РґР°РЅРёСЏ С‚РµСЃС‚Р°
                     {.year = 2025,              .month = 12,                .day = 21},
                     // Most possible date
                     {.year = Date::YEAR_MAX,    .month = Date::DECEMBER,    .day = Date::DAY_MAX},
-                    // Вискокосный год, февраль
+                    // Р’РёСЃРєРѕРєРѕСЃРЅС‹Р№ РіРѕРґ, С„РµРІСЂР°Р»СЊ
                     {.year = 2024,              .month = Date::FEBRARY,     .day = Date::DAY_FEBRUARY_LEAP},
-                    // Вискокосный год, январь
+                    // Р’РёСЃРєРѕРєРѕСЃРЅС‹Р№ РіРѕРґ, СЏРЅРІР°СЂСЊ
                     {.year = 2024,              .month = Date::JANUARY,     .day = Date::DAY_MAX},
 
                 };
@@ -1111,53 +1112,53 @@ namespace IdiomsCppTest
             //
             TEST(ConstructionFor1, NoValidDate)
             {
-                // Все даты должны быть данными значениями
+                // Р’СЃРµ РґР°С‚С‹ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РґР°РЅРЅС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё
                 const int   day = Date::DAY_MIN,
                     month = Date::JANUARY,
                     year = Date::YEAR_MIN;
 
                 const int MILENIUM_YEAR = 2000;
 
-                // Зададим структуру для работы с датой
+                // Р—Р°РґР°РґРёРј СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РґР°С‚РѕР№
                 const date_test_t unvalid_dates[] =
                 {
-                    // *** Проверяем установку года ***
-                    // Год меньше минимального
-                    {.year = 1095,                  .month = Date::MAY,             .day = 16},                  // В этот год начался первый крестовый поход
+                    // *** РџСЂРѕРІРµСЂСЏРµРј СѓСЃС‚Р°РЅРѕРІРєСѓ РіРѕРґР° ***
+                    // Р“РѕРґ РјРµРЅСЊС€Рµ РјРёРЅРёРјР°Р»СЊРЅРѕРіРѕ
+                    {.year = 1095,                  .month = Date::MAY,             .day = 16},                  // Р’ СЌС‚РѕС‚ РіРѕРґ РЅР°С‡Р°Р»СЃСЏ РїРµСЂРІС‹Р№ РєСЂРµСЃС‚РѕРІС‹Р№ РїРѕС…РѕРґ
                     {.year = Date::YEAR_MIN - 1,    .month = Date::MAY,             .day = 16},
                     {.year = Date::YEAR_MIN - 32,   .month = Date::MAY,             .day = 16},
                     {.year = INT_MIN,               .month = Date::MAY,             .day = 16},
                     {.year = 0,                     .month = Date::MAY,             .day = 16},
                     {.year = -1,                    .month = Date::MAY,             .day = 16},
                     {.year = -3000,                 .month = Date::MAY,             .day = 16},
-                    // Год больше максимально допустимого
+                    // Р“РѕРґ Р±РѕР»СЊС€Рµ РјР°РєСЃРёРјР°Р»СЊРЅРѕ РґРѕРїСѓСЃС‚РёРјРѕРіРѕ
                     {.year = Date::YEAR_MAX + 1,    .month = Date::MAY,             .day = 16},
                     {.year = Date::YEAR_MAX + 32,   .month = Date::MAY,             .day = 16},
                     {.year = Date::YEAR_MAX + 3200, .month = Date::MAY,             .day = 16},
                     {.year = INT_MAX,               .month = Date::MAY,             .day = 16},
 
-                    // *** Проверяем установку месяца ***
-                    // Маленькое значение месяца
+                    // *** РџСЂРѕРІРµСЂСЏРµРј СѓСЃС‚Р°РЅРѕРІРєСѓ РјРµСЃСЏС†Р° ***
+                    // РњР°Р»РµРЅСЊРєРѕРµ Р·РЅР°С‡РµРЅРёРµ РјРµСЃСЏС†Р°
                     {.year = MILENIUM_YEAR,         .month = 0,                     .day = 16},
                     {.year = MILENIUM_YEAR,         .month = Date::JANUARY - 1,     .day = 16},
                     {.year = MILENIUM_YEAR,         .month = Date::JANUARY - 100,   .day = 16},
                     {.year = MILENIUM_YEAR,         .month = -37,                   .day = 16},
                     {.year = MILENIUM_YEAR,         .month = INT_MIN,               .day = 16},
-                    // Большое значения месяца
+                    // Р‘РѕР»СЊС€РѕРµ Р·РЅР°С‡РµРЅРёСЏ РјРµСЃСЏС†Р°
                     {.year = MILENIUM_YEAR,         .month = Date::DECEMBER + 1,    .day = 16},
                     {.year = MILENIUM_YEAR,         .month = Date::DECEMBER + 100,  .day = 16},
                     {.year = MILENIUM_YEAR,         .month = 100,                   .day = 16},
                     {.year = MILENIUM_YEAR,         .month = INT_MAX,               .day = 16},
-                    // *** Проверяем установку дня ***
-                    // Маленькое значение
+                    // *** РџСЂРѕРІРµСЂСЏРµРј СѓСЃС‚Р°РЅРѕРІРєСѓ РґРЅСЏ ***
+                    // РњР°Р»РµРЅСЊРєРѕРµ Р·РЅР°С‡РµРЅРёРµ
                     {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = 0},
                     {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MIN - 1},
                     {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MIN - 32},
                     {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MIN - 1000},
                     {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = INT_MIN},
-                    // Большое значение
+                    // Р‘РѕР»СЊС€РѕРµ Р·РЅР°С‡РµРЅРёРµ
                     {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MAX + 1},
-                    // *** Все поля невалидные ***
+                    // *** Р’СЃРµ РїРѕР»СЏ РЅРµРІР°Р»РёРґРЅС‹Рµ ***
                     {.year = Date::YEAR_MAX + 5,    .month = Date::DECEMBER + 5,    .day = Date::DAY_MAX + 1},
                     {.year = Date::YEAR_MIN - 5,    .month = Date::DECEMBER + 5,    .day = Date::DAY_MAX + 1},
                     {.year = 0,                     .month = 0,                     .day = 0},
@@ -1165,7 +1166,7 @@ namespace IdiomsCppTest
                     {.year = -8,                    .month = Date::DECEMBER,        .day = -1},
                 };
 
-                // Не должен быть пустой этот массив
+                // РќРµ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РїСѓСЃС‚РѕР№ СЌС‚РѕС‚ РјР°СЃСЃРёРІ
                 assert(sizeof(unvalid_dates) / sizeof(unvalid_dates[0]) != 0);
 
                 for (const auto& un : unvalid_dates)
@@ -1182,7 +1183,7 @@ namespace IdiomsCppTest
 
             };
 
-            // Данный тест нужен для проверки правильной установки данных в пределах одного месяца
+            // Р”Р°РЅРЅС‹Р№ С‚РµСЃС‚ РЅСѓР¶РµРЅ РґР»СЏ РїСЂРѕРІРµСЂРєРё РїСЂР°РІРёР»СЊРЅРѕР№ СѓСЃС‚Р°РЅРѕРІРєРё РґР°РЅРЅС‹С… РІ РїСЂРµРґРµР»Р°С… РѕРґРЅРѕРіРѕ РјРµСЃСЏС†Р°
             TEST(SumOperFor1, ValidSumChangeDay)
             {
                 const date_oper_test_t dates[] =
@@ -1207,25 +1208,25 @@ namespace IdiomsCppTest
                         .days = 1,
                         .result = {.year = Date::YEAR_MIN, .month = Date::FEBRARY, .day = Date::DAY_MIN + 1}
                     },
-                    // Февраль (28 дней)
+                    // Р¤РµРІСЂР°Р»СЊ (28 РґРЅРµР№)
                     {
                         .start = {.year = Date::YEAR_MIN, .month = Date::FEBRARY, .day = Date::DAY_MIN},
                         .days = 27,
                         .result = {.year = Date::YEAR_MIN, .month = Date::FEBRARY, .day = Date::DAY_MIN + 27}
                     },
-                    // Февраль (Високосый год)
+                    // Р¤РµРІСЂР°Р»СЊ (Р’РёСЃРѕРєРѕСЃС‹Р№ РіРѕРґ)
                     {
                         .start = {.year = 2024, .month = Date::FEBRARY, .day = Date::DAY_MIN},
                         .days = 28,
                         .result = {.year = 2024, .month = Date::FEBRARY, .day = Date::DAY_MIN + 28}
                     },
-                    // Апрель (30 дней)
+                    // РђРїСЂРµР»СЊ (30 РґРЅРµР№)
                     {
                         .start = {.year = Date::YEAR_MIN, .month = Date::APRIL, .day = Date::DAY_MIN},
                         .days = 29,
                         .result = {.year = Date::YEAR_MIN, .month = Date::APRIL, .day = Date::DAY_MIN + 29}
                     },
-                    // Последний год
+                    // РџРѕСЃР»РµРґРЅРёР№ РіРѕРґ
                     {
                         .start = {.year = Date::YEAR_MAX, .month = Date::DECEMBER, .day = Date::DAY_MIN},
                         .days = 10,
@@ -1239,18 +1240,18 @@ namespace IdiomsCppTest
                     Date start(d.start.day, d.start.month, d.start.year);
                     const auto res = start + d.days;
 
-                    // Проверка дня
+                    // РџСЂРѕРІРµСЂРєР° РґРЅСЏ
                     ASSERT_EQ(res.GetDay(), d.result.day);
 
-                    // Месяца
+                    // РњРµСЃСЏС†Р°
                     ASSERT_EQ(res.GetMonth(), d.result.month);
 
-                    // Года
+                    // Р“РѕРґР°
                     ASSERT_EQ(res.GetYear(), d.result.year);
                 }
             };
 
-            // *** Добавляем в пределах нескольких месяцев ***
+            // *** Р”РѕР±Р°РІР»СЏРµРј РІ РїСЂРµРґРµР»Р°С… РЅРµСЃРєРѕР»СЊРєРёС… РјРµСЃСЏС†РµРІ ***
             TEST(SumOperFor1, ValidSumChangeMonth)
             {
                 const date_oper_test_t dates[] =
@@ -1284,13 +1285,13 @@ namespace IdiomsCppTest
                     Date start(d.start.day, d.start.month, d.start.year);
                     const auto res = start + d.days;
 
-                    // Проверка дня
+                    // РџСЂРѕРІРµСЂРєР° РґРЅСЏ
                     ASSERT_EQ(res.GetDay(), d.result.day);
 
-                    // Месяца
+                    // РњРµСЃСЏС†Р°
                     ASSERT_EQ(res.GetMonth(), d.result.month);
 
-                    // Года
+                    // Р“РѕРґР°
                     ASSERT_EQ(res.GetYear(), d.result.year);
                 }
 
@@ -1298,13 +1299,13 @@ namespace IdiomsCppTest
 
         }; // End Date namespace
 
-        // Тесты для задания B 
+        // РўРµСЃС‚С‹ РґР»СЏ Р·Р°РґР°РЅРёСЏ B 
         namespace DateTest2
         {
-            // ИСпользуем пространство для второго задания
+            // РРЎРїРѕР»СЊР·СѓРµРј РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРѕ РґР»СЏ РІС‚РѕСЂРѕРіРѕ Р·Р°РґР°РЅРёСЏ
             using namespace HandbookIdioms::TaskB;
 
-            // Определим структуру для хранения даты
+            // РћРїСЂРµРґРµР»РёРј СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РґР°С‚С‹
             typedef struct
             {
                 const int year;
@@ -1313,7 +1314,7 @@ namespace IdiomsCppTest
 
             } date_test_t;
 
-            // Определим структуру для работы с операциями сложения и вычитания
+            // РћРїСЂРµРґРµР»РёРј СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РѕРїРµСЂР°С†РёСЏРјРё СЃР»РѕР¶РµРЅРёСЏ Рё РІС‹С‡РёС‚Р°РЅРёСЏ
             typedef struct
             {
                 const date_test_t start;
@@ -1323,36 +1324,36 @@ namespace IdiomsCppTest
 
             class DateTest2 : public ::testing::Test { }; // End Date Class
 
-            // Проверка, изменились ли дефолтные константы
+            // РџСЂРѕРІРµСЂРєР°, РёР·РјРµРЅРёР»РёСЃСЊ Р»Рё РґРµС„РѕР»С‚РЅС‹Рµ РєРѕРЅСЃС‚Р°РЅС‚С‹
             TEST(Constants, Valid)
             {
-                // День
+                // Р”РµРЅСЊ
                 EXPECT_EQ(Date::DAY_MIN, 1);
                 // 
                 EXPECT_EQ(Date::DAY_MAX, 31);
-                // Месяц
+                // РњРµСЃСЏС†
                 EXPECT_EQ(Date::JANUARY, 1);
                 EXPECT_EQ(Date::DECEMBER, 12);
-                // Год
+                // Р“РѕРґ
                 EXPECT_EQ(Date::YEAR_MIN, 1970);
                 EXPECT_EQ(Date::YEAR_MAX, 2099);
             }
 
             TEST(Constants, NoValid)
             {
-                // День
+                // Р”РµРЅСЊ
                 EXPECT_NE(Date::DAY_MIN, 0);
-                // Месяц
+                // РњРµСЃСЏС†
                 EXPECT_NE(Date::JANUARY, 0);
-                // Год
+                // Р“РѕРґ
                 EXPECT_NE(Date::YEAR_MIN, 2000);
             }
 
-            // *** Конструкторы по умолчанию ***
-            // Так написан тест на константы, 
-            // можем ссылаться на константы тестируемого класса
+            // *** РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ ***
+            // РўР°Рє РЅР°РїРёСЃР°РЅ С‚РµСЃС‚ РЅР° РєРѕРЅСЃС‚Р°РЅС‚С‹, 
+            // РјРѕР¶РµРј СЃСЃС‹Р»Р°С‚СЊСЃСЏ РЅР° РєРѕРЅСЃС‚Р°РЅС‚С‹ С‚РµСЃС‚РёСЂСѓРµРјРѕРіРѕ РєР»Р°СЃСЃР°
 
-            // Получаем из дефолтного объекта год
+            // РџРѕР»СѓС‡Р°РµРј РёР· РґРµС„РѕР»С‚РЅРѕРіРѕ РѕР±СЉРµРєС‚Р° РіРѕРґ
             TEST(DefaultConstruction, ValidGetterYear)
             {
                 Date date;
@@ -1360,7 +1361,7 @@ namespace IdiomsCppTest
                 EXPECT_EQ(date.GetYear(), Date::YEAR_MIN);
             }
 
-            // Получаем из дефолтного объекта месяц
+            // РџРѕР»СѓС‡Р°РµРј РёР· РґРµС„РѕР»С‚РЅРѕРіРѕ РѕР±СЉРµРєС‚Р° РјРµСЃСЏС†
             TEST(DefaultConstruction, ValidGetterMonth)
             {
                 Date date;
@@ -1369,7 +1370,7 @@ namespace IdiomsCppTest
                 EXPECT_EQ(date.GetMonth(), Date::JANUARY);
             }
 
-            // Получаем из дефолтного объекта день
+            // РџРѕР»СѓС‡Р°РµРј РёР· РґРµС„РѕР»С‚РЅРѕРіРѕ РѕР±СЉРµРєС‚Р° РґРµРЅСЊ
             TEST(DefaultConstruction, ValidGetterDay)
             {
                 Date date;
@@ -1377,8 +1378,8 @@ namespace IdiomsCppTest
                 EXPECT_EQ(date.GetDay(), Date::DAY_MIN);
             }
 
-            // Протестируем геттер при фиксированных других значениях
-            // Для года
+            // РџСЂРѕС‚РµСЃС‚РёСЂСѓРµРј РіРµС‚С‚РµСЂ РїСЂРё С„РёРєСЃРёСЂРѕРІР°РЅРЅС‹С… РґСЂСѓРіРёС… Р·РЅР°С‡РµРЅРёСЏС…
+            // Р”Р»СЏ РіРѕРґР°
             TEST(GetterWithFixedAnotherFields, Year)
             {
                 const date_test_t d = { .year = 2025, .month = 12, .day = 21 };
@@ -1391,7 +1392,7 @@ namespace IdiomsCppTest
                 }
             }
 
-            // Для месяца
+            // Р”Р»СЏ РјРµСЃСЏС†Р°
             TEST(GetterWithFixedAnotherFields, Month)
             {
                 const date_test_t d = { .year = 2025, .month = 12, .day = 21 };
@@ -1404,10 +1405,10 @@ namespace IdiomsCppTest
                 }
             }
 
-            // Для дня
+            // Р”Р»СЏ РґРЅСЏ
             TEST(GetterWithFixedAnotherFields, Day)
             {
-                // В декабре точно все эти дни есть
+                // Р’ РґРµРєР°Р±СЂРµ С‚РѕС‡РЅРѕ РІСЃРµ СЌС‚Рё РґРЅРё РµСЃС‚СЊ
                 const date_test_t d = { .year = 2025, .month = Date::DECEMBER, .day = 21 };
 
                 for (int i = Date::DAY_MIN; i <= Date::DAY_MAX; i++)
@@ -1423,17 +1424,17 @@ namespace IdiomsCppTest
             {
                 const date_test_t dates[] =
                 {
-                    // День создания теста
+                    // Р”РµРЅСЊ СЃРѕР·РґР°РЅРёСЏ С‚РµСЃС‚Р°
                     {.year = 2025,              .month = 12,                .day = 21},
                     // Most possible date
                     {.year = Date::YEAR_MAX,    .month = Date::DECEMBER,    .day = Date::DAY_MAX},
-                    // Вискокосный год, февраль
+                    // Р’РёСЃРєРѕРєРѕСЃРЅС‹Р№ РіРѕРґ, С„РµРІСЂР°Р»СЊ
                     {.year = 2024,              .month = Date::FEBRARY,     .day = Date::DAY_FEBRUARY_LEAP},
-                    // Вискокосный год, март 31
+                    // Р’РёСЃРєРѕРєРѕСЃРЅС‹Р№ РіРѕРґ, РјР°СЂС‚ 31
                     {.year = 2024,              .month = Date::MARCH,       .day = Date::DAY_MAX},
-                    // Вискокосный год, март 30
+                    // Р’РёСЃРєРѕРєРѕСЃРЅС‹Р№ РіРѕРґ, РјР°СЂС‚ 30
                     {.year = 2024,              .month = Date::MARCH,       .day = 30},
-                    // Вискокосный год, январь
+                    // Р’РёСЃРєРѕРєРѕСЃРЅС‹Р№ РіРѕРґ, СЏРЅРІР°СЂСЊ
                     {.year = 2024,              .month = Date::JANUARY,     .day = Date::DAY_MAX},
 
                 };
@@ -1451,24 +1452,24 @@ namespace IdiomsCppTest
                 }
             }
 
-            // *** Проверки конструктора с невалидноыми датами
+            // *** РџСЂРѕРІРµСЂРєРё РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° СЃ РЅРµРІР°Р»РёРґРЅРѕС‹РјРё РґР°С‚Р°РјРё
 
-            // Невалидный год 
+            // РќРµРІР°Р»РёРґРЅС‹Р№ РіРѕРґ 
             TEST(ConstructionWithParams, NoValidYear)
             {
-                // Зададим структуру для работы с датой
+                // Р—Р°РґР°РґРёРј СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РґР°С‚РѕР№
                 const date_test_t unvalid_dates[] =
                 {
-                    // *** Проверяем установку года ***
-                    // Год меньше минимального
-                    {.year = 1095,                  .month = Date::MAY,             .day = 16},                  // В этот год начался первый крестовый поход
+                    // *** РџСЂРѕРІРµСЂСЏРµРј СѓСЃС‚Р°РЅРѕРІРєСѓ РіРѕРґР° ***
+                    // Р“РѕРґ РјРµРЅСЊС€Рµ РјРёРЅРёРјР°Р»СЊРЅРѕРіРѕ
+                    {.year = 1095,                  .month = Date::MAY,             .day = 16},                  // Р’ СЌС‚РѕС‚ РіРѕРґ РЅР°С‡Р°Р»СЃСЏ РїРµСЂРІС‹Р№ РєСЂРµСЃС‚РѕРІС‹Р№ РїРѕС…РѕРґ
                     {.year = Date::YEAR_MIN - 1,    .month = Date::MAY,             .day = 16},
                     {.year = Date::YEAR_MIN - 32,   .month = Date::MAY,             .day = 16},
                     {.year = INT_MIN,               .month = Date::MAY,             .day = 16},
                     {.year = 0,                     .month = Date::MAY,             .day = 16},
                     {.year = -1,                    .month = Date::MAY,             .day = 16},
                     {.year = -3000,                 .month = Date::MAY,             .day = 16},
-                    // Год больше максимально допустимого
+                    // Р“РѕРґ Р±РѕР»СЊС€Рµ РјР°РєСЃРёРјР°Р»СЊРЅРѕ РґРѕРїСѓСЃС‚РёРјРѕРіРѕ
                     {.year = Date::YEAR_MAX + 1,    .month = Date::MAY,             .day = 16},
                     {.year = Date::YEAR_MAX + 32,   .month = Date::MAY,             .day = 16},
                     {.year = Date::YEAR_MAX + 3200, .month = Date::MAY,             .day = 16},
@@ -1476,13 +1477,13 @@ namespace IdiomsCppTest
 
                 };
 
-                // Не должен быть пустой этот массив
+                // РќРµ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РїСѓСЃС‚РѕР№ СЌС‚РѕС‚ РјР°СЃСЃРёРІ
                 EXPECT_NE(sizeof(unvalid_dates) / sizeof(unvalid_dates[0]), 0);
 
-                // проитерируем по данным
+                // РїСЂРѕРёС‚РµСЂРёСЂСѓРµРј РїРѕ РґР°РЅРЅС‹Рј
                 for (const auto& un : unvalid_dates)
                 {
-                    //Построим объект
+                    //РџРѕСЃС‚СЂРѕРёРј РѕР±СЉРµРєС‚
                     Date date(un.day, un.month, un.year);
 
                     // Get day
@@ -1495,34 +1496,34 @@ namespace IdiomsCppTest
 
             }
 
-            // Итерируем по месяцам
+            // РС‚РµСЂРёСЂСѓРµРј РїРѕ РјРµСЃСЏС†Р°Рј
             TEST(ConstructionWithParams, NoValidMonth)
             {
-                // Некий дефолтный год
+                // РќРµРєРёР№ РґРµС„РѕР»С‚РЅС‹Р№ РіРѕРґ
                 const int MILENIUM_YEAR = 2000;
 
-                // Зададим структуру для работы с датой
+                // Р—Р°РґР°РґРёРј СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РґР°С‚РѕР№
                 const date_test_t unvalid_dates[] =
                 {
 
-                    // *** Проверяем установку месяца ***
-                    // Маленькое значение месяца
+                    // *** РџСЂРѕРІРµСЂСЏРµРј СѓСЃС‚Р°РЅРѕРІРєСѓ РјРµСЃСЏС†Р° ***
+                    // РњР°Р»РµРЅСЊРєРѕРµ Р·РЅР°С‡РµРЅРёРµ РјРµСЃСЏС†Р°
                     {.year = MILENIUM_YEAR,         .month = 0,                     .day = 16},
                     {.year = MILENIUM_YEAR,         .month = Date::JANUARY - 1,     .day = 16},
                     {.year = MILENIUM_YEAR,         .month = Date::JANUARY - 100,   .day = 16},
                     {.year = MILENIUM_YEAR,         .month = -37,                   .day = 16},
                     {.year = MILENIUM_YEAR,         .month = INT_MIN,               .day = 16},
-                    // Большое значения месяца
+                    // Р‘РѕР»СЊС€РѕРµ Р·РЅР°С‡РµРЅРёСЏ РјРµСЃСЏС†Р°
                     {.year = MILENIUM_YEAR,         .month = Date::DECEMBER + 1,    .day = 16},
                     {.year = MILENIUM_YEAR,         .month = Date::DECEMBER + 100,  .day = 16},
                     {.year = MILENIUM_YEAR,         .month = 100,                   .day = 16},
                     {.year = MILENIUM_YEAR,         .month = INT_MAX,               .day = 16},
                 };
 
-                // Не должен быть пустой этот массив
+                // РќРµ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РїСѓСЃС‚РѕР№ СЌС‚РѕС‚ РјР°СЃСЃРёРІ
                 EXPECT_NE(sizeof(unvalid_dates) / sizeof(unvalid_dates[0]), 0);
 
-                // проитерируем по данным
+                // РїСЂРѕРёС‚РµСЂРёСЂСѓРµРј РїРѕ РґР°РЅРЅС‹Рј
                 for (const auto& un : unvalid_dates)
                 {
                     Date date(un.day, un.month, un.year);
@@ -1537,25 +1538,25 @@ namespace IdiomsCppTest
 
             }
 
-            // Итерируем по дням
+            // РС‚РµСЂРёСЂСѓРµРј РїРѕ РґРЅСЏРј
             TEST(ConstructionWithParams, NoValidDay)
             {
-                // Некий дефолтный год
+                // РќРµРєРёР№ РґРµС„РѕР»С‚РЅС‹Р№ РіРѕРґ
                 const int MILENIUM_YEAR = 2000;
 
-                // Зададим структуру для работы с датой
+                // Р—Р°РґР°РґРёРј СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РґР°С‚РѕР№
                 const date_test_t unvalid_dates[] =
                 {
-                    // *** Проверяем установку дня ***
-                    // Маленькое значение
+                    // *** РџСЂРѕРІРµСЂСЏРµРј СѓСЃС‚Р°РЅРѕРІРєСѓ РґРЅСЏ ***
+                    // РњР°Р»РµРЅСЊРєРѕРµ Р·РЅР°С‡РµРЅРёРµ
                     {.year = MILENIUM_YEAR, .month = Date::MAY, .day = 0 },
                     {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MIN - 1 },
                     {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MIN - 32 },
                     {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MIN - 1000 },
                     {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = INT_MIN },
-                    // Большое значение
+                    // Р‘РѕР»СЊС€РѕРµ Р·РЅР°С‡РµРЅРёРµ
                     {.year = MILENIUM_YEAR,         .month = Date::MAY,             .day = Date::DAY_MAX + 1 },
-                    // *** Все поля невалидные ***
+                    // *** Р’СЃРµ РїРѕР»СЏ РЅРµРІР°Р»РёРґРЅС‹Рµ ***
                     {.year = Date::YEAR_MAX + 5,    .month = Date::DECEMBER + 5,    .day = Date::DAY_MAX + 1 },
                     {.year = Date::YEAR_MIN - 5,    .month = Date::DECEMBER + 5,    .day = Date::DAY_MAX + 1 },
                     {.year = 0,                     .month = 0,                     .day = 0 },
@@ -1563,10 +1564,10 @@ namespace IdiomsCppTest
                     {.year = -8,                    .month = Date::DECEMBER},
                 };
 
-                // Не должен быть пустой этот массив
+                // РќРµ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РїСѓСЃС‚РѕР№ СЌС‚РѕС‚ РјР°СЃСЃРёРІ
                 EXPECT_NE(sizeof(unvalid_dates) / sizeof(unvalid_dates[0]), 0);
 
-                // проитерируем по данным
+                // РїСЂРѕРёС‚РµСЂРёСЂСѓРµРј РїРѕ РґР°РЅРЅС‹Рј
                 for (const auto& un : unvalid_dates)
                 {
                     Date date(un.day, un.month, un.year);
@@ -1581,16 +1582,16 @@ namespace IdiomsCppTest
 
             }
 
-            // Все поля невалидные
+            // Р’СЃРµ РїРѕР»СЏ РЅРµРІР°Р»РёРґРЅС‹Рµ
             TEST(ConstructionWithParams, NoValidAllFields)
             {
-                // Некий дефолтный год
+                // РќРµРєРёР№ РґРµС„РѕР»С‚РЅС‹Р№ РіРѕРґ
                 const int MILENIUM_YEAR = 2000;
 
-                // Зададим структуру для работы с датой
+                // Р—Р°РґР°РґРёРј СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РґР°С‚РѕР№
                 const date_test_t unvalid_dates[] =
                 {
-                    // *** Все поля невалидные ***
+                    // *** Р’СЃРµ РїРѕР»СЏ РЅРµРІР°Р»РёРґРЅС‹Рµ ***
                     {.year = Date::YEAR_MAX + 5,    .month = Date::DECEMBER + 5,    .day = Date::DAY_MAX + 1 },
                     {.year = Date::YEAR_MIN - 5,    .month = Date::DECEMBER + 5,    .day = Date::DAY_MAX + 1 },
                     {.year = 0,                     .month = 0,                     .day = 0 },
@@ -1598,10 +1599,10 @@ namespace IdiomsCppTest
                     {.year = -8,                    .month = Date::DECEMBER},
                 };
 
-                // Не должен быть пустой этот массив
+                // РќРµ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РїСѓСЃС‚РѕР№ СЌС‚РѕС‚ РјР°СЃСЃРёРІ
                 EXPECT_NE(sizeof(unvalid_dates) / sizeof(unvalid_dates[0]), 0);
 
-                // проитерируем по данным
+                // РїСЂРѕРёС‚РµСЂРёСЂСѓРµРј РїРѕ РґР°РЅРЅС‹Рј
                 for (const auto& un : unvalid_dates)
                 {
                     Date date(un.day, un.month, un.year);
@@ -1616,7 +1617,7 @@ namespace IdiomsCppTest
 
             }
 
-            // Данный тест нужен для проверки правильной установки данных в пределах одного месяца
+            // Р”Р°РЅРЅС‹Р№ С‚РµСЃС‚ РЅСѓР¶РµРЅ РґР»СЏ РїСЂРѕРІРµСЂРєРё РїСЂР°РІРёР»СЊРЅРѕР№ СѓСЃС‚Р°РЅРѕРІРєРё РґР°РЅРЅС‹С… РІ РїСЂРµРґРµР»Р°С… РѕРґРЅРѕРіРѕ РјРµСЃСЏС†Р°
             TEST(SumOperForDateB, ValidChangeDay)
             {
                 const date_oper_test_t validSumsChangeDay[] =
@@ -1641,25 +1642,25 @@ namespace IdiomsCppTest
                         .days = 1,
                         .result = {.year = Date::YEAR_MIN, .month = Date::FEBRARY, .day = Date::DAY_MIN + 1}
                     },
-                    // Февраль (28 дней)
+                    // Р¤РµРІСЂР°Р»СЊ (28 РґРЅРµР№)
                     {
                         .start = {.year = Date::YEAR_MIN, .month = Date::FEBRARY, .day = Date::DAY_MIN},
                         .days = 27,
                         .result = {.year = Date::YEAR_MIN, .month = Date::FEBRARY, .day = Date::DAY_MIN + 27}
                     },
-                    // Февраль (Високосый год)
+                    // Р¤РµРІСЂР°Р»СЊ (Р’РёСЃРѕРєРѕСЃС‹Р№ РіРѕРґ)
                     {
                         .start = {.year = 2024, .month = Date::FEBRARY, .day = Date::DAY_MIN},
                         .days = 28,
                         .result = {.year = 2024, .month = Date::FEBRARY, .day = Date::DAY_MIN + 28}
                     },
-                    // Апрель (30 дней)
+                    // РђРїСЂРµР»СЊ (30 РґРЅРµР№)
                     {
                         .start = {.year = Date::YEAR_MIN, .month = Date::APRIL, .day = Date::DAY_MIN},
                         .days = 29,
                         .result = {.year = Date::YEAR_MIN, .month = Date::APRIL, .day = Date::DAY_MIN + 29}
                     },
-                    // Последний год
+                    // РџРѕСЃР»РµРґРЅРёР№ РіРѕРґ
                     {
                         .start = {.year = Date::YEAR_MAX, .month = Date::DECEMBER, .day = Date::DAY_MIN},
                         .days = 10,
@@ -1673,7 +1674,7 @@ namespace IdiomsCppTest
                     Date start(d.start.day, d.start.month, d.start.year);
                     const auto res = start + d.days;
 
-                    // Проверка дня
+                    // РџСЂРѕРІРµСЂРєР° РґРЅСЏ
                     EXPECT_EQ(res.GetDay(), d.result.day);
 
                     EXPECT_EQ(res.GetMonth(), d.result.month);
@@ -1683,7 +1684,7 @@ namespace IdiomsCppTest
 
             }
 
-            // *** Добавляем в пределах нескольких месяцев ***
+            // *** Р”РѕР±Р°РІР»СЏРµРј РІ РїСЂРµРґРµР»Р°С… РЅРµСЃРєРѕР»СЊРєРёС… РјРµСЃСЏС†РµРІ ***
             TEST(SumOperForDateB, ValidChangeMonth)
             {
                 const date_oper_test_t dates[] =
@@ -1716,23 +1717,248 @@ namespace IdiomsCppTest
                     Date start(d.start.day, d.start.month, d.start.year);
                     const auto res = start + d.days;
 
-                    // Проверка дня
+                    // РџСЂРѕРІРµСЂРєР° РґРЅСЏ
                     ASSERT_EQ(res.GetDay(), d.result.day);
 
-                    // Месяца
+                    // РњРµСЃСЏС†Р°
                     ASSERT_EQ(res.GetMonth(), d.result.month);
 
-                    // Года
+                    // Р“РѕРґР°
                     ASSERT_EQ(res.GetYear(), d.result.year);
                 } // end for
 
             } // End test ValidSumChangeMonth
 
+             // TODO: СЃРґРµР»Р°С‚СЊ С‚РµСЃС‚С‹ РґР»СЏ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹С… С‡РёСЃРµР» 
+
         }; // End Date namespace
-        
-        // TODO: сделать тесты 
+       
+         // *** РўРµСЃС‚С‹ РґР»СЏ C: Rational ***
+        namespace TaskC
+        {
+            // РїРѕРґРєР»СЋС‡РёРј С‚РµСЃС‚РёСЂСѓРµРј РѕР±СЉРµРєС‚
+            using namespace HandbookIdioms;
 
-    }; // End TaskA namespace
+            TEST(constructor_default, create_object)
+            {
+                // РћР±СЉРµРєС‚ РґРѕР»Р¶РµРЅ СЃРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊСЃСЏ
+                ASSERT_NO_THROW(Rational rational);
+            }
 
+            TEST(constructor_default, get_numerator)
+            {
+                Rational rational;
+
+                EXPECT_EQ(rational.Numerator(), 0);
+            }
+
+            TEST(constructor_default, get_denominator)
+            {
+                Rational rational;
+
+                EXPECT_EQ(rational.Denominator(), 1);
+            }
+
+            // РџРµСЂРµРґР°РґРёРјРІ С‡РёСЃР»РёС‚РµР»СЊ РІСЃРµ С‡РёСЃР»Р° РѕС‚ РјРёРЅРёРјСѓРјР° РґРѕ РјР°РєСЃРёРјСѓРјР°,
+            // РѕС‚РІРµС‚ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РѕРґРёРЅ Рё С‚РѕС‚ Р¶Рµ РґР»СЏ РЅСѓР»РµРІРѕРіРѕ РґРµР»РёС‚РµР»СЏ
+            TEST(constructor_params, pass_0_to_denominator)
+            {
+                // Р—Р°РґР°РґРёРј С‡РёСЃР»Рѕ РёС‚РµСЂР°С†РёР№ (С‡С‚Рѕ Р±С‹ С‚РµСЃС‚ Р±С‹Р» РЅРµ СЃР»РёС€РєРѕРј РґРѕР»РіРёРј)
+                const int half_count = 10000;
+               
+                for(int i = -half_count; i <= half_count; i++)
+                {
+                    Rational rational(i, 0);
+
+                    EXPECT_EQ(rational.Numerator(), 0);
+
+                    EXPECT_EQ(rational.Denominator(), 1);
+                }
+            }
+
+            TEST(constructor_params, pass_0_to_denom_and_boundary_num)
+            {
+                // Р—Р°РґР°РґРёРј С‡РёСЃР»Рѕ РёС‚РµСЂР°С†РёР№ (С‡С‚Рѕ Р±С‹ С‚РµСЃС‚ Р±С‹Р» РЅРµ СЃР»РёС€РєРѕРј РґРѕР»РіРёРј)
+                const auto values = std::to_array<int>({ 0, INT_MIN, INT_MAX});
+
+                for (const auto val : values)
+                {
+                    Rational rational(val, 0);
+
+                    EXPECT_EQ(rational.Numerator(), 0);
+
+                    EXPECT_EQ(rational.Denominator(), 1);
+                }
+            }
+
+
+            // TODO: Р”Р°Р»РµРµ РјРѕР¶РЅРѕ Р±С‹Р»Рѕ РІРѕСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РїР°СЂР°РјРµС‚СЂРёР·РѕРІР°РЅРЅС‹РјРё С‚РµСЃС‚Р°РјРё,
+            // РЅРѕ РјРѕСЏ VS Studio РЅРµ С…РѕС‡РµС‚ СЃ РЅРёРјРё СЂР°Р±РѕС‚Р°С‚СЊ Рё РіРµРЅРµСЂРёС‚ РѕС€РёР±РєРё
+
+            // Р”Р°Р»РµРµ: РїСЂРѕСЃС‚С‹Рµ С‚РµСЃС‚С‹ РЅР° СЃРѕР·РґР°РЅРёРµ РѕР±СЉРµРєС‚Р°. 
+            // РџРµСЂРµРґР°РґРёРј С‡РёСЃР»РёС‚РµР»СЊ Рё Р·РЅР°РјРµРЅР°С‚РµР»СЊ РІ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ,
+            // РґРѕР»Р¶РЅС‹ РїРѕР»СѓС‡РёС‚СЊ С‚Рµ Р¶Рµ СЃР°РјС‹Рµ Р·РЅР°С‡РµРЅРёСЏ
+
+
+            TEST(constructor_params, no_reduced_fractional_positive_numbers)
+            {
+                // Р—Р°РґР°РґРёРј С‡РёСЃР»РёС‚РµР»СЊ Рё Р·РЅР°С‡РµРЅР°С‚РµР»СЊ
+                const std::pair<int, int> values[] =
+                { 
+                    {1, 2},
+                    {2, 17},
+                    {3, 4},
+                    {5, 6},
+                    {7, 8},
+                    {2, 137},
+                    {2, 17},
+                    {5, 7},
+                    {0, 1},
+                    {0, 137},
+                    {1, INT_MAX}
+                };
+
+                for (const auto& val : values)
+                {
+                    Rational rational(val.first, val.second);
+
+                    EXPECT_EQ(rational.Numerator(), val.first);
+
+                    EXPECT_EQ(rational.Denominator(), val.second);
+                }
+            }
+
+            // РџСЂРѕРІРµСЂРёРј РїРѕСЃС‚СЂРѕРµРЅРёРµ РѕР±СЉРµРєС‚Р° СЃ С‡РёСЃР»РёС‚РµР»РµРј Р±РѕР»СЊС€Рµ С‡РµРј Р·РЅР°РјРµРЅР°С‚РµР»СЊ
+            TEST(constructor_params, mixed_no_reduced_positive)
+            {
+                // Р—Р°РґР°РґРёРј С‡РёСЃР»РёС‚РµР»СЊ Рё Р·РЅР°С‡РµРЅР°С‚РµР»СЊ
+                const std::pair<int, int> values[] =
+                {
+                    // 
+                    { 3, 1 },
+                    { INT_MAX, 1 },
+                    { 3, 2 },
+                    { 17, 3 },
+                    { 14, 3 },
+                    { 4, 3 },
+                    { 7, 4 },
+                    { 7, 5 },
+                    { 11, 2 },
+                };
+
+                for (const auto& val : values)
+                {
+                    Rational rational(val.first, val.second);
+
+                    EXPECT_EQ(rational.Numerator(), val.first);
+
+                    EXPECT_EQ(rational.Denominator(), val.second);
+                }
+            }
+
+
+
+            //  *** Р”Р°Р»РµРµ: РїСЂРѕРІРµСЂРєР° СЃРѕР·РґР°РЅРёРµ РѕР±СЉРµРєС‚Р° СЃ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹РјРё С‡РёСЃР»Р°РјРё. ***
+
+            //  РџСЂРѕРІРµСЂРєР° СЃ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹РјРё С‡РёСЃР»РёС‚РµР»СЏРјРё 
+            TEST(constructor_params, no_reduced_and_negative_numerator)
+            {
+                // Р—Р°РґР°РґРёРј С‡РёСЃР»РёС‚РµР»СЊ Рё Р·РЅР°С‡РµРЅР°С‚РµР»СЊ
+                const std::pair<int, int> values[] =
+                {
+                    {-1, 2},
+                    {-2, 17},
+                    {-3, 4},
+                    {-5, 6},
+                    {-7, 8},
+                    {-2, 137},
+                    {-2, 17},
+                    {-5, 7},
+                    {-4, 137},
+                    {-1, INT_MAX},
+                    {INT_MIN, 1}
+                };
+
+                for (const auto & value : values)
+                {
+                    Rational rational(value.first, value.second);
+
+                    EXPECT_EQ(rational.Numerator(), value.first);
+
+                    EXPECT_EQ(rational.Denominator(), value.second);
+                }
+            }
+
+            //  РџСЂРѕРІРµСЂРєР° СЃ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹РјРё Р·РЅР°РјРµРЅР°С‚РµР»СЏРјРё  
+            TEST(constructor_params, no_reduced_and_negative_denominator)
+            {
+                // Р—Р°РґР°РґРёРј С‡РёСЃР»РёС‚РµР»СЊ Рё Р·РЅР°С‡РµРЅР°С‚РµР»СЊ
+                const std::pair<int, int> values[] =
+                {
+                    {1, -2},
+                    {2, -17},
+                    {3, -4},
+                    {5, -6},
+                    {7, -8},
+                    {2, -137},
+                    {2, -17},
+                    {5, -7},
+                    {4, -137},
+                    {1, INT_MIN},
+                    {INT_MAX, -1},
+                    {3, -1},
+                    {13, -2},
+                    {15, -7}
+                };
+
+                for (const auto& value : values)
+                {
+                    Rational rational(value.first, value.second);
+
+                    EXPECT_EQ(rational.Numerator(), -value.first);
+
+                    EXPECT_EQ(rational.Denominator(), -value.second);
+                }
+            }
+
+            // РџСЂРѕРІРµСЂРєР° СЃ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹РјРё С‡РёСЃР»РёС‚РµР»СЏРјРё Рё Р·РЅР°РјРµРЅР°С‚РµР»СЏРјРё  
+            TEST(constructor_params, no_reduced_and_negative_both_numbers)
+            {
+                // Р—Р°РґР°РґРёРј С‡РёСЃР»РёС‚РµР»СЊ Рё Р·РЅР°С‡РµРЅР°С‚РµР»СЊ
+                const std::pair<int, int> values[] =
+                {
+                    {-1, -2},
+                    {-2, -17},
+                    {-3, -4},
+                    {-5, -6},
+                    {-7, -8},
+                    {-2, -137},
+                    {-2, -17},
+                    {-5, -7},
+                    {-4, -137},
+                    {-1, INT_MIN},
+                    {INT_MIN, -1},
+                    {-3, -1},
+                    {-13, -2},
+                    {-15, -7}
+                };
+
+                for (const auto& value : values)
+                {
+                    Rational rational(value.first, value.second);
+
+                    EXPECT_EQ(rational.Numerator(), -value.first);
+
+                    EXPECT_EQ(rational.Denominator(), -value.second);
+                }
+            }
+
+
+
+        }
+
+       
+
+    }; // End ClassesTest namespace
 
 }; // End IdiomsCpp namespace
