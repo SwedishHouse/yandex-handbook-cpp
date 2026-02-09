@@ -896,7 +896,7 @@ namespace HandbookIdioms
 			return *this;
 		}
 
-		// Операторы денления
+		// Операторы деления
 		Rational operator / (int val)
 		{
 			return Rational();
@@ -922,23 +922,26 @@ namespace HandbookIdioms
 
 		Rational operator+()
 		{
-			return Rational();
+			return Rational(*this);
 		}
 
 		Rational operator-()
 		{
-			return Rational();
+			Rational res = Rational(*this);
+			res.numerator = -res.numerator;
+			return res;
 		}
 
-		// Опреаторы сравнения
-		Rational operator==(Rational other)
+		// Операторы сравнения
+		bool operator==(Rational other)
 		{
-			return Rational();
+			return	this->Numerator() == other.Numerator() && 
+					this->Denominator() == other.Denominator();
 		}
 
-		Rational operator!=(Rational other)
+		bool operator!=(Rational other)
 		{
-			return Rational();
+			return !(*this != other);
 		}
 
 	};

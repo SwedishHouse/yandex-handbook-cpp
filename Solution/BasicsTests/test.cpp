@@ -1953,6 +1953,170 @@ namespace IdiomsCppTest
                 }
             }
 
+            // *** Проверка сокращения дробей ***
+            
+            // Для положительных чисел
+            TEST(reduce_in_construct, positive_numbers)
+            {
+                // Зададим числитель и значенатель
+                const struct
+                {
+                    std::pair<int, int> input;
+                    std::pair<int, int> res;
+                } values[] =
+                {
+                    // .5
+                    {{2 ,4}, {1, 2}},
+                    {{3 ,6}, {1, 2}},
+                    {{4 ,8}, {1, 2}},
+
+                    {{3 ,9}, {1, 3}},
+                    {{4 ,16}, {1, 4}},
+                    {{5 ,25}, {1, 5}},
+                    {{11 ,121}, {1, 11}},
+                    {{12 ,144}, {1, 12}},
+                    {{6 ,8}, {3, 4}},
+
+                    // Целые числа
+                    {{6 ,2}, {3, 1}},
+                    {{25 ,5}, {5, 1}},
+
+                };
+
+                for (const auto value : values)
+                {
+                    const auto input = value.input;
+
+                    Rational rational = Rational(input.first, input.second);
+
+                    const auto res = value.res;
+
+                    EXPECT_EQ(rational.Numerator(), res.first);
+
+                    EXPECT_EQ(rational.Denominator(), res.second);
+
+                }
+               
+
+            }
+
+            // Для отрицательных чисел
+            TEST(reduce_in_construct, negative_numbers)
+            {
+                // Зададим числитель и значенатель
+                const struct
+                {
+                    std::pair<int, int> input;
+                    std::pair<int, int> res;
+                } values[] =
+                {
+                    // .5
+                    {{-2 ,4}, {-1, 2}},
+                    {{-3 ,6}, {-1, 2}},
+                    {{-4 ,8}, {-1, 2}},
+
+                    {{3 ,-9}, {-1, 3}},
+                    {{4 ,-16}, {-1, 4}},
+                    {{5 ,-25}, {-1, 5}},
+                    {{-11 ,121}, {-1, 11}},
+                    {{12 ,-144}, {-1, 12}},
+                    {{-6 ,8}, {-3, 4}},
+
+                    // Целые числа
+                    {{-6 ,2}, {-3, 1}},
+                    {{25 ,-5}, {-5, 1}},
+
+                };
+
+                for (const auto value : values)
+                {
+                    const auto input = value.input;
+
+                    Rational rational = Rational(input.first, input.second);
+
+                    const auto res = value.res;
+
+                    EXPECT_EQ(rational.Numerator(), res.first);
+
+                    EXPECT_EQ(rational.Denominator(), res.second);
+
+                }
+            }
+
+            // *** Унарные операторы
+
+            TEST(unary_operator, minus_usual)
+            {
+                // Зададим числитель и значенатель
+                const struct
+                {
+                    std::pair<int, int> input;
+                    std::pair<int, int> res;
+                } values[] =
+                {
+                    // .5
+                    {{-2 ,4}, {1, 2}},
+                    {{-3 ,6}, {1, 2}},
+                    {{4 ,8}, {-1, 2}},
+
+                    {{3 ,-9}, {1, 3}},
+                    {{4 ,16}, {-1, 4}},
+                    {{5 ,-25}, {1, 5}},
+                    {{-11 ,121}, {1, 11}},
+                    {{12 ,-144}, {1, 12}},
+                    {{-6 ,8}, {3, 4}},
+
+                    // Целые числа
+                    {{-6 ,2}, {3, 1}},
+                    {{25 ,-5}, {5, 1}},
+
+                };
+
+                for (const auto value : values)
+                {
+                    const auto input = value.input;
+
+                    Rational rational = -Rational(input.first, input.second);
+
+                    const auto res = value.res;
+
+                    EXPECT_EQ(rational.Numerator(), res.first);
+
+                    EXPECT_EQ(rational.Denominator(), res.second);
+
+                }
+            }
+
+            TEST(unary_operator, minus_and_boundary)
+            {
+                // Зададим числитель и значенатель
+                const struct
+                {
+                    std::pair<int, int> input;
+                    std::pair<int, int> res;
+                } values[] =
+                {
+                    {{0 ,1}, {0, 1}},
+                    {{INT_MAX ,1}, {-INT_MAX, 1}},
+                    {{1 ,INT_MIN}, {1, -INT_MIN}},
+
+                };
+
+                for (const auto value : values)
+                {
+                    const auto input = value.input;
+
+                    Rational rational = -Rational(input.first, input.second);
+
+                    const auto res = value.res;
+
+                    EXPECT_EQ(rational.Numerator(), res.first);
+
+                    EXPECT_EQ(rational.Denominator(), res.second);
+
+                }
+            }
+
 
 
         }
