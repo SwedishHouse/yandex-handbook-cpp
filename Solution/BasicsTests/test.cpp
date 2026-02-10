@@ -1791,6 +1791,36 @@ namespace IdiomsCppTest
                 }
             }
 
+            TEST(constructor_params, pass_0_to_numerator)
+            {
+                const int start = -1000;
+                const int end = 1000;
+
+                for (int i = start; i != end; i++)
+                {
+                    Rational rational(0, i);
+
+                    EXPECT_EQ(rational.Numerator(), 0);
+
+                    EXPECT_EQ(rational.Denominator(), 1);
+                }
+            }
+
+            TEST(constructor_params, pass_0_to_numerator_and_boundary_denom)
+            {
+                // Зададим число итераций (что бы тест был не слишком долгим)
+                const auto values = std::to_array<int>({ 0, INT_MIN, INT_MAX });
+
+                for (const auto &val: values)
+                {
+                    Rational rational(0, val);
+
+                    EXPECT_EQ(rational.Numerator(), 0);
+
+                    EXPECT_EQ(rational.Denominator(), 1);
+                }
+            }
+
 
             // TODO: Далее можно было воспользоваться параметризованными тестами,
             // но моя VS Studio не хочет с ними работать и генерит ошибки
@@ -1814,7 +1844,6 @@ namespace IdiomsCppTest
                     {2, 17},
                     {5, 7},
                     {0, 1},
-                    {0, 137},
                     {1, INT_MAX}
                 };
 
@@ -2145,7 +2174,7 @@ namespace IdiomsCppTest
 
             // Операторы умножения
 
-            TEST(operator_multiply, value_integer)
+            TEST(operators, multiply_other_integer)
             {
                 // Зададим числитель и значенатель
                 const struct
@@ -2183,7 +2212,51 @@ namespace IdiomsCppTest
                     EXPECT_EQ(rational.Denominator(), res.second);
 
                 }
-            } // unary_operator, plus
+            }
+
+            TEST(operators, multiply_other_rational)
+            {
+                // Зададим числитель и значенатель
+                const struct
+                {
+                    std::pair<int, int> left;
+                    std::pair<int, int> right;
+                    std::pair<int, int> res;
+                } values[] =
+                {
+                    // Нулевой числитель
+                    {{0, 1}, {0, 1}, {0, 1}},
+                    {{0, 1}, {1, 2}, {0, 1}},
+                    {{0, 1}, {-1, 2}, {0, 1}},
+                    {{0, 1}, {4, 5}, {0, 1}},
+                    {{0, 1}, {-4, 5}, {0, 1}},
+                    {{0, 1}, {5, 1}, {0, 1}},
+                    {{0, 1}, {-5, 1}, {0, 1}},
+                    {{0, 1}, {5, 7}, {0, 1}},
+                    {{0, 1}, {-5, 7}, {0, 1}},
+                    // Не нулевой числитель
+                    {{1, 1}, {1, 1}, {1, 1}},
+                    {{1, 1}, {-1, 1}, {-1, 1}},
+                    {{1, 2}, {1, 2}, {1, 4}},
+                    {{1, 2}, {-1, 2}, {-1, 4}},
+
+                };
+
+                for (const auto& value : values)
+                {
+                    Rational left = Rational(value.left.first, value.left.second);
+                    Rational right = Rational(value.right.first, value.right.second);
+
+                    Rational res = left * right;
+
+                    EXPECT_EQ(res.Numerator(), value.res.first);
+
+                    EXPECT_EQ(res.Denominator(), value.res.second);
+
+                }
+            }
+
+
 
         }
 

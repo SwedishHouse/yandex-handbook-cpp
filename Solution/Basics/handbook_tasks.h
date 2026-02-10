@@ -795,8 +795,8 @@ namespace HandbookIdioms
 
 		void Reduce(void)
 		{
-			if (numerator == 0)
-				return;
+			/*if (numerator == 0)
+				return;*/
 
 			const int gcd = std::gcd<int64_t>(numerator, denominator);
 
@@ -821,13 +821,23 @@ namespace HandbookIdioms
 
 			numerator = num;
 			denominator = den;
-
-			Reduce();
 		}
 
-		// Свойства геттеры
-		int Numerator(void) { return numerator; }
-		int Denominator(void) { return denominator; }
+		// *** Свойства геттеры ***
+
+		// Получение числителя
+		int Numerator(void) 
+		{
+			Reduce();
+			return numerator; 
+		}
+
+		// Получение знаменателя
+		int Denominator(void) 
+		{ 
+			Reduce();
+			return denominator;
+		}
 
 		// Операторы сложения
 		Rational operator + (int val)
@@ -837,8 +847,6 @@ namespace HandbookIdioms
 
 		Rational operator + (Rational val)
 		{
-
-
 
 			return Rational();
 		}
@@ -880,27 +888,25 @@ namespace HandbookIdioms
 		// Операторы умножения
 		Rational operator * (int val)
 		{
-			Rational res = Rational(*this);
-			res.numerator *= val;
+			Rational res = Rational(val, 1);
 
-			res.Reduce();
+			return *this * res;
+		}
+
+		Rational operator * (Rational other)
+		{
+			Rational res = Rational(*this);
+
+			res.numerator *= other.numerator;
+			res.denominator *= other.denominator;
 
 			return res;
 		}
 
-		Rational operator * (Rational val)
-		{
-			Rational res = Rational(*this);
-
-			return Rational();
-		}
-
 		// Умножение с присвоением
-		Rational operator *= (int val)
+		Rational& operator *= (int val)
 		{
 			this->numerator *= val;
-
-			this->Reduce();
 
 			return *this;
 		}
@@ -916,8 +922,6 @@ namespace HandbookIdioms
 			Rational res = Rational(*this);
 
 			res.denominator *= val;
-
-			res.Reduce();
 
 			return Rational();
 		}
