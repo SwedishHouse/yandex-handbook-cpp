@@ -898,6 +898,10 @@ namespace HandbookIdioms
 		// Умножение с присвоением
 		Rational operator *= (int val)
 		{
+			this->numerator *= val;
+
+			this->Reduce();
+
 			return *this;
 		}
 
@@ -909,6 +913,12 @@ namespace HandbookIdioms
 		// Операторы деления
 		Rational operator / (int val)
 		{
+			Rational res = Rational(*this);
+
+			res.denominator *= val;
+
+			res.Reduce();
+
 			return Rational();
 		}
 

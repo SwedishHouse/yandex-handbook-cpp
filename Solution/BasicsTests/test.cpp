@@ -2143,6 +2143,48 @@ namespace IdiomsCppTest
                 }
             } // unary_operator, plus
 
+            // Операторы умножения
+
+            TEST(operator_multiply, value_integer)
+            {
+                // Зададим числитель и значенатель
+                const struct
+                {
+                    std::pair<int, int> init;
+                    int multiplier;
+                    std::pair<int, int> res;
+                } values[] =
+                {
+                    // Нулевой числитель
+                    {{0, 1}, 1, {0, 1}},
+                    {{0, 1}, -1, {0, 1}},
+                    {{0, 1}, 2, {0, 1}},
+                    {{0, 1}, -2, {0, 1}},
+                    // Не нулевой числитель
+                    {{1, 2}, 1, {1, 2}},
+                    {{1, 2}, -1, {-1, 2}},
+                    {{2, 7}, 3, {6, 7}},
+                    {{2, 7}, -3, {-6, 7}},
+                    // Сокращаемая дробь после умножения
+                    {{2, 9}, 3, {2, 3}},
+                    {{2, 9}, -3, {-2, 3}},
+                };
+
+                for (const auto &value : values)
+                {
+                    const std::pair<int, int> init = value.init;
+
+                    Rational rational = Rational(init.first, init.second) * value.multiplier;
+
+                    const std::pair<int, int> res = value.res;
+
+                    EXPECT_EQ(rational.Numerator(), res.first);
+
+                    EXPECT_EQ(rational.Denominator(), res.second);
+
+                }
+            } // unary_operator, plus
+
         }
 
        
