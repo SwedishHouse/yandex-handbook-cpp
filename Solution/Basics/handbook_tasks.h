@@ -837,6 +837,9 @@ namespace HandbookIdioms
 
 		Rational operator + (Rational val)
 		{
+
+
+
 			return Rational();
 		}
 
@@ -877,11 +880,18 @@ namespace HandbookIdioms
 		// Операторы умножения
 		Rational operator * (int val)
 		{
-			return Rational();
+			Rational res = Rational(*this);
+			res.numerator *= val;
+
+			res.Reduce();
+
+			return res;
 		}
 
 		Rational operator * (Rational val)
 		{
+			Rational res = Rational(*this);
+
 			return Rational();
 		}
 

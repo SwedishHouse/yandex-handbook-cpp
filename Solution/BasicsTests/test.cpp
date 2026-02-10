@@ -2115,9 +2115,33 @@ namespace IdiomsCppTest
                     EXPECT_EQ(rational.Denominator(), res.second);
 
                 }
-            }
+            } // unary_operator, minus_and_boundary
 
+            TEST(unary_operator, plus)
+            {
+                // Зададим числитель и значенатель
 
+                    std::pair<int, int> values[] =
+                {
+                    {0 ,1},
+                    {INT_MAX ,1},
+                    {1 ,INT_MAX},
+                    {2 ,3},
+                    {-2 ,3},
+                    {-2 ,17},
+                    {5, 3}
+                };
+
+                for (const auto value : values)
+                {
+                    Rational rational = +Rational(value.first, value.second);
+
+                    EXPECT_EQ(rational.Numerator(), value.first);
+
+                    EXPECT_EQ(rational.Denominator(), value.second);
+
+                }
+            } // unary_operator, plus
 
         }
 
