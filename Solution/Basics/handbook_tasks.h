@@ -911,8 +911,11 @@ namespace HandbookIdioms
 			return *this;
 		}
 
-		Rational operator *= (Rational val)
+		Rational& operator *= (Rational val)
 		{
+			this->numerator *= val.numerator;
+			this->denominator *= val.denominator;
+
 			return *this;
 		}
 

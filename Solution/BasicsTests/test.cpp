@@ -1985,7 +1985,7 @@ namespace IdiomsCppTest
             // *** Проверка сокращения дробей ***
             
             // Для положительных чисел
-            TEST(reduce_in_construct, positive_numbers)
+            TEST(reduce, positive_numbers)
             {
                 // Зададим числитель и значенатель
                 const struct
@@ -2030,7 +2030,7 @@ namespace IdiomsCppTest
             }
 
             // Для отрицательных чисел
-            TEST(reduce_in_construct, negative_numbers)
+            TEST(reduce, negative_numbers)
             {
                 // Зададим числитель и значенатель
                 const struct
@@ -2194,9 +2194,13 @@ namespace IdiomsCppTest
                     {{1, 2}, -1, {-1, 2}},
                     {{2, 7}, 3, {6, 7}},
                     {{2, 7}, -3, {-6, 7}},
+                    {{3, 11}, 2, {6, 11}},
+                    {{3, 11}, -2, {-6, 11}},
                     // Сокращаемая дробь после умножения
                     {{2, 9}, 3, {2, 3}},
                     {{2, 9}, -3, {-2, 3}},
+                    {{1, 16}, 4, {1, 4}},
+                    {{1, 16}, -4, {-1, 4}},
                 };
 
                 for (const auto &value : values)
@@ -2239,6 +2243,19 @@ namespace IdiomsCppTest
                     {{1, 1}, {-1, 1}, {-1, 1}},
                     {{1, 2}, {1, 2}, {1, 4}},
                     {{1, 2}, {-1, 2}, {-1, 4}},
+                    {{2, 3}, {1, 4}, {1, 6}},
+                    {{2, 3}, {-1, 4}, {-1, 6}},
+                    {{7, 2}, {1, 4}, {7, 8}},
+                    {{7, 2}, {-1, 4}, {-7, 8}},
+                    {{1, 1}, {4, 1}, {4, 1}},
+                    {{1, 1}, {-4, 1}, {-4, 1}},
+                    {{3, 8}, {2, 1}, {3, 4}},
+                    {{3, 8}, {-2, 1}, {-3, 4}},
+                    {{3, 5}, {2, 1}, {6, 5}},
+                    {{3, 5}, {-2, 1}, {-6, 5}},
+                    {{3, 5}, {1, 2}, {3, 10}},
+                    {{3, 5}, {-1, 2}, {-3, 10}},
+
 
                 };
 
@@ -2256,6 +2273,105 @@ namespace IdiomsCppTest
                 }
             }
 
+
+            TEST(operators, multiply_and_assign_other_int)
+            {
+                // Зададим числитель и значенатель
+                const struct
+                {
+                    std::pair<int, int> init;
+                    int multiplier;
+                    std::pair<int, int> res;
+                } values[] =
+                {
+                    // Нулевой числитель
+                    {{0, 1}, 1, {0, 1}},
+                    {{0, 1}, -1, {0, 1}},
+                    {{0, 1}, 2, {0, 1}},
+                    {{0, 1}, -2, {0, 1}},
+                    // Не нулевой числитель
+                    {{1, 2}, 1, {1, 2}},
+                    {{1, 2}, -1, {-1, 2}},
+                    {{2, 7}, 3, {6, 7}},
+                    {{2, 7}, -3, {-6, 7}},
+                    {{3, 11}, 2, {6, 11}},
+                    {{3, 11}, -2, {-6, 11}},
+                    // Сокращаемая дробь после умножения
+                    {{2, 9}, 3, {2, 3}},
+                    {{2, 9}, -3, {-2, 3}},
+                    {{1, 16}, 4, {1, 4}},
+                    {{1, 16}, -4, {-1, 4}},
+                };
+
+                for (const auto& value : values)
+                {
+                    const std::pair<int, int> init = value.init;
+
+                    Rational rational(init.first, init.second);
+
+                    rational *= value.multiplier;
+
+                    const std::pair<int, int> res = value.res;
+
+                    EXPECT_EQ(rational.Numerator(), res.first);
+
+                    EXPECT_EQ(rational.Denominator(), res.second);
+
+                }
+            }
+
+            TEST(operators, multiply_and_assign_other_rational)
+            {
+                // Зададим числитель и значенатель
+                const struct
+                {
+                    std::pair<int, int> left;
+                    std::pair<int, int> right;
+                    std::pair<int, int> res;
+                } values[] =
+                {
+                    // Нулевой числитель
+                    {{0, 1}, {0, 1}, {0, 1}},
+                    {{0, 1}, {1, 2}, {0, 1}},
+                    {{0, 1}, {-1, 2}, {0, 1}},
+                    {{0, 1}, {4, 5}, {0, 1}},
+                    {{0, 1}, {-4, 5}, {0, 1}},
+                    {{0, 1}, {5, 1}, {0, 1}},
+                    {{0, 1}, {-5, 1}, {0, 1}},
+                    {{0, 1}, {5, 7}, {0, 1}},
+                    {{0, 1}, {-5, 7}, {0, 1}},
+                    // Не нулевой числитель
+                    {{1, 1}, {1, 1}, {1, 1}},
+                    {{1, 1}, {-1, 1}, {-1, 1}},
+                    {{1, 2}, {1, 2}, {1, 4}},
+                    {{1, 2}, {-1, 2}, {-1, 4}},
+                    {{2, 3}, {1, 4}, {1, 6}},
+                    {{2, 3}, {-1, 4}, {-1, 6}},
+                    {{7, 2}, {1, 4}, {7, 8}},
+                    {{7, 2}, {-1, 4}, {-7, 8}},
+                    {{1, 1}, {4, 1}, {4, 1}},
+                    {{1, 1}, {-4, 1}, {-4, 1}},
+                    {{3, 8}, {2, 1}, {3, 4}},
+                    {{3, 8}, {-2, 1}, {-3, 4}},
+                    {{3, 5}, {2, 1}, {6, 5}},
+                    {{3, 5}, {-2, 1}, {-6, 5}},
+                    {{3, 5}, {1, 2}, {3, 10}},
+                    {{3, 5}, {-1, 2}, {-3, 10}},
+                };
+
+                for (const auto& value : values)
+                {
+                    Rational left = Rational(value.left.first, value.left.second);
+                    Rational right = Rational(value.right.first, value.right.second);
+
+                    left *= right;
+
+                    EXPECT_EQ(left.Numerator(), value.res.first);
+
+                    EXPECT_EQ(left.Denominator(), value.res.second);
+
+                }
+            }
 
 
         }
