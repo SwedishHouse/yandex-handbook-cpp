@@ -2174,7 +2174,7 @@ namespace IdiomsCppTest
 
             // Операторы умножения
 
-            TEST(operators, multiply_other_integer)
+            TEST(operators_multiply, other_integer)
             {
                 // Зададим числитель и значенатель
                 const struct
@@ -2218,7 +2218,7 @@ namespace IdiomsCppTest
                 }
             }
 
-            TEST(operators, multiply_other_rational)
+            TEST(operators_multiply, other_rational)
             {
                 // Зададим числитель и значенатель
                 const struct
@@ -2255,8 +2255,6 @@ namespace IdiomsCppTest
                     {{3, 5}, {-2, 1}, {-6, 5}},
                     {{3, 5}, {1, 2}, {3, 10}},
                     {{3, 5}, {-1, 2}, {-3, 10}},
-
-
                 };
 
                 for (const auto& value : values)
@@ -2274,7 +2272,7 @@ namespace IdiomsCppTest
             }
 
 
-            TEST(operators, multiply_and_assign_other_int)
+            TEST(operators_multiply, and_assign_other_int)
             {
                 // Зададим числитель и значенатель
                 const struct
@@ -2316,11 +2314,10 @@ namespace IdiomsCppTest
                     EXPECT_EQ(rational.Numerator(), res.first);
 
                     EXPECT_EQ(rational.Denominator(), res.second);
-
                 }
             }
 
-            TEST(operators, multiply_and_assign_other_rational)
+            TEST(operators_multiply, and_assign_other_rational)
             {
                 // Зададим числитель и значенатель
                 const struct
@@ -2369,7 +2366,6 @@ namespace IdiomsCppTest
                     EXPECT_EQ(left.Numerator(), value.res.first);
 
                     EXPECT_EQ(left.Denominator(), value.res.second);
-
                 }
             }
 

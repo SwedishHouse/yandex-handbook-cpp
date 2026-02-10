@@ -793,6 +793,12 @@ namespace HandbookIdioms
 		int denominator;
 		int numerator;
 
+		void Invert(void)
+		{
+			std::swap(numerator,
+					denominator);
+		}
+
 		void Reduce(void)
 		{
 			/*if (numerator == 0)
@@ -922,25 +928,23 @@ namespace HandbookIdioms
 		// Операторы деления
 		Rational operator / (int val)
 		{
-			Rational res = Rational(*this);
-
-			res.denominator *= val;
-
-			return Rational();
+			return Rational(*this) * Rational(1, val);
 		}
 
 		Rational operator / (Rational val)
 		{
-			return Rational();
+			val.Invert();
+
+			return Rational(*this) * val;
 		}
 
 		// Деление с присвоением
-		Rational operator /= (int val)
+		Rational& operator /= (int val)
 		{
 			return *this;
 		}
 
-		Rational operator /= (Rational val)
+		Rational& operator /= (Rational val)
 		{
 			return *this;
 		}
