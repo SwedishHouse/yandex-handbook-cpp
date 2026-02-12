@@ -846,12 +846,12 @@ namespace HandbookIdioms
 		}
 
 		// Операторы сложения
-		Rational operator + (int val)
+		Rational operator + (int other)
 		{
 			return Rational();
 		}
 
-		Rational operator + (Rational val)
+		Rational operator + (Rational other)
 		{
 
 			return Rational();
@@ -859,47 +859,47 @@ namespace HandbookIdioms
 
 		// Сложение с присвоением
 
-		Rational operator += (int val)
+		Rational operator += (int other)
 		{
 			return *this;
 		}
 
-		Rational operator += (Rational val)
+		Rational operator += (Rational other)
 		{
 			return *this;
 		}
 
 		// Операторы вычитания
-		Rational operator - (int val)
+		Rational operator - (int other)
 		{
 			return Rational();
 		}
 
-		Rational operator - (Rational val)
+		Rational operator - (Rational other)
 		{
 			return Rational();
 		}
 
 		// Вычитание с присвоением
-		Rational operator -= (int val)
+		Rational operator -= (int other)
 		{
 			return *this;
 		}
 
-		Rational operator -= (Rational val)
+		Rational operator -= (Rational other)
 		{
 			return *this;
 		}
 
 		// Операторы умножения
-		Rational operator * (int val)
+		Rational operator * (int other)
 		{
-			Rational res = Rational(val, 1);
+			Rational res = Rational(other, 1);
 
 			return *this * res;
 		}
 
-		Rational operator * (Rational other)
+		Rational operator * (Rational& other)
 		{
 			Rational res = Rational(*this);
 
@@ -910,42 +910,50 @@ namespace HandbookIdioms
 		}
 
 		// Умножение с присвоением
-		Rational& operator *= (int val)
+		Rational& operator *= (int other)
 		{
-			this->numerator *= val;
+			this->numerator *= other;
 
 			return *this;
 		}
 
-		Rational& operator *= (Rational val)
+		Rational& operator *= (Rational& other)
 		{
-			this->numerator *= val.numerator;
-			this->denominator *= val.denominator;
+			this->numerator *= other.numerator;
+			this->denominator *= other.denominator;
 
 			return *this;
 		}
 
 		// Операторы деления
-		Rational operator / (int val)
+		Rational operator / (int other)
 		{
-			return Rational(*this) * Rational(1, val);
+			Rational r = Rational(1, other);
+
+			return Rational(*this) * r;
 		}
 
-		Rational operator / (Rational val)
+		Rational operator / (Rational& other)
 		{
-			val.Invert();
+			const int num = this->numerator * other.denominator;
+			const int den = this->denominator * other.numerator;
 
-			return Rational(*this) * val;
+			return Rational(num, den);
 		}
 
 		// Деление с присвоением
-		Rational& operator /= (int val)
+		Rational& operator /= (int other)
 		{
+			this->denominator *= other;
+
 			return *this;
 		}
 
-		Rational& operator /= (Rational val)
+		Rational& operator /= (Rational& other)
 		{
+			this->numerator *= other.denominator;
+			this->denominator *= other.numerator;
+			
 			return *this;
 		}
 

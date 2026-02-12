@@ -2374,8 +2374,6 @@ namespace IdiomsCppTest
                 }
             }
 
-
-
             // Операторы умножения
 
             TEST(operators_multiply, other_integer)
@@ -2572,6 +2570,117 @@ namespace IdiomsCppTest
                     EXPECT_EQ(left.Denominator(), value.res.second);
                 }
             }
+
+            // *** Секция тестрования операторов деления
+
+            // Для целых чисел
+
+            TEST(DivisionOperators, ByInteger)
+            {
+                const struct
+                {
+                    std::pair<int, int> left;
+                    int right;
+                    std::pair<int, int> result;
+                } values[] = 
+                {
+                    // пограничный случай
+                    {{0, 1}, 0, {0, 1}},
+                    // Нулевая дробь
+                    {{0, 1}, 1, {0, 1}},
+                    {{0, 1}, -1, {0, 1}},
+                    // Правильные положительные
+                    {{1, 2}, 1, {1, 2}},
+                    {{1, 2}, 2, {1, 4}},
+                    {{1, 2}, 3, {1, 6}},
+                    {{2, 5}, 2, {1, 5}},
+                    {{4, 15}, 2, {2, 15}},
+                    {{2, 5}, 2, {1, 5}},
+                    {{4, 7}, 2, {2, 7}},
+                    // Правильные отрицательные
+                    {{-1, 2}, 1, {-1, 2}},
+                    {{-1, 2}, 2, {-1, 4}},
+                    {{-1, 2}, 3, {-1, 6}},
+                    {{-2, 5}, 2, {-1, 5}},
+                    {{-4, 15}, 2, {-2, 15}},
+                    {{-2, 5}, 2, {-1, 5}},
+                    {{-4, 7}, 2, {-2, 7}},
+                    // Делим на отрицательное
+                    {{1, 2}, -1, {-1, 2}},
+                    {{-1, 2}, -1, {1, 2}},
+                    {{-1, 2}, -2, {1, 4}},
+                    {{1, 2}, -2, {-1, 4}},
+                    {{-4, 7}, -2, {2, 7}},
+                    {{4, 7}, -2, {-2, 7}},
+                    // Неправильные
+                    {{3, 2}, -1, {-3, 2}},
+                    {{-3, 2}, -1, {3, 2}},
+                    {{-5, 2}, 2, {-5, 4}},
+                    {{5, 2}, -2, {-5, 4}},
+                    {{-5, 2}, -2, {5, 4}},
+                    {{-12, 7}, -2, {6, 7}},
+                    {{12, 7}, -2, {-6, 7}},
+                    {{-12, 7}, 2, {-6, 7}},
+                };
+
+                for (const auto& value : values)
+                {
+                    Rational left = Rational(value.left.first, value.left.second);
+                    Rational result = Rational(value.result.first, value.result.second);
+
+                    Rational by_div = left / value.right;
+
+                    if (by_div != result)
+                        __nop();
+
+                    EXPECT_EQ(by_div == result, true);
+                }
+            }
+
+            TEST(DivisionOperators, ByRational)
+            {
+                const struct
+                {
+                    std::pair<int, int> left;
+                    std::pair<int, int> right;
+                    std::pair<int, int> result;
+                } values[] =
+                {
+                    // пограничный случай
+                    {{0, 1}, {0, 1}, {0, 1}},
+                    // Нулевая дробь
+                    {{0, 1}, {1, 1}, {0, 1}},
+                    {{0, 1}, {-1, 1}, {0, 1}},
+                    // Правильные положительные
+                    {{1, 2}, {1, 1}, {1, 2}},
+                    {{1, 2}, {1, 2}, {1, 1}},
+                    {{1, 2}, {1, 3}, {3, 2}},
+                    {{2, 5}, {1, 2}, {4, 5}},
+                    {{4, 15}, {1, 3}, {4, 5}},
+                    // Делим на отрицательное
+                    {{1, 2}, {-1, 1}, {-1, 2}},
+                    {{1, 2}, {-1, 2}, {-1, 1}},
+                    {{1, 2}, {-1, 3}, {-3, 2}},
+                    {{2, 5}, {-1, 2}, {-4, 5}},
+                    {{4, 15}, {-1, 3}, {-4, 5}},
+                    // Неправильные
+                    {{3, 2}, {1, 2}, {3, 1}},
+                    {{3, 2}, {5, 2}, {3, 5}},
+               
+                };
+
+                for (const auto& value : values)
+                {
+                    Rational left   = Rational(value.left.first, value.left.second);
+                    Rational right  = Rational(value.right.first, value.right.second);
+                    Rational result = Rational(value.result.first, value.result.second);
+
+                    Rational by_div = left / right;
+
+                    EXPECT_EQ(by_div == result, true);
+                }
+            }
+
 
 
         }
