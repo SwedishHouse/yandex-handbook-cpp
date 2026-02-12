@@ -2172,6 +2172,210 @@ namespace IdiomsCppTest
                 }
             } // unary_operator, plus
 
+            // *** Блок проверки операторов сравнения
+            
+            // Положительный результат сравнения
+            TEST(EqualityOperator, Equals)
+            {
+                const struct
+                {
+                    std::pair<int, int> left;
+                    std::pair<int, int> right;
+                    bool expected;
+                } values[] =
+                {
+                    // Секция нулевых знаменателей
+                    {{0, 1}, {0, 1}, true},
+                    {{0, 1}, {0, 4}, true},
+                    {{0, 1}, {0, 6}, true},
+                    {{0, 1}, {0, -1}, true},
+                    {{0, 1}, {0, INT_MIN}, true},
+                    // Правильные положительные дроби
+                    {{1, 2}, {1, 2}, true},
+                    {{1, 2}, {2, 4}, true},
+                    {{1, 2}, {4, 8}, true},
+                    {{2, 3}, {2, 3}, true},
+                    {{2, 5}, {2, 5}, true},
+                    {{2, 5}, {4, 10}, true},
+                    // Правильные отрицательные дроби
+                    {{-1, 2}, {-1, 2}, true},
+                    {{1, -2}, {-2, 4}, true},
+                    {{-1, 2}, {4, -8}, true},
+                    {{-2, 3}, {-2, 3}, true},
+                    {{-2, 5}, {-2, 5}, true},
+                    {{-2, 5}, {4, -10}, true},
+                    // Неправильные положительные дроби
+                    {{3, 1}, {3, 1}, true},
+                    {{3, 1}, {6, 2}, true},
+                    {{2, 1}, {10, 5}, true},
+                    // Неправильные отрицательные дроби
+                    {{-3, 1}, {3, -1}, true},
+                    {{-3, 1}, {-6, 2}, true},
+                    {{-2, 1}, {-10, 5}, true},
+                    {{-2, 1}, {10, -5}, true},
+                };
+
+                for (const auto& value : values)
+                {
+                    Rational left = Rational(value.left.first, value.left.second);
+                    Rational right = Rational(value.right.first, value.right.second);
+
+                    EXPECT_EQ(left == right, value.expected);
+                }
+            }
+
+            // Все дроби не равны
+            TEST(EqualityOperator, NotEquals)
+            {
+                const struct
+                {
+                    std::pair<int, int> left;
+                    std::pair<int, int> right;
+                    bool expected;
+                } values[] =
+                {
+                    // Секция нулевых знаменателей
+                    {{0, 1}, {2, 1}, false},
+                    {{0, 1}, {3, 4}, false},
+                    {{0, 1}, {-1, 6}, false},
+                    {{0, 1}, {INT_MAX, -1}, false},
+                    {{0, 1}, {12345, INT_MIN}, false},
+                    // Правильные положительные дроби
+                    {{1, 22}, {12, 2}, false},
+                    {{1, 2}, {2, 44}, false},
+                    {{761, 2}, {4, 8}, false},
+                    {{22, 333}, {2, 3}, false},
+                    {{3, 5}, {4, 5}, false},
+                    {{3, 4}, {2, 3}, false},
+                    // Правильные отрицательные дроби
+                    {{1, 2}, {-1, 2}, false},
+                    {{1, 2}, {-2, 4}, false},
+                    {{1, 2}, {4, -8}, false},
+                    {{2, 3}, {-2, 3}, false},
+                    {{2, 5}, {-2, 5}, false},
+                    {{2, 5}, {4, -10}, false},
+                    // Неправильные положительные дроби
+                    {{5, 1}, {3, 1}, false},
+                    {{21, 3}, {7, 2}, false},
+                    {{2, 1}, {11, 5}, false},
+                    // Неправильные отрицательные дроби
+                    {{3, 1}, {3, -1}, false},
+                    {{3, 1}, {-6, 2}, false},
+                    {{2, 1}, {-10, 5}, false},
+                    {{2, 1}, {10, -5}, false},
+                };
+
+                for (const auto& value : values)
+                {
+                    Rational left = Rational(value.left.first, value.left.second);
+                    Rational right = Rational(value.right.first, value.right.second);
+
+                    EXPECT_EQ(left == right, value.expected);
+                }
+            }
+
+            
+            // Тестирование оператора неравенства с кейсами, где все дроби не равны
+            TEST(InequalityOperator, NotEquals)
+            {
+                // Все дроби не равны
+                const struct
+                {
+                    std::pair<int, int> left;
+                    std::pair<int, int> right;
+                } values[] =
+                {
+                    // Секция нулевых знаменателей
+                    {{0, 1}, {2, 1}},
+                    {{0, 1}, {3, 4}},
+                    {{0, 1}, {-1, 6}},
+                    {{0, 1}, {INT_MAX, -1}},
+                    {{0, 1}, {12345, INT_MIN}},
+                    // Правильные положительные дроби
+                    {{1, 22}, {12, 2}},
+                    {{1, 2}, {2, 44}},
+                    {{761, 2}, {4, 8}},
+                    {{22, 333}, {2, 3}},
+                    {{3, 5}, {4, 5}},
+                    {{3, 4}, {2, 3}},
+                    // Правильные отрицательные дроби
+                    {{1, 2}, {-1, 2}},
+                    {{1, 2}, {-2, 4}},
+                    {{1, 2}, {4, -8}},
+                    {{2, 3}, {-2, 3}},
+                    {{2, 5}, {-2, 5}},
+                    {{2, 5}, {4, -10}},
+                    // Неправильные положительные дроби
+                    {{5, 1}, {3, 1}},
+                    {{21, 3}, {7, 2}},
+                    {{2, 1}, {11, 5}},
+                    // Неправильные отрицательные дроби
+                    {{3, 1}, {3, -1}},
+                    {{3, 1}, {-6, 2}},
+                    {{2, 1}, {-10, 5}},
+                    {{2, 1}, {10, -5}}
+                };
+
+                for (const auto& value : values)
+                {
+                    Rational left = Rational(value.left.first, value.left.second);
+                    Rational right = Rational(value.right.first, value.right.second);
+
+                    EXPECT_EQ(left != right, true);
+                }
+            }
+
+            // Тестирование оператора неравенства с кейсами, где все дроби равны
+            TEST(InequalityOperator, Equals)
+            {
+                const struct
+                {
+                    std::pair<int, int> left;
+                    std::pair<int, int> right;
+                } values[] =
+                {
+                    // Секция нулевых знаменателей
+                    {{0, 1}, {0, 1}},
+                    {{0, 1}, {0, 4}},
+                    {{0, 1}, {0, 6}},
+                    {{0, 1}, {0, -1}},
+                    {{0, 1}, {0, INT_MIN}},
+                    // Правильные положительные дроби
+                    {{1, 2}, {1, 2}},
+                    {{1, 2}, {2, 4}},
+                    {{1, 2}, {4, 8}},
+                    {{2, 3}, {2, 3}},
+                    {{2, 5}, {2, 5}},
+                    {{2, 5}, {4, 10}},
+                    // Правильные отрицательные дроби
+                    {{-1, 2}, {-1, 2}},
+                    {{1, -2}, {-2, 4}},
+                    {{-1, 2}, {4, -8}},
+                    {{-2, 3}, {-2, 3}},
+                    {{-2, 5}, {-2, 5}},
+                    {{-2, 5}, {4, -10}},
+                    // Неправильные положительные дроби
+                    {{3, 1}, {3, 1}},
+                    {{3, 1}, {6, 2}},
+                    {{2, 1}, {10, 5}},
+                    // Неправильные отрицательные дроби
+                    {{-3, 1}, {3, -1}},
+                    {{-3, 1}, {-6, 2}},
+                    {{-2, 1}, {-10, 5}},
+                    {{-2, 1}, {10, -5}},
+                };
+
+                for (const auto& value : values)
+                {
+                    Rational left = Rational(value.left.first, value.left.second);
+                    Rational right = Rational(value.right.first, value.right.second);
+
+                    EXPECT_EQ(left != right, false);
+                }
+            }
+
+
+
             // Операторы умножения
 
             TEST(operators_multiply, other_integer)

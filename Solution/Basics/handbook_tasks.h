@@ -950,7 +950,6 @@ namespace HandbookIdioms
 		}
 
 		// Унарные операторы
-
 		Rational operator+()
 		{
 			return Rational(*this);
@@ -972,7 +971,7 @@ namespace HandbookIdioms
 
 		bool operator!=(Rational other)
 		{
-			return !(*this != other);
+			return !(*this == other);
 		}
 
 	};
