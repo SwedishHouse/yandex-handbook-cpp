@@ -944,7 +944,8 @@ namespace HandbookIdioms
 		// Деление с присвоением
 		Rational& operator /= (int other)
 		{
-			this->denominator *= other;
+			Rational r = Rational(1, other);
+			*this *= r;
 
 			return *this;
 		}
