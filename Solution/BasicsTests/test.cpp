@@ -2738,6 +2738,50 @@ namespace IdiomsCppTest
                 }
             }
 
+            TEST(DivisionOperators, ByRationalAndAssign)
+            {
+                const struct
+                {
+                    std::pair<int, int> left;
+                    std::pair<int, int> right;
+                    std::pair<int, int> result;
+                } values[] =
+                {
+                    // пограничный случай
+                    {{0, 1}, {0, 1}, {0, 1}},
+                    // Нулевая дробь
+                    {{0, 1}, {1, 1}, {0, 1}},
+                    {{0, 1}, {-1, 1}, {0, 1}},
+                    // Правильные положительные
+                    {{1, 2}, {1, 1}, {1, 2}},
+                    {{1, 2}, {1, 2}, {1, 1}},
+                    {{1, 2}, {1, 3}, {3, 2}},
+                    {{2, 5}, {1, 2}, {4, 5}},
+                    {{4, 15}, {1, 3}, {4, 5}},
+                    // Делим на отрицательное
+                    {{1, 2}, {-1, 1}, {-1, 2}},
+                    {{1, 2}, {-1, 2}, {-1, 1}},
+                    {{1, 2}, {-1, 3}, {-3, 2}},
+                    {{2, 5}, {-1, 2}, {-4, 5}},
+                    {{4, 15}, {-1, 3}, {-4, 5}},
+                    // Неправильные
+                    {{3, 2}, {1, 2}, {3, 1}},
+                    {{3, 2}, {5, 2}, {3, 5}},
+
+                };
+
+                for (const auto& value : values)
+                {
+                    Rational left = Rational(value.left.first, value.left.second);
+                    Rational right = Rational(value.right.first, value.right.second);
+                    Rational result = Rational(value.result.first, value.result.second);
+
+                    left /= right;
+
+                    EXPECT_EQ(left == result, true);
+                }
+            }
+
 
 
         }

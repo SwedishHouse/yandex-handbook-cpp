@@ -952,8 +952,8 @@ namespace HandbookIdioms
 
 		Rational& operator /= (Rational& other)
 		{
-			this->numerator *= other.denominator;
-			this->denominator *= other.numerator;
+			Rational r = Rational(other.denominator, other.numerator);
+			*this *= r;
 			
 			return *this;
 		}
