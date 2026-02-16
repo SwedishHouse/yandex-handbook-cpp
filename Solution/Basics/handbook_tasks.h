@@ -897,22 +897,24 @@ namespace HandbookIdioms
 		// Операторы вычитания
 		Rational operator - (int other)
 		{
-			return Rational();
+			return Rational(*this) + -other;
 		}
 
 		Rational operator - (Rational other)
 		{
-			return Rational();
+			return Rational(*this) + -other;
 		}
 
 		// Вычитание с присвоением
-		Rational operator -= (int other)
+		Rational& operator -= (int other)
 		{
+			*this += -other;
 			return *this;
 		}
 
-		Rational operator -= (Rational other)
+		Rational& operator -= (Rational other)
 		{
+			*this += -other;
 			return *this;
 		}
 
