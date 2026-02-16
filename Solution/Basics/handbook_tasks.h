@@ -871,19 +871,23 @@ namespace HandbookIdioms
 
 		// Сложение с присвоением
 
-		Rational operator += (int other)
+		Rational& operator += (int other)
 		{
-			Rational right(other * this->denominator, this->denominator);
+			Rational right(other , 1);
 
-			this->numerator += right.numerator;
+			*this += right;
 
 			return *this;
 		}
 
-		Rational operator += (Rational other)
+		Rational& operator += (Rational other)
 		{
+			const int denom = other.denominator;
 			other.denominator *= this->denominator;
 			other.numerator *= this->denominator;
+
+			this->numerator *= denom;
+			this->denominator *= denom;
 
 			this->numerator += other.numerator;
 

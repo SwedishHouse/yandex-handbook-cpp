@@ -2869,6 +2869,91 @@ namespace IdiomsCppTest
 
             } // End OperSum, WithInteger
 
+            TEST(OperSum, WithIntegerAndAssignee)
+            {
+                const struct
+                {
+                    std::pair<int, int> left;
+                    int right;
+                    std::pair<int, int> result;
+                } values[] =
+                {
+                    // пограничный случай
+                    {{0, 1}, 0, {0, 1}},
+                    // Нулевая дробь
+                    {{0, 1}, 4, {4, 1}},
+                    {{0, 1}, -4, {-4, 1}},
+                    // Правильные положительные с одинаковым знаменателем
+                    {{1, 2}, 1, {3, 2}},
+                    {{1, 3}, 1, {4, 3}},
+                    // Сумма неправильных дробей
+                    {{4, 2}, 1, {3, 1}},
+                    {{4, 2}, -1, {1, 1}},
+
+                };
+
+                for (const auto& value : values)
+                {
+                    Rational left = Rational(value.left.first, value.left.second);
+                    Rational result = Rational(value.result.first, value.result.second);
+
+                    left += value.right;
+
+                    EXPECT_EQ(left == result, true);
+                }
+
+
+            } // End OperSum, WithIntegerAndAssignee
+
+            TEST(OperSum, WithRationalAndAssignee)
+            {
+                const struct
+                {
+                    std::pair<int, int> left;
+                    std::pair<int, int> right;
+                    std::pair<int, int> result;
+                } values[] =
+                {
+                    // пограничный случай
+                    {{0, 1}, {0, 1}, {0, 1}},
+                    {{0, 1}, {0, 4}, {0, 1}},
+                    {{0, 1}, {0, -17}, {0, 1}},
+
+                    // Нулевая дробь
+                    {{0, 1}, {1, 1}, {1, 1}},
+                    {{0, 1}, {-1, 1}, {-1, 1}},
+                    // Правильные положительные с одинаковым знаменателем
+                    {{1, 2}, {1, 2}, {1, 1}},
+                    {{1, 3}, {1, 3}, {2, 3}},
+                    // Правильные положительные с разным знаменателем
+                    {{1, 4}, {1, 2}, {3, 4}},
+                    {{1, 2}, {1, 3}, {5, 6}},
+                    {{2, 5}, {1, 2}, {9, 10}},
+                    // Сумма с отрицательным
+                    {{1, 2}, {-1, 3}, {1, 6}},
+                    // Переполнение
+                    {{3, 4}, {1, 4}, {1, 1}},
+                    {{3, 4}, {1, 3}, {13, 12}},
+                    // Сумма неправильных дробей
+                    {{4, 2}, {3, 1}, {5, 1}},
+                    {{4, 2}, {-3, 1}, {-1, 1}},
+
+                };
+
+                for (const auto& value : values)
+                {
+                    Rational left = Rational(value.left.first, value.left.second);
+                    Rational right = Rational(value.right.first, value.right.second);
+                    Rational result = Rational(value.result.first, value.result.second);
+
+                    left += right;
+
+                    EXPECT_EQ(left == result, true);
+                }
+
+
+            } // End OperSum, WithRationalAndAssignee
+
         }
 
        
