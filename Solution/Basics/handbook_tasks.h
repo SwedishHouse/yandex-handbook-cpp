@@ -848,24 +848,45 @@ namespace HandbookIdioms
 		// Операторы сложения
 		Rational operator + (int other)
 		{
-			return Rational();
+			Rational left(*this);
+			Rational right(other * left.denominator, left.denominator);
+
+			return left + right;
 		}
 
 		Rational operator + (Rational other)
 		{
+			Rational left(*this);
 
-			return Rational();
+			left.numerator *= other.denominator;
+			left.denominator *= other.denominator;
+
+			other.numerator *= this->denominator;
+			other.denominator *= this->denominator;
+
+			left.numerator += other.numerator;
+
+			return left;
 		}
 
 		// Сложение с присвоением
 
 		Rational operator += (int other)
 		{
+			Rational right(other * this->denominator, this->denominator);
+
+			this->numerator += right.numerator;
+
 			return *this;
 		}
 
 		Rational operator += (Rational other)
 		{
+			other.denominator *= this->denominator;
+			other.numerator *= this->denominator;
+
+			this->numerator += other.numerator;
+
 			return *this;
 		}
 
