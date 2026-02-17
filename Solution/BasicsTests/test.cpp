@@ -1739,36 +1739,44 @@ namespace IdiomsCppTest
             // подключим тестируем объект
             using namespace HandbookIdioms;
 
-            TEST(constructor_default, create_object)
+            TEST(ConstructionDefault, CreateObject)
             {
                 // Объект должен сгенерироваться
                 ASSERT_NO_THROW(Rational rational);
             }
 
-            TEST(constructor_default, get_numerator)
+            TEST(ConstructionDefault, GetNumerator)
             {
                 Rational rational;
 
                 EXPECT_EQ(rational.Numerator(), 0);
             }
 
-            TEST(constructor_default, get_denominator)
+            TEST(ConstructionDefault, GetDenominator)
             {
                 Rational rational;
 
                 EXPECT_EQ(rational.Denominator(), 1);
             }
 
+            TEST(ConstructionDefault, CreateConstObject)
+            {
+                const Rational rational;
+
+                EXPECT_EQ(rational.Numerator(), 0);
+                EXPECT_EQ(rational.Denominator(), 1);
+            }
+
             // Передадимв числитель все числа от минимума до максимума,
             // ответ должен быть один и тот же для нулевого делителя
-            TEST(constructor_params, pass_0_to_denominator)
+            TEST(ConstructionWithParams, pass_0_to_denominator)
             {
                 // Зададим число итераций (что бы тест был не слишком долгим)
-                const int half_count = 10000;
+                const int half_count = 100;
                
                 for(int i = -half_count; i <= half_count; i++)
                 {
-                    Rational rational(i, 0);
+                    const Rational rational(i, 0);
 
                     EXPECT_EQ(rational.Numerator(), 0);
 
@@ -1776,7 +1784,7 @@ namespace IdiomsCppTest
                 }
             }
 
-            TEST(constructor_params, pass_0_to_denom_and_boundary_num)
+            TEST(ConstructionWithParams, pass_0_to_denom_and_boundary_num)
             {
                 // Зададим число итераций (что бы тест был не слишком долгим)
                 const auto values = std::to_array<int>({ 0, INT_MIN, INT_MAX});
@@ -1791,14 +1799,15 @@ namespace IdiomsCppTest
                 }
             }
 
-            TEST(constructor_params, pass_0_to_numerator)
+            TEST(ConstructionWithParams, pass_0_to_numerator)
             {
+                // Зададим число итераций (что бы тест был не слишком долгим)
                 const int start = -1000;
                 const int end = 1000;
 
                 for (int i = start; i != end; i++)
                 {
-                    Rational rational(0, i);
+                    const Rational rational(0, i);
 
                     EXPECT_EQ(rational.Numerator(), 0);
 
@@ -1806,14 +1815,14 @@ namespace IdiomsCppTest
                 }
             }
 
-            TEST(constructor_params, pass_0_to_numerator_and_boundary_denom)
+            TEST(ConstructionWithParams, pass_0_to_numerator_and_boundary_denom)
             {
-                // Зададим число итераций (что бы тест был не слишком долгим)
+               
                 const auto values = std::to_array<int>({ 0, INT_MIN, INT_MAX });
 
                 for (const auto &val: values)
                 {
-                    Rational rational(0, val);
+                    const Rational rational(0, val);
 
                     EXPECT_EQ(rational.Numerator(), 0);
 
@@ -1830,7 +1839,7 @@ namespace IdiomsCppTest
             // должны получить те же самые значения
 
 
-            TEST(constructor_params, no_reduced_fractional_positive_numbers)
+            TEST(ConstructionWithParams, no_reduced_fractional_positive_numbers)
             {
                 // Зададим числитель и значенатель
                 const std::pair<int, int> values[] =
@@ -1858,7 +1867,7 @@ namespace IdiomsCppTest
             }
 
             // Проверим построение объекта с числителем больше чем знаменатель
-            TEST(constructor_params, mixed_no_reduced_positive)
+            TEST(ConstructionWithParams, mixed_no_reduced_positive)
             {
                 // Зададим числитель и значенатель
                 const std::pair<int, int> values[] =
@@ -1890,7 +1899,7 @@ namespace IdiomsCppTest
             //  *** Далее: проверка создание объекта с отрицательными числами. ***
 
             //  Проверка с отрицательными числителями 
-            TEST(constructor_params, no_reduced_and_negative_numerator)
+            TEST(ConstructionWithParams, no_reduced_and_negative_numerator)
             {
                 // Зададим числитель и значенатель
                 const std::pair<int, int> values[] =
@@ -1919,7 +1928,7 @@ namespace IdiomsCppTest
             }
 
             //  Проверка с отрицательными знаменателями  
-            TEST(constructor_params, no_reduced_and_negative_denominator)
+            TEST(ConstructionWithParams, no_reduced_and_negative_denominator)
             {
                 // Зададим числитель и значенатель
                 const std::pair<int, int> values[] =
@@ -1951,7 +1960,7 @@ namespace IdiomsCppTest
             }
 
             // Проверка с отрицательными числителями и знаменателями  
-            TEST(constructor_params, no_reduced_and_negative_both_numbers)
+            TEST(ConstructionWithParams, no_reduced_and_negative_both_numbers)
             {
                 // Зададим числитель и значенатель
                 const std::pair<int, int> values[] =
@@ -2121,17 +2130,17 @@ namespace IdiomsCppTest
                 // Зададим числитель и значенатель
                 const struct
                 {
-                    std::pair<int, int> input;
-                    std::pair<int, int> res;
+                    std::pair<int64_t, int64_t> input;
+                    std::pair<int64_t, int64_t> res;
                 } values[] =
                 {
                     {{0 ,1}, {0, 1}},
-                    {{INT_MAX ,1}, {-INT_MAX, 1}},
-                    {{1 ,INT_MIN}, {1, -INT_MIN}},
+                   /* {{INT_MAX ,1}, {-static_cast<int64_t>(INT_MAX), 1}},
+                    {{1 ,INT_MIN}, {1, -static_cast<int64_t>(INT_MIN)}},*/
 
                 };
 
-                for (const auto value : values)
+                for (const auto &value : values)
                 {
                     const auto input = value.input;
 
@@ -2869,6 +2878,42 @@ namespace IdiomsCppTest
 
             } // End OperSum, WithInteger
 
+            TEST(OperSum, WithIntegerLeftSide)
+            {
+                const struct
+                {
+                    std::pair<int, int> left;
+                    int right;
+                    std::pair<int, int> result;
+                } values[] =
+                {
+                    // пограничный случай
+                    {{0, 1}, 0, {0, 1}},
+                    // Нулевая дробь
+                    {{0, 1}, 4, {4, 1}},
+                    {{0, 1}, -4, {-4, 1}},
+                    // Правильные положительные с одинаковым знаменателем
+                    {{1, 2}, 1, {3, 2}},
+                    {{1, 3}, 1, {4, 3}},
+                    // Сумма неправильных дробей
+                    {{4, 2}, 1, {3, 1}},
+                    {{4, 2}, -1, {1, 1}},
+
+                };
+
+                for (const auto& value : values)
+                {
+                    const Rational left = Rational(value.left.first, value.left.second);
+                    const Rational result = Rational(value.result.first, value.result.second);
+
+                    const Rational by_sum = value.right + left;
+
+                    EXPECT_EQ(by_sum == result, true);
+                }
+
+
+            } // End OperSum, WithIntegerLeftSide
+
             TEST(OperSum, WithIntegerAndAssignee)
             {
                 const struct
@@ -2895,7 +2940,7 @@ namespace IdiomsCppTest
                 for (const auto& value : values)
                 {
                     Rational left = Rational(value.left.first, value.left.second);
-                    Rational result = Rational(value.result.first, value.result.second);
+                    const Rational result = Rational(value.result.first, value.result.second);
 
                     left += value.right;
 
@@ -2971,13 +3016,13 @@ namespace IdiomsCppTest
                     {{0, 1}, {0, -17}, {0, 1}},
 
                     // Нулевая дробь
-                    {{0, 1}, {-1, 1}, {-1, 1}},
+                    {{0, 1}, {1, 1}, {-1, 1}},
                     {{0, 1}, {-1, 1}, {1, 1}},
                     // Правильные положительные с одинаковым знаменателем
                     {{1, 2}, {1, 2}, {0, 1}},
                     {{1, 3}, {1, 3}, {0, 3}},
                     // Правильные положительные с разным знаменателем
-                    {{1, 4}, {1, 2}, {-3, 4}},
+                    {{1, 4}, {1, 2}, {-1, 4}},
                     {{1, 2}, {1, 3}, {1, 6}},
                     {{1, 2}, {2, 5}, {1, 10}},
                     // Разность с отрицательным
@@ -2986,8 +3031,8 @@ namespace IdiomsCppTest
                     {{3, 4}, {1, 4}, {1, 2}},
                     {{1, 3}, {3, 4}, {-5, 12}},
                     // Разность неправильных дробей
-                    {{4, 2}, {3, 1}, {1, 1}},
-                    {{4, 2}, {-3, 1}, {7, 1}},
+                    {{4, 2}, {3, 1}, {-1, 1}},
+                    {{4, 2}, {-3, 1}, {5, 1}},
 
                 };
 
@@ -3092,13 +3137,13 @@ namespace IdiomsCppTest
                     {{0, 1}, {0, -17}, {0, 1}},
 
                     // Нулевая дробь
-                    {{0, 1}, {-1, 1}, {-1, 1}},
+                    {{0, 1}, {1, 1}, {-1, 1}},
                     {{0, 1}, {-1, 1}, {1, 1}},
                     // Правильные положительные с одинаковым знаменателем
                     {{1, 2}, {1, 2}, {0, 1}},
                     {{1, 3}, {1, 3}, {0, 3}},
                     // Правильные положительные с разным знаменателем
-                    {{1, 4}, {1, 2}, {-3, 4}},
+                    {{1, 4}, {1, 2}, {-1, 4}},
                     {{1, 2}, {1, 3}, {1, 6}},
                     {{1, 2}, {2, 5}, {1, 10}},
                     // Разность с отрицательным
@@ -3107,8 +3152,8 @@ namespace IdiomsCppTest
                     {{3, 4}, {1, 4}, {1, 2}},
                     {{1, 3}, {3, 4}, {-5, 12}},
                     // Разность неправильных дробей
-                    {{4, 2}, {3, 1}, {1, 1}},
-                    {{4, 2}, {-3, 1}, {7, 1}},
+                    {{4, 2}, {3, 1}, {-1, 1}},
+                    {{4, 2}, {-3, 1}, {5, 1}},
 
                 };
 

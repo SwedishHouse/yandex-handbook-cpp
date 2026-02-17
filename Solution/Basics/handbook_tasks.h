@@ -790,63 +790,48 @@ namespace HandbookIdioms
 	class Rational
 	{
 	private:
-		int denominator;
 		int numerator;
+		int denominator;
 
-		void Invert(void)
+		static int prepare_num(int n, int d)
 		{
-			std::swap(numerator,
-					denominator);
+			if (d == 0)
+				return 0;
+
+			return d > 0 ? n : -n;
 		}
 
-		void Reduce(void)
+		static int prepare_den(int n, int d)
 		{
-			/*if (numerator == 0)
-				return;*/
+			if (d == 0 || n == 0)
+				return 1;
 
-			const int gcd = std::gcd<int64_t>(numerator, denominator);
-
-			numerator /= gcd;
-			denominator /= gcd;
+			return d > 0 ? d : -d;
 		}
 
 	public:
 		Rational() : numerator(0), denominator(1) {}
 
-		Rational(int num, int den) :numerator(0), denominator(1)
-		{
-			if (den == 0)
-				return;
-
-			// Обработаем знаки входных чисел
-			if (den < 0)
-			{
-				num = -num;
-				den = -den;
-			}
-
-			numerator = num;
-			denominator = den;
-		}
+		Rational(int num, int den) :
+			numerator(prepare_num(num, den)),
+			denominator(prepare_den(num, den)) {}
 
 		// *** Свойства геттеры ***
 
 		// Получение числителя
-		int Numerator(void) 
+		int Numerator(void) const
 		{
-			Reduce();
-			return numerator; 
+			return numerator / std::gcd<int64_t>(numerator, denominator);
 		}
 
 		// Получение знаменателя
-		int Denominator(void) 
-		{ 
-			Reduce();
-			return denominator;
+		int Denominator(void) const
+		{
+			return denominator / std::gcd<int64_t>(numerator, denominator);
 		}
 
 		// Операторы сложения
-		Rational operator + (int other)
+		Rational operator + (int other) const 
 		{
 			Rational left(*this);
 			Rational right(other * left.denominator, left.denominator);
@@ -854,55 +839,49 @@ namespace HandbookIdioms
 			return left + right;
 		}
 
-		Rational operator + (Rational other)
+		Rational operator + (const Rational& other) const
 		{
-			Rational left(*this);
+			const int den = this->denominator * other.denominator;
 
-			left.numerator *= other.denominator;
-			left.denominator *= other.denominator;
+			const int num = this->numerator * other.denominator +
+				this->denominator * other.numerator;
 
-			other.numerator *= this->denominator;
-			other.denominator *= this->denominator;
+			return Rational(num, den);
+		}
 
-			left.numerator += other.numerator;
-
-			return left;
+		// Левосторонний операнд целого числа
+		friend Rational operator + (int left, const Rational& right)
+		{
+			return right + left;
 		}
 
 		// Сложение с присвоением
 
 		Rational& operator += (int other)
 		{
-			Rational right(other , 1);
+			Rational right(other, 1);
 
 			*this += right;
 
 			return *this;
 		}
 
-		Rational& operator += (Rational other)
+		Rational& operator += (const Rational& other)
 		{
-			const int denom = other.denominator;
-			other.denominator *= this->denominator;
-			other.numerator *= this->denominator;
-
-			this->numerator *= denom;
-			this->denominator *= denom;
-
-			this->numerator += other.numerator;
+			*this = Rational(*this) + other;
 
 			return *this;
 		}
 
 		// Операторы вычитания
-		Rational operator - (int other)
+		Rational operator - (int other) const
 		{
 			return Rational(*this) + -other;
 		}
 
-		Rational operator - (Rational other)
+		Rational operator - (const Rational& other) const
 		{
-			return Rational(*this) + -other;
+			return Rational(*this) + (-other);
 		}
 
 		// Вычитание с присвоением
@@ -912,28 +891,33 @@ namespace HandbookIdioms
 			return *this;
 		}
 
-		Rational& operator -= (Rational other)
+		Rational& operator -= (const Rational& other)
 		{
 			*this += -other;
 			return *this;
 		}
 
 		// Операторы умножения
-		Rational operator * (int other)
+		Rational operator*(int other) const
 		{
 			Rational res = Rational(other, 1);
 
 			return *this * res;
 		}
 
-		Rational operator * (Rational& other)
+		Rational operator*(const Rational& other) const
 		{
-			Rational res = Rational(*this);
 
-			res.numerator *= other.numerator;
-			res.denominator *= other.denominator;
+			const int num = this->numerator * other.numerator;
+			const int den = this->denominator * other.denominator;
 
-			return res;
+			return Rational(num, den);
+		}
+
+		// Версия для левого операнда
+		friend Rational operator*(int left, const Rational& right)
+		{
+			return right * left;
 		}
 
 		// Умножение с присвоением
@@ -944,7 +928,7 @@ namespace HandbookIdioms
 			return *this;
 		}
 
-		Rational& operator *= (Rational& other)
+		Rational& operator *= (const Rational& other)
 		{
 			this->numerator *= other.numerator;
 			this->denominator *= other.denominator;
@@ -953,14 +937,14 @@ namespace HandbookIdioms
 		}
 
 		// Операторы деления
-		Rational operator / (int other)
+		Rational operator / (int other) const
 		{
 			Rational r = Rational(1, other);
 
 			return Rational(*this) * r;
 		}
 
-		Rational operator / (Rational& other)
+		Rational operator / (const Rational& other) const
 		{
 			const int num = this->numerator * other.denominator;
 			const int den = this->denominator * other.numerator;
@@ -977,40 +961,38 @@ namespace HandbookIdioms
 			return *this;
 		}
 
-		Rational& operator /= (Rational& other)
+		Rational& operator /= (const Rational& other)
 		{
 			Rational r = Rational(other.denominator, other.numerator);
 			*this *= r;
-			
+
 			return *this;
 		}
 
 		// Унарные операторы
-		Rational operator+()
+		Rational operator+() const
 		{
 			return Rational(*this);
 		}
 
-		Rational operator-()
+		Rational operator-() const
 		{
-			Rational res = Rational(*this);
-			res.numerator = -res.numerator;
-			return res;
+			return Rational(-this->numerator, this->denominator);
 		}
 
 		// Операторы сравнения
-		bool operator==(Rational other)
+		bool operator==(const Rational& other) const 
 		{
-			return	this->Numerator() == other.Numerator() && 
-					this->Denominator() == other.Denominator();
+			return	this->Numerator() == other.Numerator() &&
+				this->Denominator() == other.Denominator();
 		}
 
-		bool operator!=(Rational other)
+		bool operator!=(const Rational& other) const
 		{
 			return !(*this == other);
 		}
 
-	};
+	}; // end Rational
 	
 
 };
