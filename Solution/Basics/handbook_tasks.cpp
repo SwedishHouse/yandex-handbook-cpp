@@ -1092,3 +1092,26 @@ void Tree::Delete(const std::vector<std::string>& node)
             current = &current->children.at(item);
     }
 }
+
+std::ostream& operator << (std::ostream& out, HandbookIdioms::TicTacToe& field)
+{
+    for (size_t i = 0; i != field.N; ++i)
+    {
+        for (size_t j = 0; j != field.N; ++j)
+        {
+            switch (field(i, j))
+            {
+            case 0:
+                out << '.';
+                break;
+            case 1:
+                out << 'X';
+                break;
+            case 2:
+                out << 'O';
+            }
+        }
+        out << "\n";
+    }
+    return out;
+}

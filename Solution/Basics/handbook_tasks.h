@@ -998,11 +998,13 @@ namespace HandbookIdioms
 	//
 	namespace TaskD 
 	{
-		struct Node {
+		struct Node 
+		{
 			std::map<std::string, Node> children;
 		};
 
-		class Tree {
+		class Tree 
+		{
 		private:
 			Node root;
 
@@ -1012,8 +1014,198 @@ namespace HandbookIdioms
 			void Delete(const std::vector<std::string>& node);
 		};
 	}
+
+	class TicTacToe 
+	{
+	public:
+		const size_t N;  // размер игрового поля
+		const size_t K;  // сколько фишек нужно поставить в ряд, чтобы выиграть
+
+	private:
+		// 0 - пусто, 1 - фишка первого игрока (крестик), 2 - фишка второго игрока (нолик)
+		std::vector<std::vector<int>> Table;
+
+		// номер текущего игрока (1 или 2)
+		int currentPlayer;
+
+	public:
+		TicTacToe(size_t n, size_t k) : N(n), K(k), Table(n), currentPlayer(1)
+		{
+			for (size_t i = 0; i != N; ++i) 
+			{
+				Table[i].reserve(N);
+				Table[i] = std::vector<int>(N);
+			}
+		}
+
+		int operator()(size_t i, size_t j) const 
+		{
+			return Table[i][j];
+		}
+
+		int GetCurrentPlayer() const 
+		{
+			return currentPlayer;
+		}
+
+		bool Set(size_t i, size_t j) 
+		{  
+			// возвращает true, если ход завершился выигрышем
+			Table[i][j] = currentPlayer;
+			currentPlayer = currentPlayer % 2 + 1;
+			bool wins = CheckRow(i, j) || CheckColumn(i, j) || CheckDiagonal1(i, j) || CheckDiagonal2(i, j);
+			return wins;
+		}
+
+	private:
+		bool CheckRow(size_t i, size_t j) const 
+		{
+			size_t d1 = 0;
+			while (d1 <= j && Table[i][j - d1] == Table[i][j]) 
+			{
+				++d1;
+			}
+
+			size_t d2 = 0;
+			while (j + d2 < N && Table[i][j + d2] == Table[i][j]) 
+			{
+				++d2;
+			}
+
+			return d1 + d2 > K;
+		}
+
+		bool CheckColumn(size_t i, size_t j) const 
+		{
+			size_t d1 = 0;
+			while (d1 <= i && Table[i - d1][j] == Table[i][j]) 
+			{
+				++d1;
+			}
+
+			size_t d2 = 0;
+			while (i + d2 < N && Table[i + d2][j] == Table[i][j]) 
+			{
+				++d2;
+			}
+
+			return d1 + d2 > K;
+		}
+
+		bool CheckDiagonal1(size_t i, size_t j) const
+		{
+			size_t d1 = 0;
+
+			while (d1 <= i &&  d1 <= j && Table[i - d1][j - d1] == Table[i][j])
+				d1++;
+
+			// Потом вверх по диагонали
+			size_t d2 = 0;
+
+			while (i + d2 < N && j + d2 < N && Table[i + d2][j + d2] == Table[i][j])
+				d2++;
+
+			return d1 + d2 > K;
+		}
+
+		bool CheckDiagonal2(size_t i, size_t j) const 
+		{
+			size_t d1 = 0;
+
+			while (i + d1 < N && d1 <= j && Table[i + d1][j - d1] == Table[i][j])
+				d1++;
+
+			size_t d2 = 0;
+			while (d2 <= i && j + d2 < N && Table[i - d2][j + d2] == Table[i][j])
+				d2++;
+
+			return d1 + d2 > K;
+		}
+
+	}; // End TicTacToe
+
+
+	std::ostream& operator << (std::ostream& out, TicTacToe& field);
+
+
+	//Вы работаете оператором на складе. Время от времени вам привозят новые коробки. 
+	// Каждая коробка имеет свою грузоподъемность wi​ и объем vi​.
+	// Получая новую коробку, вы ставите на ней серийный номер, 
+	// используя все целые неотрицательные числа последовательно, начиная с нуля.
+	// Иногда вас просят выдать коробку минимальной грузоподъемности, 
+	// чтобы она выдержала предмет весом w — или коробку минимальной вместимости,
+	// в которую можно насыпать песок объемом v.
+	// Вам нужно быстро определять серийный номер коробки, которая будет выдана.
+	// Коробки обратно на склад не возвращаются.
+	// Если подходящих коробок несколько, нужно выбрать ту,
+	// которая пролежала на складе меньше. 
+	// Нужно реализовать класс Stock, у которого, среди прочих, будет три функции:
+	// void Add(int w, int v); — добавить коробку на склад;
+	// int GetByW(int min_w); — вернуть номер коробки грузоподъемности, хотя бы minwminw​;
+	// int GetByV(int min_v); — вернуть номер коробки объема, хотя бы minvminv​.
+	//	Если подходящей коробки нет, соответствующая функция должна вернуть −1.
+	class Stock
+	{
+	private:
+		struct WeightNumber
+		{
+			int w;
+			size_t i;
+
+			bool operator < (const WeightNumber& other) const
+			{
+				if (w == other.w)
+				{
+					return i > other.i;
+				}
+
+				return w < other.w;
+			}
+		};
+
+		struct VolumeNumber
+		{
+			int v;
+			size_t i;
+
+			bool operator < (const VolumeNumber& other) const
+			{
+				if (v == other.v)
+				{
+					return i > other.i;
+				}
+
+				return v < other.v;
+			}
+		};
+
+		struct Iterators 
+		{
+			std::set<WeightNumber>::iterator byW;
+			std::set<VolumeNumber>::iterator byV;
+		};
 	
+	public:
+		void Add(int w, int v)
+		{
+			throw std::logic_error("Сделай этот метод!!!");
+		}
+		int GetByW(int min_w)
+		{
+			throw std::logic_error("Сделай этот метод!!!");
+		}
+
+		int GetByV(int min_v)
+		{
+			throw std::logic_error("Сделай этот метод!!!");
+		}
 
 	
 
-};
+
+
+			
+	};
+
+
+}; // End namespace HandbookIdioms

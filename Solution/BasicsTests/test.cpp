@@ -3211,6 +3211,234 @@ namespace IdiomsCppTest
             }
         }
 
+        // Один студент решил написать класс для своей реализации игры «крестики-нолики». 
+        // Игра ведётся на квадратном поле размера N×N двумя игроками.
+        // Игроки должны составить K крестиков или ноликов в ряд(по горизонтали, по вертикали или по диагонали).
+        // Класс должен уметь создавать квадратное поле заданных размеров, выполнять очередной ход в пустую клетку,
+        // а также проверять, не наступил ли выигрыш.
+        // Кроме того, должен быть оператор << , который печатает поле.
+        namespace TaskE
+        {
+            // подключим тестируем объект
+            using namespace HandbookIdioms;
+
+            typedef std::pair<size_t, size_t> player_move;
+
+            // Тесты конструкторов
+            TEST(Construction, Default)
+            {
+                const size_t fieldSize = 4;
+                const size_t count_for_winnig = 2;
+
+                TicTacToe ticTacToe = TicTacToe(fieldSize, count_for_winnig);
+
+                ASSERT_TRUE(ticTacToe.GetCurrentPlayer() == 1);
+            }
+
+            // Note: Исключения не изучили, 
+            // потому не буду себя мучать передачей граничных элементов
+
+            TEST(TrivialGame, FirstRow)
+            {
+                const size_t fieldSize = 3;
+                const size_t count_for_winnig = 3;
+
+                TicTacToe game = TicTacToe(fieldSize, count_for_winnig);
+
+                player_move moves[] =
+                {
+                    { 0, 0},
+                    { 1, 0},
+                    { 0, 1},
+                    { 1, 1},
+                    { 0, 2}
+                };
+
+                for (auto move : moves)
+                {
+                    const int player = game.GetCurrentPlayer();
+
+                    if (game.Set(move.first, move.second))
+                    {
+                        ASSERT_EQ(player, 1);
+                    }
+                }
+            }
+
+            TEST(TrivialGame, FirstCol)
+            {
+                const size_t fieldSize = 3;
+                const size_t count_for_winnig = 3;
+
+                TicTacToe game = TicTacToe(fieldSize, count_for_winnig);
+
+                player_move moves[] =
+                {
+                    { 0, 0},
+                    { 1, 0},
+                    { 1, 0},
+                    { 1, 1},
+                    { 2, 0}
+                };
+
+                for (auto move : moves)
+                {
+                    const int player = game.GetCurrentPlayer();
+
+                    if (game.Set(move.first, move.second))
+                    {
+                        ASSERT_EQ(player, 1);
+                    }
+                }
+            }
+
+            // Напишем сценарии с учетом хода игроков
+            TEST(TrivialGame, StarightDiag)
+            {
+                const size_t fieldSize = 3;
+                const size_t count_for_winnig = 3;
+
+                TicTacToe game = TicTacToe(fieldSize, count_for_winnig);
+
+                player_move moves[] =
+                {
+                    { 0, 0},
+                    { 0, 1},
+                    { 1, 1},
+                    { 1, 0},
+                    { 2, 2}
+                };
+
+                for (auto move: moves)
+                {
+                    const int player = game.GetCurrentPlayer();
+
+                    if (game.Set(move.first, move.second))
+                    {
+                        ASSERT_EQ(player, 1);
+                    }
+                }
+            }
+
+        } // End namespace TaskE
+
+        namespace TaskF
+        {
+            // подключим тестируем объект
+            using namespace HandbookIdioms;
+
+
+
+            typedef struct Box
+            {
+                // Максимальный вес груза коробки
+                int w;
+                // Максимальный объем коробки
+                int v;
+            } box_t;
+
+            // Создание объекта
+            TEST(Constructor, Default)
+            {
+                ASSERT_NO_THROW(Stock());
+            }
+
+            // Добавление объекта
+            TEST(Add, SingleBox)
+            {
+                Stock stock = Stock();
+
+                const box_t box = { 1, 1 };
+
+                EXPECT_NO_THROW(stock.Add(box.w, box.v));
+            }
+
+            // Добавление множества различных объектов
+            TEST(Add, SeveralUniqueBoxes)
+            {
+                Stock stock = Stock();
+
+                const size_t count = 200;
+
+                for (size_t i = 0; i < count; i++)
+                {
+                    const box_t box = { i, i };
+
+                    EXPECT_NO_THROW(stock.Add(box.w, box.v));
+                }
+            }
+
+            // Добавление множества одинаковых объектов
+            TEST(Add, AllBoxesEqual)
+            {
+                Stock stock = Stock();
+
+                const size_t count = 200;
+
+                for (size_t i = 0; i < count; i++)
+                {
+                    const box_t box = { 0, 0 };
+
+                    EXPECT_NO_THROW(stock.Add(box.w, box.v));
+                }
+            }
+
+            // Добавление множества одинаковых объектов
+            TEST(Add, AllBoxesEqualWeight)
+            {
+                Stock stock = Stock();
+
+                const size_t count = 200;
+
+                for (size_t i = 0; i < count; i++)
+                {
+                    const box_t box = { i, 0 };
+
+                    EXPECT_NO_THROW(stock.Add(box.w, box.v));
+                }
+            }
+
+            // Добавление множества одинаковых объектов
+            TEST(Add, AllBoxesEqualVolume)
+            {
+                Stock stock = Stock();
+
+                const size_t count = 200;
+
+                for (size_t i = 0; i < count; i++)
+                {
+                    const box_t box = { 0, i };
+
+                    EXPECT_NO_THROW(stock.Add(box.w, box.v));
+                }
+            }
+
+            // Добавление множества одинаковых объектов
+            TEST(Add, MixedBoxes)
+            {
+                Stock stock = Stock();
+
+                const size_t count = 10, prescaller = 4;
+
+                size_t index = 0, prescaller_index = 0;
+
+                while(index <= count)
+                {
+                    const box_t box = { index, index };
+
+                    EXPECT_NO_THROW(stock.Add(box.w, box.v));
+
+                    if (prescaller_index++ != prescaller)
+                        continue;
+
+                    prescaller_index = 0;
+                    index++;
+                }
+            }
+
+
+        } // End namespace TaskF
+
 
     }; // End ClassesTest namespace
 
