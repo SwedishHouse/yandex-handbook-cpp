@@ -3436,6 +3436,48 @@ namespace IdiomsCppTest
                 }
             }
 
+            TEST(GetByW, NoSingleBox)
+            {
+                Stock stock = Stock();
+
+                const box_t box = { 1, 1 };
+
+                const int res = stock.GetByW(box.w);
+
+                EXPECT_EQ(res, -1);
+            }
+
+            TEST(GetByW, NoSingleBoxNoThrow)
+            {
+                Stock stock = Stock();
+
+                const box_t box = { 1, 1 };
+
+                EXPECT_NO_THROW(stock.GetByW(box.w));
+            }
+
+            TEST(GetByV, NoSingleBox)
+            {
+                Stock stock = Stock();
+
+                const box_t box = { 1, 1 };
+
+                const int res = stock.GetByV(box.v);
+
+                EXPECT_EQ(res, -1);
+            }
+
+            TEST(GetByV, NoSingleBoxNoThrow)
+            {
+                Stock stock = Stock();
+
+                const box_t box = { 1, 1 };
+
+                EXPECT_NO_THROW(stock.GetByV(box.v));
+            }
+
+            
+
 
         } // End namespace TaskF
 
