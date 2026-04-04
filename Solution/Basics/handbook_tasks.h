@@ -307,905 +307,1025 @@ namespace HandbookSTL
 // Задачи из главы 4. Идиомы C++
 namespace HandbookIdioms
 {
-	// Задачи из раздела https://education.yandex.ru/handbook/cpp/article/classes
-	// Note: для некоторых задач надо написать классы с одинаковыми именами
-	// Для простоты тестирования оберну их в отдельное простанство имен
-	namespace TaskA
+
+	namespace Classes
 	{
-		// Задача А
-		// Вам надо написать класс Date для хранения даты григорианского календаря. 
-		// Используйте три переменных типа int для хранения дня, месяца и года.
-		// В вашем классе должен быть следующий публичный интерфейс:
-		// Конструктор, принимающий на вход три числа : день, месяц и год.
-		// В случае некорректной даты должна создаваться дата 1 января 1970 года
-		// Константные функции GetDay, GetMonth и GetYear.
-		// Бинарные операторы + и - , где вторым аргументом является целое число — количество дней.
-		// Эти операторы должны вернуть новую дату, отстоящую от заданной на указанное число дней.
-		// Бинарный оператор - , вычисляющий разность между двумя датами и возвращающий int – количество дней.
-		// Считайте, что все обрабатываемые даты будут лежать в пределах от 1 января 1970 года до 31 декабря 2099 года.
-		// Сдайте в систему только код класса Date без функции main.
-		class Date
+		// Задачи из раздела https://education.yandex.ru/handbook/cpp/article/classes
+		// Note: для некоторых задач надо написать классы с одинаковыми именами
+		// Для простоты тестирования оберну их в отдельное простанство имен
+		namespace TaskA
 		{
-		public:
-			// Перечисление месяцев
-			typedef enum : int
+			// Задача А
+			// Вам надо написать класс Date для хранения даты григорианского календаря. 
+			// Используйте три переменных типа int для хранения дня, месяца и года.
+			// В вашем классе должен быть следующий публичный интерфейс:
+			// Конструктор, принимающий на вход три числа : день, месяц и год.
+			// В случае некорректной даты должна создаваться дата 1 января 1970 года
+			// Константные функции GetDay, GetMonth и GetYear.
+			// Бинарные операторы + и - , где вторым аргументом является целое число — количество дней.
+			// Эти операторы должны вернуть новую дату, отстоящую от заданной на указанное число дней.
+			// Бинарный оператор - , вычисляющий разность между двумя датами и возвращающий int – количество дней.
+			// Считайте, что все обрабатываемые даты будут лежать в пределах от 1 января 1970 года до 31 декабря 2099 года.
+			// Сдайте в систему только код класса Date без функции main.
+			class Date
 			{
-				JANUARY = 1,
-				FEBRARY,
-				MARCH,
-				APRIL,
-				MAY,
-				JUNE,
-				JULY,
-				AUGUST,
-				SEPTEMBER,
-				OCTOBER,
-				NOVEMBER,
-				DECEMBER
-			} months_e;
+			public:
+				// Перечисление месяцев
+				typedef enum : int
+				{
+					JANUARY = 1,
+					FEBRARY,
+					MARCH,
+					APRIL,
+					MAY,
+					JUNE,
+					JULY,
+					AUGUST,
+					SEPTEMBER,
+					OCTOBER,
+					NOVEMBER,
+					DECEMBER
+				} months_e;
 
-			// Конструктор по умолчанию
-			Date()
+				// Конструктор по умолчанию
+				Date()
+				{
+					set_from_days(this->DAY_MIN);
+				};
+
+				// Конструктор с параметрами
+				Date(int day, int month, int year) : Date()
+				{
+					// Проверяем полученные значения на попадания в диапазон
+					if (!is_coorect_date(year, month, day))
+						return;
+
+					// Дополнительная проверка для високосного года
+					if (day == this->FEBRARY && day > get_days_in_february(year))
+						return;
+
+					// Обновим значения
+					this->day = day;
+					this->month = month;
+					this->year = year;
+				}
+
+
+				// Public getters
+				int GetDay() const { return day; };
+				int GetMonth() const { return static_cast<int>(month); };
+				int GetYear() const { return year; };
+
+				// Operators
+				Date operator+ (int days) const
+				{
+					Date res(*this);
+
+					res.set_from_days(res.get_days_count() + days);
+
+					return res;
+				}
+
+				Date operator - (int k) const {
+					Date result(*this);
+					result.set_from_days(result.get_days_count() - k);
+					return result;
+				}
+
+				int operator - (const Date& other) const {
+					return get_days_count() - other.get_days_count();
+				}
+
+				// Public constants
+				static const int YEAR_MIN = 1970;
+				static const int YEAR_MAX = 2099;
+				static const int DAY_MIN = 1;
+				static const int DAY_FEBRUARY_USUAL = 28;
+				static const int DAY_FEBRUARY_LEAP = DAY_FEBRUARY_USUAL + 1;
+				static const int DAY_MAX = 31;
+				static const int DAYS_IN_YEAR_WITHOUT_FEB = 337;
+
+			private:
+				// Переменная для хранения текущего года
+				int year;
+				// Текущий месяц
+				int month;
+				// Текущий день
+				int day;
+
+				// Определяет, високосный ли год
+				bool is_a_leap_year(int year) const
+				{
+					if (year % 400 == 0)
+						return true;
+					else if (year % 100 == 0)
+						return false;
+					else if (year % 4 == 0)
+						return true;
+					else
+						return false;
+				}
+
+				// Ставит дату по количеству дней
+				void set_from_days(int in_days)
+				{
+					// Установим значения года и месяца по умолчанию
+					this->year = this->YEAR_MIN;
+					this->month = JANUARY;
+
+					// Обрабатываем случай превышения входного количества дней 
+					// по сравнению в количеством дней в году
+					while (in_days > days_in_a_year(this->GetYear()))
+					{
+						// Уменьшим входное количество дней
+						in_days -= days_in_a_year(this->GetYear());
+						// Инкремент года
+						this->year++;
+					}
+
+					// Обрабатываем случай превышения входного количества дней 
+					// по сравнению в количеством дней в месяце
+					while (in_days > days_passed_to_month(this->GetYear(), this->GetMonth() + 1))
+					{
+						// Инкремент месяца
+						this->month++;
+					}
+
+					// Обновим количество дней
+					this->day = in_days - days_passed_to_month(this->GetYear(), this->GetMonth());
+				}
+
+				// Проверка, корректная ли дата
+				bool is_coorect_date(int year, int month, int day) const
+				{
+					return	year >= this->YEAR_MIN && year <= this->YEAR_MAX &&
+						month >= JANUARY && month <= DECEMBER &&
+						day >= this->DAY_MIN && day <= this->DAY_MAX;
+				}
+
+				// Опредлеяпет коилчество дней в феврале
+				int get_days_in_february(int year) const
+				{
+					if (is_a_leap_year(year))
+						return this->DAY_FEBRUARY_LEAP;
+
+					return this->DAY_FEBRUARY_USUAL;
+				}
+
+				// Определяет количество дней в месяце
+				int get_days_in_month(int year, int m) const
+				{
+					switch (m)
+					{
+					case FEBRARY:
+						return get_days_in_february(year);
+
+					case JANUARY:
+					case MARCH:
+					case MAY:
+					case JULY:
+					case AUGUST:
+					case OCTOBER:
+					case DECEMBER:
+						return 31;
+
+					default:
+						return 30;
+					}
+				}
+
+				// Определим количество дней с начала года в целых месяцах
+				int days_passed_to_month(int year, int month) const
+				{
+					int days = 0;
+					for (int i = JANUARY; i < month; ++i)
+					{
+						// Прибавляем количество дней месяца 
+						days += get_days_in_month(year, i);
+					}
+
+					// Возвращаем результат
+					return days;
+				}
+
+				// Определяет количество дней в году
+				int days_in_a_year(int year) const
+				{
+					return DAYS_IN_YEAR_WITHOUT_FEB + get_days_in_february(year);
+				}
+
+				// Определяем количество дней с начальной даты
+				int get_days_count() const
+				{
+					int result = 0;
+
+					for (int i = this->YEAR_MIN; i < GetYear(); ++i)
+					{
+						result += days_in_a_year(i);
+					}
+
+					return this->day + result + days_passed_to_month(GetYear(), GetMonth());
+				}
+
+			}; // End Class Date
+
+		}; // End namespace Task A
+
+		namespace TaskB
+		{
+			// Задача B
+			/*
+			Вам надо переделать реализацию класса Date из предыдущей задачи,
+			сохранив публичный интерфейс неизменным. Теперь для хранения даты
+			используйте одну переменную типа int — количество дней,
+			прошедших с некоторого начала отсчёта.
+			Считайте, что все обрабатываемые даты будут лежать в пределах
+			от 1 января 1970 года до 31 декабря 2099 года.
+			Сдайте в систему только код класса Date без функции main.
+			*/
+			class Date
 			{
-				set_from_days(this->DAY_MIN);
-			};
+			public:
+				// Перечисление месяцев
+				typedef enum : int
+				{
+					JANUARY = 1,
+					FEBRARY,
+					MARCH,
+					APRIL,
+					MAY,
+					JUNE,
+					JULY,
+					AUGUST,
+					SEPTEMBER,
+					OCTOBER,
+					NOVEMBER,
+					DECEMBER
+				} months_e;
 
-			// Конструктор с параметрами
-			Date(int day, int month, int year) : Date()
+				// Конструктор по умолчанию
+				Date(void) : days(1) {}
+
+				// Конструктор с параметрами
+				Date(int day, int month, int year) : days(0)
+				{
+					// Проверяем полученные значения на попадания в диапазон
+					if (!is_coorect_date(year, month, day))
+					{
+						day = 1;
+						month = this->JANUARY;
+						year = this->YEAR_MIN;
+					}
+
+					// Проитерируем по годам
+					for (int i = this->YEAR_MIN; i < year; i++)
+					{
+						// Заполняем количетсвом дней в годах
+						this->days += days_in_a_year(i);
+					}
+
+					// Проитерируем по месяцам
+					for (int i = this->JANUARY; i < month; i++)
+					{
+						// Заполняем количетсвом дней в годах
+						this->days += get_days_in_month(year, i);
+					}
+
+					// Добавим количество дней
+					this->days += day;
+				}
+
+
+				// Public getters
+				int GetDay() const
+				{
+					int days = this->days;
+
+					int year = this->GetYear();
+
+					for (int i = this->YEAR_MIN; i < year; i++)
+					{
+						days -= days_in_a_year(i);
+					}
+
+					return days -= days_passed_to_month(year, this->GetMonth());
+				};
+
+				int GetMonth() const
+				{
+					int days = this->days;
+
+					int year = this->GetYear();
+
+					for (int i = this->YEAR_MIN; i < year; i++)
+					{
+						days -= days_in_a_year(i);
+					}
+
+					for (int i = this->JANUARY; i < this->DECEMBER; i++)
+					{
+						const int in_m = days_passed_to_month(year, i + 1);
+						if (days <= in_m)
+							return i;
+					}
+
+					return this->DECEMBER;
+				};
+
+				int GetYear() const
+				{
+					int days_count = this->days;
+
+					for (int i = this->YEAR_MIN; i <= this->YEAR_MAX; i++)
+					{
+						const int in_a_year = this->days_in_a_year(i);
+
+						if (days_count <= in_a_year)
+							return i;
+
+						days_count -= in_a_year;
+					}
+
+					return this->YEAR_MAX + 1;
+				};
+
+				// Operators
+				Date operator+ (int days) const
+				{
+					Date res;
+
+					res.days = this->days + days;
+
+					if (is_coorect_date(res.GetYear(), res.GetMonth(), res.GetDay()))
+						return res;
+
+					return Date();
+				}
+
+				Date operator - (int k) const {
+					Date res;
+
+					res.days = this->days - k;
+
+					if (is_coorect_date(res.GetYear(), res.GetMonth(), res.GetDay()))
+						return res;
+
+					return Date();
+				}
+
+				int operator - (const Date& other) const {
+					return this->days - other.days;
+				}
+
+				// Public constants
+				static const int YEAR_MIN = 1970;
+				static const int YEAR_MAX = 2099;
+				static const int DAY_MIN = 1;
+				static const int DAY_FEBRUARY_USUAL = 28;
+				static const int DAY_FEBRUARY_LEAP = DAY_FEBRUARY_USUAL + 1;
+				static const int DAY_MAX = 31;
+				static const int DAYS_IN_YEAR_WITHOUT_FEB = 337;
+
+			private:
+				// Количество дней с начала минимальной даты
+				int days;
+
+				// Определяет, високосный ли год
+				bool is_a_leap_year(int year) const
+				{
+					if (year % 400 == 0)
+						return true;
+					else if (year % 100 == 0)
+						return false;
+					else if (year % 4 == 0)
+						return true;
+					else
+						return false;
+				}
+
+				// Проверка корректности кода 
+				bool is_coorect_date(int year, int month, int day) const
+				{
+					// Проверка, попадаем ли в диапазон лет
+					if (year < this->YEAR_MIN || year > this->YEAR_MAX)
+						return false;
+
+					// Проверка, попадаем ли в диапазон месяцев
+					if (month < JANUARY || month > DECEMBER)
+						return false;
+
+					// Проверка на нулевое количество дней
+					if (day < this->DAY_MIN)
+						return false;
+
+					// Проверим, сколько дней в предлагаемом месяце
+					const int days_in_month = get_days_in_month(year, month);
+
+					return day <= days_in_month;
+				}
+
+				// Опредлеяпет коилчество дней в феврале
+				int get_days_in_february(int year) const
+				{
+					if (is_a_leap_year(year))
+						return this->DAY_FEBRUARY_LEAP;
+
+					return this->DAY_FEBRUARY_USUAL;
+				}
+
+				// Определяет количество дней в месяце
+				int get_days_in_month(int year, int m) const
+				{
+					switch (m)
+					{
+					case FEBRARY:
+						return get_days_in_february(year);
+
+					case JANUARY:
+					case MARCH:
+					case MAY:
+					case JULY:
+					case AUGUST:
+					case OCTOBER:
+					case DECEMBER:
+						return 31;
+
+					default:
+						return 30;
+					}
+				}
+
+				// Определим количество дней с начала года в целых месяцах
+				int days_passed_to_month(int year, int month) const
+				{
+					int days = 0;
+					for (int i = JANUARY; i < month; ++i)
+					{
+						// Прибавляем количество дней месяца 
+						days += get_days_in_month(year, i);
+					}
+
+					// Возвращаем результат
+					return days;
+				}
+
+				// Определяет количество дней в году
+				int days_in_a_year(int year) const
+				{
+					return DAYS_IN_YEAR_WITHOUT_FEB + get_days_in_february(year);
+				}
+
+			}; // End Class Date
+		} // End namespace for Task B
+
+		// Задача C: Rational
+		// https://new.contest.yandex.ru/contests/42158/problems?id=40119%2F2022_10_30%2FLJjNoDCHJX
+		// Напишите класс Rational(рациональное число).
+		// Конструктор класса должен получать на вход два числа типа int(числитель и знаменатель).
+		// Считайте, что по умолчанию числитель равен 0, а знаменатель — 1.
+		// Переопределите бинарные операторы сложения, вычитания, умножения и 
+		// деления(работающие в том числе и с аргументами типа int), 
+		// унарные плюс и минус.
+		// Предусмотрите функции - члены Numerator и Denominator для получения числителя и 
+		// знаменателя несократимого представления этой дроби(знаменатель должен быть положительным).
+		// Переопределите также операторы +=, -=, *= и /= .Не забудьте определить операторы == и != .
+		// Используйте функцию std::gcd стандартной библиотеки.
+		class Rational
+		{
+		private:
+			int numerator;
+			int denominator;
+
+			static int prepare_num(int n, int d)
 			{
-				// Проверяем полученные значения на попадания в диапазон
-				if (!is_coorect_date(year, month, day))
-					return;
+				if (d == 0)
+					return 0;
 
-				// Дополнительная проверка для високосного года
-				if (day == this->FEBRARY && day > get_days_in_february(year))
-					return;
-
-				// Обновим значения
-				this->day = day;
-				this->month = month;
-				this->year = year;
+				return d > 0 ? n : -n;
 			}
 
-
-			// Public getters
-			int GetDay() const { return day; };
-			int GetMonth() const { return static_cast<int>(month); };
-			int GetYear() const { return year; };
-
-			// Operators
-			Date operator+ (int days) const
+			static int prepare_den(int n, int d)
 			{
-				Date res(*this);
+				if (d == 0 || n == 0)
+					return 1;
 
-				res.set_from_days(res.get_days_count() + days);
+				return d > 0 ? d : -d;
+			}
 
+		public:
+			Rational() : numerator(0), denominator(1) {}
+
+			Rational(int num, int den) :
+				numerator(prepare_num(num, den)),
+				denominator(prepare_den(num, den)) {}
+
+			// *** Свойства геттеры ***
+
+			// Получение числителя
+			int Numerator(void) const
+			{
+				return numerator / std::gcd<int64_t>(numerator, denominator);
+			}
+
+			// Получение знаменателя
+			int Denominator(void) const
+			{
+				return denominator / std::gcd<int64_t>(numerator, denominator);
+			}
+
+			// Операторы сложения
+			Rational operator + (int other) const
+			{
+				Rational left(*this);
+				Rational right(other * left.denominator, left.denominator);
+
+				return left + right;
+			}
+
+			Rational operator + (const Rational& other) const
+			{
+				const int den = this->denominator * other.denominator;
+
+				const int num = this->numerator * other.denominator +
+					this->denominator * other.numerator;
+
+				return Rational(num, den);
+			}
+
+			// Левосторонний операнд целого числа
+			friend Rational operator + (int left, const Rational& right)
+			{
+				return right + left;
+			}
+
+			// Сложение с присвоением
+
+			Rational& operator += (int other)
+			{
+				Rational right(other, 1);
+
+				*this += right;
+
+				return *this;
+			}
+
+			Rational& operator += (const Rational& other)
+			{
+				*this = Rational(*this) + other;
+
+				return *this;
+			}
+
+			// Операторы вычитания
+			Rational operator - (int other) const
+			{
+				return Rational(*this) + -other;
+			}
+
+			Rational operator - (const Rational& other) const
+			{
+				return Rational(*this) + (-other);
+			}
+
+			// Вычитание с присвоением
+			Rational& operator -= (int other)
+			{
+				*this += -other;
+				return *this;
+			}
+
+			Rational& operator -= (const Rational& other)
+			{
+				*this += -other;
+				return *this;
+			}
+
+			// Операторы умножения
+			Rational operator*(int other) const
+			{
+				Rational res = Rational(other, 1);
+
+				return *this * res;
+			}
+
+			Rational operator*(const Rational& other) const
+			{
+
+				const int num = this->numerator * other.numerator;
+				const int den = this->denominator * other.denominator;
+
+				return Rational(num, den);
+			}
+
+			// Версия для левого операнда
+			friend Rational operator*(int left, const Rational& right)
+			{
+				return right * left;
+			}
+
+			// Умножение с присвоением
+			Rational& operator *= (int other)
+			{
+				this->numerator *= other;
+
+				return *this;
+			}
+
+			Rational& operator *= (const Rational& other)
+			{
+				this->numerator *= other.numerator;
+				this->denominator *= other.denominator;
+
+				return *this;
+			}
+
+			// Операторы деления
+			Rational operator / (int other) const
+			{
+				Rational r = Rational(1, other);
+
+				return Rational(*this) * r;
+			}
+
+			Rational operator / (const Rational& other) const
+			{
+				const int num = this->numerator * other.denominator;
+				const int den = this->denominator * other.numerator;
+
+				return Rational(num, den);
+			}
+
+			// Деление с присвоением
+			Rational& operator /= (int other)
+			{
+				Rational r = Rational(1, other);
+				*this *= r;
+
+				return *this;
+			}
+
+			Rational& operator /= (const Rational& other)
+			{
+				Rational r = Rational(other.denominator, other.numerator);
+				*this *= r;
+
+				return *this;
+			}
+
+			// Унарные операторы
+			Rational operator+() const
+			{
+				return Rational(*this);
+			}
+
+			Rational operator-() const
+			{
+				return Rational(-this->numerator, this->denominator);
+			}
+
+			// Операторы сравнения
+			bool operator==(const Rational& other) const
+			{
+				return	this->Numerator() == other.Numerator() &&
+					this->Denominator() == other.Denominator();
+			}
+
+			bool operator!=(const Rational& other) const
+			{
+				return !(*this == other);
+			}
+
+		}; // end Rational
+
+
+		//
+		namespace TaskD
+		{
+			struct Node
+			{
+				std::map<std::string, Node> children;
+			};
+
+			class Tree
+			{
+			private:
+				Node root;
+
+			public:
+				bool Has(const std::vector<std::string>& node) const;
+				void Insert(const std::vector<std::string>& node);
+				void Delete(const std::vector<std::string>& node);
+			};
+		}
+
+		class TicTacToe
+		{
+		public:
+			const size_t N;  // размер игрового поля
+			const size_t K;  // сколько фишек нужно поставить в ряд, чтобы выиграть
+
+		private:
+			// 0 - пусто, 1 - фишка первого игрока (крестик), 2 - фишка второго игрока (нолик)
+			std::vector<std::vector<int>> Table;
+
+			// номер текущего игрока (1 или 2)
+			int currentPlayer;
+
+		public:
+			TicTacToe(size_t n, size_t k) : N(n), K(k), Table(n), currentPlayer(1)
+			{
+				for (size_t i = 0; i != N; ++i)
+				{
+					Table[i].reserve(N);
+					Table[i] = std::vector<int>(N);
+				}
+			}
+
+			int operator()(size_t i, size_t j) const
+			{
+				return Table[i][j];
+			}
+
+			int GetCurrentPlayer() const
+			{
+				return currentPlayer;
+			}
+
+			bool Set(size_t i, size_t j)
+			{
+				// возвращает true, если ход завершился выигрышем
+				Table[i][j] = currentPlayer;
+				currentPlayer = currentPlayer % 2 + 1;
+				bool wins = CheckRow(i, j) || CheckColumn(i, j) || CheckDiagonal1(i, j) || CheckDiagonal2(i, j);
+				return wins;
+			}
+
+		private:
+			bool CheckRow(size_t i, size_t j) const
+			{
+				size_t d1 = 0;
+				while (d1 <= j && Table[i][j - d1] == Table[i][j])
+				{
+					++d1;
+				}
+
+				size_t d2 = 0;
+				while (j + d2 < N && Table[i][j + d2] == Table[i][j])
+				{
+					++d2;
+				}
+
+				return d1 + d2 > K;
+			}
+
+			bool CheckColumn(size_t i, size_t j) const
+			{
+				size_t d1 = 0;
+				while (d1 <= i && Table[i - d1][j] == Table[i][j])
+				{
+					++d1;
+				}
+
+				size_t d2 = 0;
+				while (i + d2 < N && Table[i + d2][j] == Table[i][j])
+				{
+					++d2;
+				}
+
+				return d1 + d2 > K;
+			}
+
+			bool CheckDiagonal1(size_t i, size_t j) const
+			{
+				size_t d1 = 0;
+
+				while (d1 <= i && d1 <= j && Table[i - d1][j - d1] == Table[i][j])
+					d1++;
+
+				// Потом вверх по диагонали
+				size_t d2 = 0;
+
+				while (i + d2 < N && j + d2 < N && Table[i + d2][j + d2] == Table[i][j])
+					d2++;
+
+				return d1 + d2 > K;
+			}
+
+			bool CheckDiagonal2(size_t i, size_t j) const
+			{
+				size_t d1 = 0;
+
+				while (i + d1 < N && d1 <= j && Table[i + d1][j - d1] == Table[i][j])
+					d1++;
+
+				size_t d2 = 0;
+				while (d2 <= i && j + d2 < N && Table[i - d2][j + d2] == Table[i][j])
+					d2++;
+
+				return d1 + d2 > K;
+			}
+
+		}; // End TicTacToe
+
+
+		std::ostream& operator << (std::ostream & out, TicTacToe & field);
+
+
+		//Вы работаете оператором на складе. Время от времени вам привозят новые коробки. 
+		// Каждая коробка имеет свою грузоподъемность wi​ и объем vi​.
+		// Получая новую коробку, вы ставите на ней серийный номер, 
+		// используя все целые неотрицательные числа последовательно, начиная с нуля.
+		// Иногда вас просят выдать коробку минимальной грузоподъемности, 
+		// чтобы она выдержала предмет весом w — или коробку минимальной вместимости,
+		// в которую можно насыпать песок объемом v.
+		// Вам нужно быстро определять серийный номер коробки, которая будет выдана.
+		// Коробки обратно на склад не возвращаются.
+		// Если подходящих коробок несколько, нужно выбрать ту,
+		// которая пролежала на складе меньше. 
+		// Нужно реализовать класс Stock, у которого, среди прочих, будет три функции:
+		// void Add(int w, int v); — добавить коробку на склад;
+		// int GetByW(int min_w); — вернуть номер коробки грузоподъемности, хотя бы minwminw​;
+		// int GetByV(int min_v); — вернуть номер коробки объема, хотя бы minvminv​.
+		//	Если подходящей коробки нет, соответствующая функция должна вернуть −1.
+		class Stock
+		{
+		private:
+			struct WeightNumber
+			{
+				int w;
+				size_t i;
+
+				bool operator < (const WeightNumber& other) const
+				{
+					if (w == other.w)
+					{
+						return i > other.i;
+					}
+
+					return w < other.w;
+				}
+			};
+
+			struct VolumeNumber
+			{
+				int v;
+				size_t i;
+
+				bool operator < (const VolumeNumber& other) const
+				{
+					if (v == other.v)
+					{
+						return i > other.i;
+					}
+
+					return v < other.v;
+				}
+			};
+
+			struct Iterators
+			{
+				std::set<WeightNumber>::iterator byW;
+				std::set<VolumeNumber>::iterator byV;
+			};
+
+			std::list<Iterators> boxes;
+			std::set<WeightNumber> sortedByW;
+			std::set<VolumeNumber> sortedByV;
+			std::unordered_map<size_t, std::list<Iterators>::iterator> indexes;
+			size_t current_index{ 0 };
+
+		public:
+			void Add(int w, int v)
+			{
+				boxes.push_front(
+					{
+						sortedByW.insert({w, current_index}).first,
+						sortedByV.insert({v, current_index}).first
+					}
+				);
+
+				indexes.insert({ current_index, boxes.begin() });
+				current_index++;
+			}
+
+			int GetByW(int min_w)
+			{
+				const auto it = sortedByW.lower_bound({ min_w, current_index });
+
+				if (it == sortedByW.end())
+				{
+					return -1;
+				}
+
+				size_t res = it->i;
+
+				sortedByW.erase(it);
+				sortedByV.erase(indexes[res]->byV);
+				boxes.erase(indexes[res]);
+				indexes.erase(res);
 				return res;
 			}
 
-			Date operator - (int k) const {
-				Date result(*this);
-				result.set_from_days(result.get_days_count() - k);
-				return result;
-			}
-
-			int operator - (const Date& other) const {
-				return get_days_count() - other.get_days_count();
-			}
-
-			// Public constants
-			static const int YEAR_MIN = 1970;
-			static const int YEAR_MAX = 2099;
-			static const int DAY_MIN = 1;
-			static const int DAY_FEBRUARY_USUAL = 28;
-			static const int DAY_FEBRUARY_LEAP = DAY_FEBRUARY_USUAL + 1;
-			static const int DAY_MAX = 31;
-			static const int DAYS_IN_YEAR_WITHOUT_FEB = 337;
-
-		private:
-			// Переменная для хранения текущего года
-			int year;
-			// Текущий месяц
-			int month;
-			// Текущий день
-			int day;
-
-			// Определяет, високосный ли год
-			bool is_a_leap_year(int year) const
+			int GetByV(int min_v)
 			{
-				if (year % 400 == 0)
-					return true;
-				else if (year % 100 == 0)
-					return false;
-				else if (year % 4 == 0)
-					return true;
-				else
-					return false;
-			}
+				const auto it = sortedByV.lower_bound({ min_v, current_index });
 
-			// Ставит дату по количеству дней
-			void set_from_days(int in_days)
-			{
-				// Установим значения года и месяца по умолчанию
-				this->year = this->YEAR_MIN;
-				this->month = JANUARY;
-
-				// Обрабатываем случай превышения входного количества дней 
-				// по сравнению в количеством дней в году
-				while (in_days > days_in_a_year(this->GetYear()))
+				if (it == sortedByV.end())
 				{
-					// Уменьшим входное количество дней
-					in_days -= days_in_a_year(this->GetYear());
-					// Инкремент года
-					this->year++;
+					return -1;
 				}
 
-				// Обрабатываем случай превышения входного количества дней 
-				// по сравнению в количеством дней в месяце
-				while (in_days > days_passed_to_month(this->GetYear(), this->GetMonth() + 1))
-				{
-					// Инкремент месяца
-					this->month++;
-				}
+				size_t res = it->i;
 
-				// Обновим количество дней
-				this->day = in_days - days_passed_to_month(this->GetYear(), this->GetMonth());
+				sortedByV.erase(it);
+				sortedByW.erase(indexes[res]->byW);
+				boxes.erase(indexes[res]);
+				indexes.erase(res);
+				return res;
 			}
 
-			// Проверка, корректная ли дата
-			bool is_coorect_date(int year, int month, int day) const
-			{
-				return	year >= this->YEAR_MIN && year <= this->YEAR_MAX &&
-					month >= JANUARY && month <= DECEMBER &&
-					day >= this->DAY_MIN && day <= this->DAY_MAX;
-			}
+		}; // Class Stock
+	} // end namespace Classes
 
-			// Опредлеяпет коилчество дней в феврале
-			int get_days_in_february(int year) const
-			{
-				if (is_a_leap_year(year))
-					return this->DAY_FEBRUARY_LEAP;
-
-				return this->DAY_FEBRUARY_USUAL;
-			}
-
-			// Определяет количество дней в месяце
-			int get_days_in_month(int year, int m) const
-			{
-				switch (m)
-				{
-				case FEBRARY:
-					return get_days_in_february(year);
-
-				case JANUARY:
-				case MARCH:
-				case MAY:
-				case JULY:
-				case AUGUST:
-				case OCTOBER:
-				case DECEMBER:
-					return 31;
-
-				default:
-					return 30;
-				}
-			}
-
-			// Определим количество дней с начала года в целых месяцах
-			int days_passed_to_month(int year, int month) const
-			{
-				int days = 0;
-				for (int i = JANUARY; i < month; ++i)
-				{
-					// Прибавляем количество дней месяца 
-					days += get_days_in_month(year, i);
-				}
-
-				// Возвращаем результат
-				return days;
-			}
-
-			// Определяет количество дней в году
-			int days_in_a_year(int year) const
-			{
-				return DAYS_IN_YEAR_WITHOUT_FEB + get_days_in_february(year);
-			}
-
-			// Определяем количество дней с начальной даты
-			int get_days_count() const
-			{
-				int result = 0;
-
-				for (int i = this->YEAR_MIN; i < GetYear(); ++i)
-				{
-					result += days_in_a_year(i);
-				}
-
-				return this->day + result + days_passed_to_month(GetYear(), GetMonth());
-			}
-
-		}; // End Class Date
-
-	}; // End namespace Task A
-
-	namespace TaskB
+	// Решение заданий для https://education.yandex.ru/handbook/cpp/article/template-classes
+	namespace TemplateClasses
 	{
-		// Задача B
-		/*
-		Вам надо переделать реализацию класса Date из предыдущей задачи,
-		сохранив публичный интерфейс неизменным. Теперь для хранения даты
-		используйте одну переменную типа int — количество дней,
-		прошедших с некоторого начала отсчёта.
-		Считайте, что все обрабатываемые даты будут лежать в пределах
-		от 1 января 1970 года до 31 декабря 2099 года.
-		Сдайте в систему только код класса Date без функции main.
-		*/
-		class Date
-		{
+		// Задание A: Table - https://new.contest.yandex.ru/contests/42182/problems?id=40119%2F2022_10_30%2FA6YCL0h2ac
+		template<typename T>
+		class Table {
 		public:
-			// Перечисление месяцев
-			typedef enum : int
-			{
-				JANUARY = 1,
-				FEBRARY,
-				MARCH,
-				APRIL,
-				MAY,
-				JUNE,
-				JULY,
-				AUGUST,
-				SEPTEMBER,
-				OCTOBER,
-				NOVEMBER,
-				DECEMBER
-			} months_e;
+			// *** Конструкторы ***
+			// 
+			// По умолчанию
+			Table();
+			// Параметры размеров таблицы
+			Table(size_t r, size_t c);
 
-			// Конструктор по умолчанию
-			Date(void) : days(1) {}
+			// Деструктор
+			~Table();
 
-			// Конструктор с параметрами
-			Date(int day, int month, int year) : days(0)
-			{
-				// Проверяем полученные значения на попадания в диапазон
-				if (!is_coorect_date(year, month, day))
-				{
-					day = 1;
-					month = this->JANUARY;
-					year = this->YEAR_MIN;
-				}
+			// Оператор индексирования
+			std::vector<T>& operator [] (size_t i);
+			// Константный оператор индексирования
+			const std::vector<T>& operator [] (size_t i) const;
 
-				// Проитерируем по годам
-				for (int i = this->YEAR_MIN; i < year; i++)
-				{
-					// Заполняем количетсвом дней в годах
-					this->days += days_in_a_year(i);
-				}
+			// Изменение размера таблицы
+			void resize(size_t r, size_t c);
 
-				// Проитерируем по месяцам
-				for (int i = this->JANUARY; i < month; i++)
-				{
-					// Заполняем количетсвом дней в годах
-					this->days += get_days_in_month(year, i);
-				}
+			// Получение размера таблицы
+			std::pair<size_t, size_t> size() const;
 
-				// Добавим количество дней
-				this->days += day;
-			}
-
-
-			// Public getters
-			int GetDay() const 
-			{ 
-				int days = this->days;
-
-				int year = this->GetYear();
-
-				for (int i = this->YEAR_MIN; i < year; i++)
-				{
-					days -= days_in_a_year(i);
-				}
-
-				return days -= days_passed_to_month(year, this->GetMonth());
-			};
-
-			int GetMonth() const 
-			{ 
-				int days = this->days;
-
-				int year = this->GetYear();
-
-				for (int i = this->YEAR_MIN; i < year; i++)
-				{
-					days -= days_in_a_year(i);
-				}
-
-				for (int i = this->JANUARY; i < this->DECEMBER; i++)
-				{
-					const int in_m = days_passed_to_month(year, i + 1);
-					if (days <= in_m)
-						return i;
-				}
-
-				return this->DECEMBER;
-			};
-
-			int GetYear() const 
-			{ 
-				int days_count = this->days;
-
-				for (int i = this->YEAR_MIN; i <= this->YEAR_MAX; i++)
-				{
-					const int in_a_year = this->days_in_a_year(i);
-
-					if (days_count <= in_a_year)
-						return i;
-
-					days_count -= in_a_year;
-				}
-
-				return this->YEAR_MAX + 1;
-			};
-
-			// Operators
-			Date operator+ (int days) const
-			{
-				Date res;
-
-				res.days = this->days + days;
-
-				if (is_coorect_date(res.GetYear(), res.GetMonth(), res.GetDay()))
-					return res;
-
-				return Date();
-			}
-
-			Date operator - (int k) const {
-				Date res;
-
-				res.days = this->days - k;
-
-				if (is_coorect_date(res.GetYear(), res.GetMonth(), res.GetDay()))
-					return res;
-
-				return Date();
-			}
-
-			int operator - (const Date& other) const {
-				return this->days - other.days;
-			}
-
-			// Public constants
-			static const int YEAR_MIN = 1970;
-			static const int YEAR_MAX = 2099;
-			static const int DAY_MIN = 1;
-			static const int DAY_FEBRUARY_USUAL = 28;
-			static const int DAY_FEBRUARY_LEAP = DAY_FEBRUARY_USUAL + 1;
-			static const int DAY_MAX = 31;
-			static const int DAYS_IN_YEAR_WITHOUT_FEB = 337;
 
 		private:
-			// Количество дней с начала минимальной даты
-			int days;
+			// Поле хранения данных
+			std::vector<std::vector<T>> data;
 
-			// Определяет, високосный ли год
-			bool is_a_leap_year(int year) const
-			{
-				if (year % 400 == 0)
-					return true;
-				else if (year % 100 == 0)
-					return false;
-				else if (year % 4 == 0)
-					return true;
-				else
-					return false;
-			}
+		}; // End class Table
 
-			// Проверка корректности кода 
-			bool is_coorect_date(int year, int month, int day) const
-			{
-				// Проверка, попадаем ли в диапазон лет
-				if (year < this->YEAR_MIN || year > this->YEAR_MAX)
-					return false;
-
-				// Проверка, попадаем ли в диапазон месяцев
-				if (month < JANUARY || month > DECEMBER)
-					return false;
-
-				// Проверка на нулевое количество дней
-				if (day < this->DAY_MIN)
-					return false;
-
-				// Проверим, сколько дней в предлагаемом месяце
-				const int days_in_month = get_days_in_month(year, month);
-
-				return day <= days_in_month;
-			}
-
-			// Опредлеяпет коилчество дней в феврале
-			int get_days_in_february(int year) const
-			{
-				if (is_a_leap_year(year))
-					return this->DAY_FEBRUARY_LEAP;
-
-				return this->DAY_FEBRUARY_USUAL;
-			}
-
-			// Определяет количество дней в месяце
-			int get_days_in_month(int year, int m) const
-			{
-				switch (m)
-				{
-				case FEBRARY:
-					return get_days_in_february(year);
-
-				case JANUARY:
-				case MARCH:
-				case MAY:
-				case JULY:
-				case AUGUST:
-				case OCTOBER:
-				case DECEMBER:
-					return 31;
-
-				default:
-					return 30;
-				}
-			}
-
-			// Определим количество дней с начала года в целых месяцах
-			int days_passed_to_month(int year, int month) const
-			{
-				int days = 0;
-				for (int i = JANUARY; i < month; ++i)
-				{
-					// Прибавляем количество дней месяца 
-					days += get_days_in_month(year, i);
-				}
-
-				// Возвращаем результат
-				return days;
-			}
-
-			// Определяет количество дней в году
-			int days_in_a_year(int year) const
-			{
-				return DAYS_IN_YEAR_WITHOUT_FEB + get_days_in_february(year);
-			}
-
-		}; // End Class Date
-	} // End namespace for Task B
-
-	// Задача C: Rational
-	// https://new.contest.yandex.ru/contests/42158/problems?id=40119%2F2022_10_30%2FLJjNoDCHJX
-	// Напишите класс Rational(рациональное число).
-	// Конструктор класса должен получать на вход два числа типа int(числитель и знаменатель).
-	// Считайте, что по умолчанию числитель равен 0, а знаменатель — 1.
-	// Переопределите бинарные операторы сложения, вычитания, умножения и 
-	// деления(работающие в том числе и с аргументами типа int), 
-	// унарные плюс и минус.
-	// Предусмотрите функции - члены Numerator и Denominator для получения числителя и 
-	// знаменателя несократимого представления этой дроби(знаменатель должен быть положительным).
-	// Переопределите также операторы +=, -=, *= и /= .Не забудьте определить операторы == и != .
-	// Используйте функцию std::gcd стандартной библиотеки.
-	class Rational
-	{
-	private:
-		int numerator;
-		int denominator;
-
-		static int prepare_num(int n, int d)
-		{
-			if (d == 0)
-				return 0;
-
-			return d > 0 ? n : -n;
-		}
-
-		static int prepare_den(int n, int d)
-		{
-			if (d == 0 || n == 0)
-				return 1;
-
-			return d > 0 ? d : -d;
-		}
-
-	public:
-		Rational() : numerator(0), denominator(1) {}
-
-		Rational(int num, int den) :
-			numerator(prepare_num(num, den)),
-			denominator(prepare_den(num, den)) {}
-
-		// *** Свойства геттеры ***
-
-		// Получение числителя
-		int Numerator(void) const
-		{
-			return numerator / std::gcd<int64_t>(numerator, denominator);
-		}
-
-		// Получение знаменателя
-		int Denominator(void) const
-		{
-			return denominator / std::gcd<int64_t>(numerator, denominator);
-		}
-
-		// Операторы сложения
-		Rational operator + (int other) const 
-		{
-			Rational left(*this);
-			Rational right(other * left.denominator, left.denominator);
-
-			return left + right;
-		}
-
-		Rational operator + (const Rational& other) const
-		{
-			const int den = this->denominator * other.denominator;
-
-			const int num = this->numerator * other.denominator +
-				this->denominator * other.numerator;
-
-			return Rational(num, den);
-		}
-
-		// Левосторонний операнд целого числа
-		friend Rational operator + (int left, const Rational& right)
-		{
-			return right + left;
-		}
-
-		// Сложение с присвоением
-
-		Rational& operator += (int other)
-		{
-			Rational right(other, 1);
-
-			*this += right;
-
-			return *this;
-		}
-
-		Rational& operator += (const Rational& other)
-		{
-			*this = Rational(*this) + other;
-
-			return *this;
-		}
-
-		// Операторы вычитания
-		Rational operator - (int other) const
-		{
-			return Rational(*this) + -other;
-		}
-
-		Rational operator - (const Rational& other) const
-		{
-			return Rational(*this) + (-other);
-		}
-
-		// Вычитание с присвоением
-		Rational& operator -= (int other)
-		{
-			*this += -other;
-			return *this;
-		}
-
-		Rational& operator -= (const Rational& other)
-		{
-			*this += -other;
-			return *this;
-		}
-
-		// Операторы умножения
-		Rational operator*(int other) const
-		{
-			Rational res = Rational(other, 1);
-
-			return *this * res;
-		}
-
-		Rational operator*(const Rational& other) const
-		{
-
-			const int num = this->numerator * other.numerator;
-			const int den = this->denominator * other.denominator;
-
-			return Rational(num, den);
-		}
-
-		// Версия для левого операнда
-		friend Rational operator*(int left, const Rational& right)
-		{
-			return right * left;
-		}
-
-		// Умножение с присвоением
-		Rational& operator *= (int other)
-		{
-			this->numerator *= other;
-
-			return *this;
-		}
-
-		Rational& operator *= (const Rational& other)
-		{
-			this->numerator *= other.numerator;
-			this->denominator *= other.denominator;
-
-			return *this;
-		}
-
-		// Операторы деления
-		Rational operator / (int other) const
-		{
-			Rational r = Rational(1, other);
-
-			return Rational(*this) * r;
-		}
-
-		Rational operator / (const Rational& other) const
-		{
-			const int num = this->numerator * other.denominator;
-			const int den = this->denominator * other.numerator;
-
-			return Rational(num, den);
-		}
-
-		// Деление с присвоением
-		Rational& operator /= (int other)
-		{
-			Rational r = Rational(1, other);
-			*this *= r;
-
-			return *this;
-		}
-
-		Rational& operator /= (const Rational& other)
-		{
-			Rational r = Rational(other.denominator, other.numerator);
-			*this *= r;
-
-			return *this;
-		}
-
-		// Унарные операторы
-		Rational operator+() const
-		{
-			return Rational(*this);
-		}
-
-		Rational operator-() const
-		{
-			return Rational(-this->numerator, this->denominator);
-		}
-
-		// Операторы сравнения
-		bool operator==(const Rational& other) const 
-		{
-			return	this->Numerator() == other.Numerator() &&
-				this->Denominator() == other.Denominator();
-		}
-
-		bool operator!=(const Rational& other) const
-		{
-			return !(*this == other);
-		}
-
-	}; // end Rational
-
-
-	//
-	namespace TaskD 
-	{
-		struct Node 
-		{
-			std::map<std::string, Node> children;
-		};
-
-		class Tree 
-		{
-		private:
-			Node root;
-
-		public:
-			bool Has(const std::vector<std::string>& node) const;
-			void Insert(const std::vector<std::string>& node);
-			void Delete(const std::vector<std::string>& node);
-		};
-	}
-
-	class TicTacToe 
-	{
-	public:
-		const size_t N;  // размер игрового поля
-		const size_t K;  // сколько фишек нужно поставить в ряд, чтобы выиграть
-
-	private:
-		// 0 - пусто, 1 - фишка первого игрока (крестик), 2 - фишка второго игрока (нолик)
-		std::vector<std::vector<int>> Table;
-
-		// номер текущего игрока (1 или 2)
-		int currentPlayer;
-
-	public:
-		TicTacToe(size_t n, size_t k) : N(n), K(k), Table(n), currentPlayer(1)
-		{
-			for (size_t i = 0; i != N; ++i) 
-			{
-				Table[i].reserve(N);
-				Table[i] = std::vector<int>(N);
-			}
-		}
-
-		int operator()(size_t i, size_t j) const 
-		{
-			return Table[i][j];
-		}
-
-		int GetCurrentPlayer() const 
-		{
-			return currentPlayer;
-		}
-
-		bool Set(size_t i, size_t j) 
-		{  
-			// возвращает true, если ход завершился выигрышем
-			Table[i][j] = currentPlayer;
-			currentPlayer = currentPlayer % 2 + 1;
-			bool wins = CheckRow(i, j) || CheckColumn(i, j) || CheckDiagonal1(i, j) || CheckDiagonal2(i, j);
-			return wins;
-		}
-
-	private:
-		bool CheckRow(size_t i, size_t j) const 
-		{
-			size_t d1 = 0;
-			while (d1 <= j && Table[i][j - d1] == Table[i][j]) 
-			{
-				++d1;
-			}
-
-			size_t d2 = 0;
-			while (j + d2 < N && Table[i][j + d2] == Table[i][j]) 
-			{
-				++d2;
-			}
-
-			return d1 + d2 > K;
-		}
-
-		bool CheckColumn(size_t i, size_t j) const 
-		{
-			size_t d1 = 0;
-			while (d1 <= i && Table[i - d1][j] == Table[i][j]) 
-			{
-				++d1;
-			}
-
-			size_t d2 = 0;
-			while (i + d2 < N && Table[i + d2][j] == Table[i][j]) 
-			{
-				++d2;
-			}
-
-			return d1 + d2 > K;
-		}
-
-		bool CheckDiagonal1(size_t i, size_t j) const
-		{
-			size_t d1 = 0;
-
-			while (d1 <= i &&  d1 <= j && Table[i - d1][j - d1] == Table[i][j])
-				d1++;
-
-			// Потом вверх по диагонали
-			size_t d2 = 0;
-
-			while (i + d2 < N && j + d2 < N && Table[i + d2][j + d2] == Table[i][j])
-				d2++;
-
-			return d1 + d2 > K;
-		}
-
-		bool CheckDiagonal2(size_t i, size_t j) const 
-		{
-			size_t d1 = 0;
-
-			while (i + d1 < N && d1 <= j && Table[i + d1][j - d1] == Table[i][j])
-				d1++;
-
-			size_t d2 = 0;
-			while (d2 <= i && j + d2 < N && Table[i - d2][j + d2] == Table[i][j])
-				d2++;
-
-			return d1 + d2 > K;
-		}
-
-	}; // End TicTacToe
-
-
-	std::ostream& operator << (std::ostream& out, TicTacToe& field);
-
-
-	//Вы работаете оператором на складе. Время от времени вам привозят новые коробки. 
-	// Каждая коробка имеет свою грузоподъемность wi​ и объем vi​.
-	// Получая новую коробку, вы ставите на ней серийный номер, 
-	// используя все целые неотрицательные числа последовательно, начиная с нуля.
-	// Иногда вас просят выдать коробку минимальной грузоподъемности, 
-	// чтобы она выдержала предмет весом w — или коробку минимальной вместимости,
-	// в которую можно насыпать песок объемом v.
-	// Вам нужно быстро определять серийный номер коробки, которая будет выдана.
-	// Коробки обратно на склад не возвращаются.
-	// Если подходящих коробок несколько, нужно выбрать ту,
-	// которая пролежала на складе меньше. 
-	// Нужно реализовать класс Stock, у которого, среди прочих, будет три функции:
-	// void Add(int w, int v); — добавить коробку на склад;
-	// int GetByW(int min_w); — вернуть номер коробки грузоподъемности, хотя бы minwminw​;
-	// int GetByV(int min_v); — вернуть номер коробки объема, хотя бы minvminv​.
-	//	Если подходящей коробки нет, соответствующая функция должна вернуть −1.
-	class Stock
-	{
-	private:
-		struct WeightNumber
-		{
-			int w;
-			size_t i;
-
-			bool operator < (const WeightNumber& other) const
-			{
-				if (w == other.w)
-				{
-					return i > other.i;
-				}
-
-				return w < other.w;
-			}
-		};
-
-		struct VolumeNumber
-		{
-			int v;
-			size_t i;
-
-			bool operator < (const VolumeNumber& other) const
-			{
-				if (v == other.v)
-				{
-					return i > other.i;
-				}
-
-				return v < other.v;
-			}
-		};
-
-		struct Iterators 
-		{
-			std::set<WeightNumber>::iterator byW;
-			std::set<VolumeNumber>::iterator byV;
-		};
-	
-	public:
-		void Add(int w, int v)
-		{
-			throw std::logic_error("Сделай этот метод!!!");
-		}
-		int GetByW(int min_w)
-		{
-			throw std::logic_error("Сделай этот метод!!!");
-		}
-
-		int GetByV(int min_v)
-		{
-			throw std::logic_error("Сделай этот метод!!!");
-		}
-
-	
-
-
-
+		template<typename T>
+		Table<T>::Table() : data(0, std::vector<T>(0)) {
 			
-	};
+		}
 
+		template<typename T> 
+		Table<T>::Table(size_t r, size_t c) : data(r, std::vector<T>(c)) {
+			
+		}
 
+		template<typename T> 
+		Table<T>::~Table() {
+			
+		}
+
+		template<typename T> 
+		std::vector<T>& Table<T>::operator [] (size_t i) {
+			return data[i];
+		}
+
+		template<typename T> 
+		const std::vector<T>& Table<T>::operator [] (size_t i) const {
+			return data[i];
+		}
+
+		template<typename T> 
+		void Table<T>::resize(size_t r, size_t c) {
+			data.resize(r);
+
+			for (auto &rows: data)
+			{
+				rows.resize(c);
+			}
+		}
+
+		template<typename T>
+		std::pair<size_t, size_t> Table<T>::size() const {
+			if (data.empty() || data[0].empty())
+			{
+				return {0, 0};
+			}
+			return { data.size(), data[0].size()};
+		}
+	}; // End namespace TemplateClasses
+
+	
 }; // End namespace HandbookIdioms

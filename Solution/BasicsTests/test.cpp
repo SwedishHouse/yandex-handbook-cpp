@@ -4,6 +4,8 @@
 #include <sstream> // Для std::stringstream
 #include <streambuf> // Для std::streambuf
 #include <array>
+#include <gtest/internal/gtest-type-util.h>
+#include <gtest/gtest-typed-test.h>
 
 class MyClassTest : public ::testing::Test {
 protected:
@@ -1034,6 +1036,9 @@ namespace IdiomsCppTest
     // Тестирование задач из раздела https://education.yandex.ru/handbook/cpp/article/classes
     namespace ClassesTest
     {
+
+        using namespace HandbookIdioms::Classes;
+
         // Тесты для задания А 
         namespace DateTest
         {
@@ -1057,7 +1062,7 @@ namespace IdiomsCppTest
             class DateTest : public ::testing::Test { }; // End Fate Class
 
             // Starts Tests
-            using namespace HandbookIdioms::TaskA;
+            using namespace TaskA;
 
             TEST(ConstructionFor1, ValidInit)
             {
@@ -1297,13 +1302,13 @@ namespace IdiomsCppTest
 
             };
 
-        }; // End Date namespace
+        }; // End namespace DateTest
 
         // Тесты для задания B 
         namespace DateTest2
         {
             // ИСпользуем пространство для второго задания
-            using namespace HandbookIdioms::TaskB;
+            using namespace TaskB;
 
             // Определим структуру для хранения даты
             typedef struct
@@ -1736,9 +1741,7 @@ namespace IdiomsCppTest
          // *** Тесты для C: Rational ***
         namespace TaskC
         {
-            // подключим тестируем объект
-            using namespace HandbookIdioms;
-
+            
             TEST(ConstructionDefault, CreateObject)
             {
                 // Объект должен сгенерироваться
@@ -3189,7 +3192,7 @@ namespace IdiomsCppTest
         namespace TaskD
         {
             // подключим тестируем объект
-            using namespace HandbookIdioms::TaskD;
+            using namespace HandbookIdioms::Classes::TaskD;
 
             TEST(MethodHas, EmptyObject)
             {
@@ -3220,7 +3223,7 @@ namespace IdiomsCppTest
         namespace TaskE
         {
             // подключим тестируем объект
-            using namespace HandbookIdioms;
+            using namespace HandbookIdioms::Classes;
 
             typedef std::pair<size_t, size_t> player_move;
 
@@ -3475,13 +3478,116 @@ namespace IdiomsCppTest
 
                 EXPECT_NO_THROW(stock.GetByV(box.v));
             }
-
-            
-
-
         } // End namespace TaskF
-
-
     }; // End ClassesTest namespace
+
+    // Пространоство имен для тестиорвания заданий раздела "Шаблонные классы"
+    namespace TemplateClasees
+    {
+        // Простанство имен тестов Задания A: Table
+        namespace A
+        {
+            // Поключим пространство имен с тестируемым классом
+            using namespace HandbookIdioms::TemplateClasses;
+
+            // Дефолтные переменные для задания размеров
+            const size_t r = 3, c = 3;
+
+            // Проверка конструкторов по умолчанию
+
+            TEST(Constructor, DefaultInt)
+            {
+                ASSERT_NO_THROW(Table<int> t);
+            }
+
+            TEST(Constructor, DefaultDouble)
+            {
+                ASSERT_NO_THROW(Table<double> t);
+            }
+
+            TEST(Constructor, DefaultChar)
+            {
+                ASSERT_NO_THROW(Table<char> t);
+            }
+
+            TEST(Constructor, DefaultString)
+            {
+                ASSERT_NO_THROW(Table<std::string> t);
+            }
+
+            // Секция параметризованных конструкторов
+
+            TEST(ConstructorParams, DefaultInt)
+            {
+                ASSERT_NO_THROW(Table<int> t(r, c));
+            }
+
+            TEST(ConstructorParams, DefaultDouble)
+            {
+
+                ASSERT_NO_THROW(Table<double> t(r, c));
+            }
+
+            TEST(ConstructorParams, DefaultChar)
+            {
+                ASSERT_NO_THROW(Table<char> t(r, c));
+            }
+
+            TEST(ConstructorParams, DefaultString)
+            {
+                ASSERT_NO_THROW(Table<std::string> t(r, c));
+            }
+
+            // Секция проверки оператора индексирования
+
+            TEST(Indexer, DefaultValuesInt)
+            {
+                Table<int> t(r, c);
+
+                EXPECT_EQ(t[0][0], 0);
+            }
+
+            TEST(Indexer, DefaultValuesDouble)
+            {
+                Table<double> t(r, c);
+
+                EXPECT_NEAR(t[0][0], 0.0, 0.0001);
+            }
+
+            // Тестирование получения размера
+
+            TEST(Size, NoException)
+            {
+                Table<double> t(r, c);
+
+                ASSERT_NO_THROW(t.size());
+            }
+
+            TEST(Size, GetFromDefaultSize)
+            {
+                Table<double> t(r, c);
+
+                std::pair<size_t, size_t> res = t.size();
+
+                EXPECT_EQ(res.first, r);
+                EXPECT_EQ(res.second, c);
+            }
+
+            TEST(Size, GetEmptyObject)
+            {
+                Table<double> t;
+
+                std::pair<size_t, size_t> res = t.size();
+
+                EXPECT_EQ(res.first, 0);
+                EXPECT_EQ(res.second, 0);
+            }
+
+
+        }
+
+
+
+    }; // namespace TemplateClasees
 
 }; // End IdiomsCpp namespace

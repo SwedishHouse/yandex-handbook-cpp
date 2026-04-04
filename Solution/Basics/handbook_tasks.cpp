@@ -1046,9 +1046,7 @@ std::vector<std::pair<int, std::string>> HandbookSTL::Adapters::E(const std::vec
 }
 
 
-using namespace HandbookIdioms::TaskD;
-
-bool Tree::Has(const std::vector<std::string>& node) const
+bool HandbookIdioms::Classes::TaskD::Tree::Has(const std::vector<std::string>& node) const
 {
     const Node * current = &root;
 
@@ -1063,7 +1061,7 @@ bool Tree::Has(const std::vector<std::string>& node) const
     return true;
 }
 
-void Tree::Insert(const std::vector<std::string>& node)
+void HandbookIdioms::Classes::TaskD::Tree::Insert(const std::vector<std::string>& node)
 {
     Node* current = &root;
 
@@ -1076,7 +1074,7 @@ void Tree::Insert(const std::vector<std::string>& node)
     }
 }
 
-void Tree::Delete(const std::vector<std::string>& node)
+void HandbookIdioms::Classes::TaskD::Tree::Delete(const std::vector<std::string>& node)
 {
     Node* current = &root;
 
@@ -1093,7 +1091,7 @@ void Tree::Delete(const std::vector<std::string>& node)
     }
 }
 
-std::ostream& operator << (std::ostream& out, HandbookIdioms::TicTacToe& field)
+std::ostream& operator << (std::ostream& out, HandbookIdioms::Classes::TicTacToe& field)
 {
     for (size_t i = 0; i != field.N; ++i)
     {
