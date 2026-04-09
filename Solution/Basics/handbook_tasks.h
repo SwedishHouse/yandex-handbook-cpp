@@ -1325,6 +1325,82 @@ namespace HandbookIdioms
 			}
 			return { data.size(), data[0].size()};
 		}
+
+		template <typename T, typename Container = std::deque<T>>
+		class Queue
+		{
+		private:
+
+			Container container;
+
+		public:
+
+			// Конструктор 
+			Queue();
+
+			// Возвращает элемент, стоящий в начале очереди
+			const T& front() const;
+			T& front();
+
+			// убирает элемент из начала очереди (и ничего не возвращает)
+			void pop();
+
+			//  кладёт переданный элемент в конец очереди.
+			void push(T value);
+
+			// возвращает количество элементов
+			size_t size() const;
+
+			// возвращает true тогда и только тогда, когда очередь пуста
+			bool empty() const;
+
+			template <typename U, typename Cont>
+			bool operator == (const Queue<U, Cont>& other) const{
+				return container == other.container;
+			}
+
+			template <typename U, typename Cont>
+			bool operator != (const Queue<U, Cont>& other) const {
+				return !(container == other.container);
+			}
+
+		};
+
+		template <typename T, typename Container>
+		Queue<T, Container>::Queue() : container() { }
+
+
+		template <typename T, typename Container>
+		const T& Queue<T, Container>::front() const {
+			return container.front();
+		}
+
+		template <typename T, typename Container>
+		T& Queue<T, Container>::front() {
+			return container.front();
+		}
+
+		template <typename T, typename Container>
+		void Queue<T, Container>::pop() {
+			container.pop_front();
+		}
+
+		template <typename T, typename Container>
+		void Queue<T, Container>::push(T value) {
+			container.push_back(value);
+		}
+
+		template <typename T, typename Container>
+		size_t Queue<T, Container>::size() const{
+			return container.size();
+		}
+
+		template <typename T, typename Container>
+		bool Queue<T, Container>::empty() const {
+			return container.empty();
+		}
+
+
 	}; // End namespace TemplateClasses
 
 	

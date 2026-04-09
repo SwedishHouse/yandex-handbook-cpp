@@ -3586,8 +3586,12 @@ namespace IdiomsCppTest
 
         }
 
-
-
     }; // namespace TemplateClasees
+
+
+    namespace B
+    {
+
+    }; // end namespace B
 
 }; // End IdiomsCpp namespace
