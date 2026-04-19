@@ -3584,14 +3584,42 @@ namespace IdiomsCppTest
             }
 
 
-        }
+        } // end namsace A
+
+        namespace C
+        {
+            // Поключим пространство имен с тестируемым классом
+            using namespace HandbookIdioms::TemplateClasses;
+
+            class HandBookCases : public ::testing::Test {
+            public:
+                KeyValueStorage<std::string, int> kv;
+
+            };
+
+            TEST_F(HandBookCases, ExampleCases)
+            {
+                kv.Insert("hello", 42);
+                kv.Insert("bye", -13);
+                int value = 123;
+                auto res = kv.Find("wrong", &value);  // должно вернуться false, а value не должен меняться
+
+                EXPECT_EQ(res, false);
+
+                res = kv.Find("bye", &value);  // должно вернуться true, в value должно быть -13
+
+                EXPECT_EQ(res, true);
+                EXPECT_EQ(value, -13);
+
+                res = kv.Find("hello", nullptr);  // должно вернуться true
+
+                EXPECT_EQ(res, true);
+            }
+
+
+        } // end namespace C
 
     }; // namespace TemplateClasees
 
-
-    namespace B
-    {
-
-    }; // end namespace B
 
 }; // End IdiomsCpp namespace
