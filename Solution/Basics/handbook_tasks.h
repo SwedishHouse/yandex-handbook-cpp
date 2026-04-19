@@ -18,6 +18,7 @@
 #include <stack>
 #include <string_view>
 #include <numeric>
+#include <chrono>
 
 
 namespace Basics
@@ -1794,5 +1795,33 @@ namespace HandbookIdioms
          }
 
     }; // End namespace TemplateClasses
+
+
+    namespace ObjectLiveTime
+    {
+        class  TimerGuard
+        {
+        private:
+            
+            std::string message;
+            std::ostream& out;
+            std::chrono::high_resolution_clock::time_point x;
+
+
+        public:
+             TimerGuard(std::string message = "", std::ostream& out = std::cout) : message(message), out(out) {
+                 x = std::chrono::high_resolution_clock::now();
+             }
+             ~TimerGuard() {
+                 const std::chrono::duration<double> diff1 = std::chrono::high_resolution_clock::now() - this->x;
+                 out << this->message << " " << diff1.count();
+            }
+
+        
+
+        };
+
+
+    }; // End namespace ObjectLiveTime
 
 }; // End namespace HandbookIdioms
