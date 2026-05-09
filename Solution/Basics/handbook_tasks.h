@@ -1908,6 +1908,53 @@ namespace HandbookIdioms
 
         } // End namespace B
 
+        namespace C {
+
+            class Serializer
+            {
+            public:
+                Serializer() {}
+                virtual ~Serializer() {}
+
+                virtual void BeginArray() = 0;
+                virtual void AddArrayItem(const std::string& item) = 0;
+                virtual void EndArray() = 0;
+            }; // End class Serializer
+
+            class JsonSerializer : public Serializer {
+            private:
+                bool is_first;
+            public:
+                JsonSerializer() : Serializer(), is_first{ true } {}
+                
+                void BeginArray() override {
+                    if (!is_first) {
+                        std::cout << ",";
+                    }
+                    std::cout << "[";
+
+                    is_first = true;
+                }
+
+                void AddArrayItem(const std::string& item) override {
+                    if (!is_first) {
+                        std::cout << ",";
+                    }
+                    std::cout << '\"' << item << '\"';
+
+                    is_first = false;
+                }
+
+                void EndArray() override {
+                    is_first = false;
+                    
+                    std::cout << "]";
+                }
+
+            }; // End class Serializer
+
+        } // End namespace C
+
     } // End namespace Inheritance
 
 }; // End namespace HandbookIdioms
