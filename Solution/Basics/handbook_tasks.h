@@ -1956,6 +1956,39 @@ namespace HandbookIdioms
         } // End namespace C
 
 
+        namespace D {
+
+            template<typename T>
+            class AdvancedVector : public std::vector<T>
+            {
+            public:
+                AdvancedVector() = default;
+
+                template <typename Iter>
+                AdvancedVector(Iter first, Iter last) : std::vector<T>(first, last) { }
+
+                const T& operator [](std::int64_t i) const {
+                    if (i < 0) {
+                        i += this->size();
+                    }
+                    return this->at(i);
+                }
+
+                T& operator [](std::int64_t i) {
+                    if (i < 0) {
+                        i += this->size();
+                    }
+                    return this->at(i);
+                }
+
+            private:
+
+            }; // End class AdvancedVector
+
+        } // end namespace D
+
+
+        // https://new.contest.yandex.ru/contests/42116/problems?id=40119%2F2022_10_29%2FxYIX1LU9JQ
         namespace E
         {
             class A {
