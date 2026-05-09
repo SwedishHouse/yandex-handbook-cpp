@@ -1796,7 +1796,6 @@ namespace HandbookIdioms
 
     }; // End namespace TemplateClasses
 
-
     namespace ObjectLiveTime
     {
         class  TimerGuard
@@ -1807,7 +1806,6 @@ namespace HandbookIdioms
             std::ostream& out;
             std::chrono::high_resolution_clock::time_point x;
 
-
         public:
              TimerGuard(std::string message = "", std::ostream& out = std::cout) : message(message), out(out) {
                  x = std::chrono::high_resolution_clock::now();
@@ -1816,12 +1814,58 @@ namespace HandbookIdioms
                  const std::chrono::duration<double> diff1 = std::chrono::high_resolution_clock::now() - this->x;
                  out << this->message << " " << diff1.count();
             }
-
-        
-
         };
-
-
     }; // End namespace ObjectLiveTime
+
+    // Задания из главы 4.4 Наследование и полиморфизм
+    // https://education.yandex.ru/handbook/cpp/article/inheritance-and-polymorphism
+    namespace Inheritance
+    {
+        namespace A
+        {
+            // Базовый класс
+            class Figure
+            {
+            public:
+                Figure() = default;
+                virtual  ~Figure() {}
+                virtual int Perimeter() const = 0;
+            };
+
+            class Triangle : public Figure {
+            public:
+                Triangle(int a, int b, int c) : Figure(), a(a), b(b), c(c) {}
+                ~Triangle() {}
+
+                int Perimeter() const override { return a + b + c; }
+
+            private:
+                int a;
+                int b;
+                int c;
+            };
+
+            class Rectangle : public Figure
+            {
+            private:
+                int a;
+                int b;
+
+            public:
+                Rectangle(int a, int b) : Figure(), a(a), b(b) {}
+                ~Rectangle() {};
+
+                int Perimeter() const override { return 2 * (a + b); }
+            };
+
+        } // End namespace A
+
+
+        // https://new.contest.yandex.ru/contests/42116/problems?id=40119%2F2022_10_29%2FxDFxiJ77Tw
+        namespace B {
+
+        }
+
+    } // End namespace Inheritance
 
 }; // End namespace HandbookIdioms
