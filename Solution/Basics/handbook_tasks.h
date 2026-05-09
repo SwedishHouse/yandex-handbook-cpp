@@ -1864,7 +1864,49 @@ namespace HandbookIdioms
         // https://new.contest.yandex.ru/contests/42116/problems?id=40119%2F2022_10_29%2FxDFxiJ77Tw
         namespace B {
 
-        }
+            static void SendSms(const std::string& number, const std::string& message) {
+                std::cout << "Send '" << message << "' to number " << number << std::endl;
+            }
+
+            static void SendEmail(const std::string& email, const std::string& message) {
+                std::cout << "Send '" << message << "' to e-mail " << email << std::endl;
+            }
+
+            class NotifierBase
+            {
+            public:
+                NotifierBase() {}
+
+                virtual void Notify(const std::string& message) const = 0;
+            }; // End class NotifierBase
+
+            class SmsNotifier : public NotifierBase {
+            private:
+                const std::string number;
+
+            public:
+                SmsNotifier(const std::string& number) : NotifierBase(), number(number) {}
+
+                void Notify(const std::string& message) const override {
+                    SendSms(number, message);
+                }
+
+            }; // End class SmsNotifier
+
+            class EmailNotifier : public NotifierBase {
+            private:
+                const std::string email;
+
+            public:
+                EmailNotifier(const std::string& email) : NotifierBase(), email(email) {}
+
+                void Notify(const std::string& message) const override {
+                    SendEmail(email, message);
+                }
+
+            }; // End class SmsNotifier
+
+        } // End namespace B
 
     } // End namespace Inheritance
 
