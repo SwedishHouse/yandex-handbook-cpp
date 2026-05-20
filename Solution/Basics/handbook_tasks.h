@@ -12,13 +12,14 @@
 #include <cassert>
 #include <set>
 #include <map>
-#include <unordered_map>
 #include <stdexcept>
-#include <cassert>
 #include <stack>
 #include <string_view>
 #include <numeric>
 #include <chrono>
+#include <exception>
+#include <functional>
+#include <optional>
 
 
 namespace Basics
@@ -2019,5 +2020,38 @@ namespace HandbookIdioms
         } // End namespace E
 
     } // End namespace Inheritance
+
+
+    // Блок задач на исключения
+    // https://education.yandex.ru/handbook/cpp/article/exceptions
+    namespace HandbookExceptions
+    {
+
+        static inline void Sleep(int sleepTime) { };
+
+        template <typename Result, typename Exception = std::exception>
+        std::optional<Result> DoWithRetry(std::function<Result()> func,
+            int retryCount, int sleepTime, bool throwLast) {
+
+            for(int i = 0; i < retryCount + 1; ++i)
+            {
+                try {
+                    return func();
+                }
+                catch (const Exception& ex) {
+                    if (i == retryCount)
+                    {
+                        if (throwLast) throw;
+                    }
+                    else {
+                        Sleep(sleepTime);
+                    }
+                }
+            }
+
+            return { };
+        }
+
+    }; // End namespace HandbookExceptions
 
 }; // End namespace HandbookIdioms
