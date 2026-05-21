@@ -20,6 +20,7 @@
 #include <exception>
 #include <functional>
 #include <optional>
+#include <stdexcept>
 
 
 namespace Basics
@@ -2026,31 +2027,136 @@ namespace HandbookIdioms
     // https://education.yandex.ru/handbook/cpp/article/exceptions
     namespace HandbookExceptions
     {
+        namespace B 
+        {
+            static inline void Sleep(int sleepTime) {};
 
-        static inline void Sleep(int sleepTime) { };
+            template <typename Result, typename Exception = std::exception>
+            std::optional<Result> DoWithRetry(std::function<Result()> func,
+                int retryCount, int sleepTime, bool throwLast) {
 
-        template <typename Result, typename Exception = std::exception>
-        std::optional<Result> DoWithRetry(std::function<Result()> func,
-            int retryCount, int sleepTime, bool throwLast) {
-
-            for(int i = 0; i < retryCount + 1; ++i)
-            {
-                try {
-                    return func();
-                }
-                catch (const Exception& ex) {
-                    if (i == retryCount)
-                    {
-                        if (throwLast) throw;
+                for (int i = 0; i < retryCount + 1; ++i)
+                {
+                    try {
+                        return func();
                     }
-                    else {
-                        Sleep(sleepTime);
+                    catch (const Exception& ex) {
+                        if (i == retryCount)
+                        {
+                            if (throwLast) throw;
+                        }
+                        else {
+                            Sleep(sleepTime);
+                        }
                     }
                 }
+
+                return { };
             }
+        } // End namespace B
+        
+        namespace C
+        {
+            template <typename Key1, typename Key2, typename Value>
+            class BiMap {
+            private:
+                std::vector<Value> values;
+                std::map<std::optional<Key1>, Value*>  primary;
+                std::map<std::optional<Key2>, Value*>  secondary;
 
-            return { };
-        }
+            public:
+                // Вставить значение, указав один или оба ключа.
+                // Генерирует исключение std::invalid_argument("some text") в случае,
+                // если оба ключа пусты, либо один из ключей уже имеется в хранилище.
+                void Insert(const std::optional<Key1>& key1, const std::optional<Key2>& key2, const Value& value) {
+
+                    // Выбросим исключение если оба ключа пустые
+                    if (!key1.has_value() && !key2.has_value()) {
+                        throw std::invalid_argument("foo");
+                    }
+
+                    // Сделаем проверку на наличие ключей
+                    if (key1.has_value()) {
+                        try {
+                            auto it = GetByPrimaryKey(*key1);
+                            // Уже есть данный ключ
+                            throw std::invalid_argument("spam");
+                        } 
+                        catch (const std::out_of_range& ex)
+                        {
+                            // Значения нет, можно работать дальше
+                        }
+                    }
+
+                    if (key2.has_value()) {
+                        try {
+                            auto it = GetBySecondaryKey(*key2);
+                            // Уже есть данный ключ
+                            throw std::invalid_argument("eggs");
+                        }
+                        catch (const std::out_of_range& ex)
+                        {
+                            // Значения нет, можно работать дальше
+                        }
+                    }
+
+                    // Проверки прошли, можно устанавливать значения
+                    
+                    // Добавим в вектор
+                    values.push_back(value);
+                    if (key1.has_value()) {
+                        primary.emplace(key1, &values.back());
+                    }
+
+                    if (key2.has_value()) {
+                        secondary.emplace(key2, &values.back());
+                    }
+                }
+
+                // Получить значение по ключу первого типа.
+                // Генерирует исключение std::out_of_range("some text")
+                // в случае отсутствия ключа (как и функция at в std::map).
+                Value& GetByPrimaryKey(const Key1& key) {
+                    try {
+                        return *primary.at(key);
+                    }
+                    catch (...) {
+                        throw;
+                    }
+                }
+
+                const Value& GetByPrimaryKey(const Key1& key) const {
+                    try {
+                        return *primary.at(key);
+                    }
+                    catch (...) {
+                        throw;
+                    }
+                }
+
+                // Аналогичная функция для ключа второго типа.
+                Value& GetBySecondaryKey(const Key2& key) {
+                    try {
+                        return *secondary.at(key);
+                    }
+                    catch (...) {
+                        throw;
+                    }
+                }
+
+                const Value& GetBySecondaryKey(const Key2& key) const {
+                    try {
+                        return *secondary.at(key);
+                    }
+                    catch (...) {
+                        throw;
+                    }
+                }
+
+            }; // End class BiMap
+        } // End namespace C
+
+        
 
     }; // End namespace HandbookExceptions
 
