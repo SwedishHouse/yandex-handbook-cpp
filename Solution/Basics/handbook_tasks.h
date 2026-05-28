@@ -2156,7 +2156,21 @@ namespace HandbookIdioms
             }; // End class BiMap
         } // End namespace C
 
-        
+        namespace D {
+            class LoggerGuard
+            {
+            private:
+                const std::string mes;
+                std::ostream& out;
+            public:
+                LoggerGuard(const std::string& message, std::ostream& out = std::cout) : mes{ message }, out{ out } { }
+                ~LoggerGuard() {
+                    this->out << this->mes << std::endl;
+                }
+            };
+
+
+        }; // End namespace D
 
     }; // End namespace Exceptions
 
