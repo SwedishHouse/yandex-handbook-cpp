@@ -2025,7 +2025,7 @@ namespace HandbookIdioms
 
     // Блок задач на исключения
     // https://education.yandex.ru/handbook/cpp/article/exceptions
-    namespace HandbookExceptions
+    namespace Exceptions
     {
         namespace B 
         {
@@ -2060,7 +2060,7 @@ namespace HandbookIdioms
             template <typename Key1, typename Key2, typename Value>
             class BiMap {
             private:
-                std::vector<Value> values;
+                std::list<Value> values;
                 std::map<std::optional<Key1>, Value*>  primary;
                 std::map<std::optional<Key2>, Value*>  secondary;
 
@@ -2078,7 +2078,7 @@ namespace HandbookIdioms
                     // Сделаем проверку на наличие ключей
                     if (key1.has_value()) {
                         try {
-                            auto it = GetByPrimaryKey(*key1);
+                            GetByPrimaryKey(*key1);
                             // Уже есть данный ключ
                             throw std::invalid_argument("spam");
                         } 
@@ -2090,7 +2090,7 @@ namespace HandbookIdioms
 
                     if (key2.has_value()) {
                         try {
-                            auto it = GetBySecondaryKey(*key2);
+                            GetBySecondaryKey(*key2);
                             // Уже есть данный ключ
                             throw std::invalid_argument("eggs");
                         }
@@ -2118,7 +2118,7 @@ namespace HandbookIdioms
                 // в случае отсутствия ключа (как и функция at в std::map).
                 Value& GetByPrimaryKey(const Key1& key) {
                     try {
-                        return *primary.at(key);
+                        return *primary.at(std::optional<Key1>{key});
                     }
                     catch (...) {
                         throw;
@@ -2127,7 +2127,7 @@ namespace HandbookIdioms
 
                 const Value& GetByPrimaryKey(const Key1& key) const {
                     try {
-                        return *primary.at(key);
+                        return *primary.at(std::optional<Key1>{key});
                     }
                     catch (...) {
                         throw;
@@ -2137,7 +2137,7 @@ namespace HandbookIdioms
                 // Аналогичная функция для ключа второго типа.
                 Value& GetBySecondaryKey(const Key2& key) {
                     try {
-                        return *secondary.at(key);
+                        return *secondary.at(std::optional<Key2>{key});
                     }
                     catch (...) {
                         throw;
@@ -2146,7 +2146,7 @@ namespace HandbookIdioms
 
                 const Value& GetBySecondaryKey(const Key2& key) const {
                     try {
-                        return *secondary.at(key);
+                        return *secondary.at(std::optional<Key2>{key});
                     }
                     catch (...) {
                         throw;
@@ -2158,6 +2158,6 @@ namespace HandbookIdioms
 
         
 
-    }; // End namespace HandbookExceptions
+    }; // End namespace Exceptions
 
 }; // End namespace HandbookIdioms

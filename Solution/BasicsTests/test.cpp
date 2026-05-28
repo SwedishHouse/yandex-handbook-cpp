@@ -3482,7 +3482,7 @@ namespace IdiomsCppTest
     }; // End ClassesTest namespace
 
     // Пространоство имен для тестиорвания заданий раздела "Шаблонные классы"
-    namespace TemplateClasees
+    namespace TemplateClasses
     {
         // Простанство имен тестов Задания A: Table
         namespace A
@@ -3619,7 +3619,62 @@ namespace IdiomsCppTest
 
         } // end namespace C
 
-    }; // namespace TemplateClasees
+    }; // namespace TemplateClasses
+
+    // Задачи раздела "Обработка исключений"
+    namespace TestExceptions
+    {
+        using HandbookIdioms::Exceptions::C::BiMap;
+
+        // Зададим структуру для шаблона класса
+        struct Student {
+            std::string Surname, Name;
+        };
+
+        std::ostream& operator << (std::ostream& out, const Student& s) {
+            return out << s.Surname << " " << s.Name;
+        }
+
+
+        class Fixture : public ::testing::Test {
+
+        public:
+            BiMap<int, std::string, Student> bimap;  // студента можно определить либо по номеру, либо по логину
+
+            // Настройка перед каждым тестом
+            void SetUp() override {
+                // Инициализация объекта с параметрами
+                bimap = BiMap<int, std::string, Student>();
+                bimap.Insert(42, {}, { "Ivanov", "Ivan" });
+                bimap.Insert({}, "cshse-ami-512", { "Petrov", "Petr" });
+                bimap.Insert(13, "cshse-ami-999", { "Fedorov", "Fedor" });
+                Test::SetUp();
+
+            }
+
+            // Очистка после каждого теста
+            void TearDown() override {
+                Test::TearDown();
+            }
+
+     
+        };
+            
+        TEST_F(Fixture, GetIvan) {
+            auto it = bimap.GetByPrimaryKey(42);
+
+            EXPECT_EQ(it.Surname, "Ivanov");
+            EXPECT_EQ(it.Name, "Ivan");
+        }
+
+        TEST_F(Fixture, GetPetrByLogin) {
+            auto it = bimap.GetBySecondaryKey("cshse-ami-512");
+
+            EXPECT_EQ(it.Surname, "Petrov");
+            EXPECT_EQ(it.Name, "Petr");
+        }
+
+    }; // End namespace TestExceptions
 
 
 }; // End IdiomsCpp namespace
