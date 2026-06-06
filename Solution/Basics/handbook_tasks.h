@@ -2270,6 +2270,40 @@ namespace HandbookIdioms
 
         };
 
+        namespace C {
+            class A {
+            public:
+                A(int x) {
+                    std::cout << "Constructor(int): " << x << "\n";
+                }
+                A(const A&) {
+                    std::cout << "Copy constructor\n";
+                }
+                virtual ~A() {
+                    std::cout << "Destructor\n";
+                }
+                virtual void foo() const {
+                    std::cout << "A::foo()\n";
+                }
+            };
+
+            class B : public A {
+                A a;
+            public:
+                B() : A(42), a(17) {
+
+                }
+            };
+        }; // End namecpace C
+
+        // Задача D
+        namespace D {
+            
+
+        }; // end namespace D
+
+        
+
     }; // End namespace IdiomRaii
 
 }; // End namespace HandbookIdioms

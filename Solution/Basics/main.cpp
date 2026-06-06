@@ -1,54 +1,70 @@
 #include "handbook_tasks.h"
-#include <algorithm>
 #include <iostream>
-#include <string>
-#include <tuple>
-#include <unordered_map>
-#include <utility>
 #include <vector>
+#include <memory>
 
 
-std::vector<std::pair<std::string, int>> E(const std::vector<std::string>& words, const int gramm_length)
-{
-    std::unordered_map<std::string, int> freq;
-
-    for (const std::string& word : words)
-    {
-        for (size_t i = gramm_length; i <= word.size(); i++)
-        {
-            ++freq[word.substr(i - gramm_length, gramm_length)];
-        }
+class Animal {
+public:
+    virtual std::string Voice() const {
+        return "Not implemented yet";
     }
+    virtual ~Animal() {}
+};
 
-    std::vector<std::pair<std::string, int>> sorted(freq.begin(), freq.end());
+class Tiger : public Animal {
+    std::string Voice() const override {
+        return "Rrrr";
+    }
+};
 
-    std::sort(sorted.begin(), sorted.end(), [](const auto& p1, const auto& p2) {
-        return std::tie(p2.second, p1.first) < std::tie(p1.second, p2.first);
-        });
+class Wolf : public Animal {
+    std::string Voice() const override {
+        return "Wooo";
+    }
+};
 
-    return sorted;
+class Fox : public Animal {
+    std::string Voice() const override {
+        return "Tyaf";
+    }
+};
+
+using Zoo = std::vector<std::unique_ptr<Animal>>;
+
+Zoo CreateZoo() {
+    Zoo zoo;
+    std::string word;
+    while (std::cin >> word) {
+        if (word == "Tiger") {
+            auto t = std::make_unique<Tiger>();
+            zoo.push_back(std::move(t));
+        }
+        else if (word == "Wolf") {
+            auto w = std::make_unique<Wolf>();
+            zoo.push_back(std::move(w));
+        }
+        else if (word == "Fox") {
+            auto f = std::make_unique<Fox>();
+            zoo.push_back(std::move(f));
+        }
+        else
+            throw std::runtime_error("Unknown animal!");
+    }
+    return zoo;
+}
+
+void Process(const Zoo& zoo) {
+    for (const auto& animal : zoo) {
+        std::cout << animal.get()->Voice() << "\n";
+    }
 }
 
 int main()
 {
-    int m, n;
+    auto z = CreateZoo();
+    Process(z);
 
-    std::cin >> m >> n;
-
-    std::vector<std::string> words;
-    words.reserve(m);
-    std::string word;
-
-    for (int i = 0; i < m; i++)
-    {
-        std::cin >> word;
-        words.push_back(word);
-    }
-
-    std::vector<std::pair<std::string, int>> result = E(words, n);
-
-    for (const auto& value : result)
-        std::cout << value.first << " - " << value.second << std::endl;
 
     return 0;
 }
