@@ -21,6 +21,7 @@
 #include <functional>
 #include <optional>
 #include <stdexcept>
+#include <memory> 
 
 
 namespace Basics
@@ -2173,5 +2174,102 @@ namespace HandbookIdioms
         }; // End namespace D
 
     }; // End namespace Exceptions
+
+    namespace IdiomRaii
+    {
+        class TreeNode {
+        private:
+            int value;
+            TreeNode* root = nullptr;
+            std::vector<std::unique_ptr<TreeNode>> children;
+
+        public:
+            TreeNode(int val) : value(val) {}
+
+            TreeNode(const TreeNode&) = delete;
+            TreeNode& operator=(const TreeNode&) = delete;
+
+            TreeNode* AddChild(int child_value) {
+                children.push_back(std::make_unique<TreeNode>(child_value));
+                children.back()->root = this;
+                return children.back().get();
+            }
+
+            void Print(int depth = 0) const {
+                for (int i = 0; i < depth; ++i) {
+                    std::cout << " ";
+                }
+                std::cout << "- " << value << "\n";
+                for (const auto& child : children) {
+                    child->Print(depth + 1);
+                }
+            }
+        }; // End class TreeNode
+
+        // Задача B: https://new.contest.yandex.ru/contests/42114/problems?id=10033%2F2022_10_29%2FCt9vZadj17
+        namespace B {
+
+            // Структура описывающая результаты участника (не изменять, по условию, работаем с ней)
+            struct ParticipantResults {
+                std::string login;
+                std::string team;
+                std::map<std::string, int> scores;  // номер задачи -> баллы
+
+                // ...
+
+                ParticipantResults(const std::string& l, const std::string& te) : login(l), team(te) {}
+
+                ParticipantResults(const ParticipantResults&) = delete;
+                ParticipantResults& operator = (const ParticipantResults&) = delete;
+            };
+
+            // Проектируемы класс 
+            class Monitor {
+            private:
+                using Ptr = std::shared_ptr<ParticipantResults>;
+                using ConstPtr = std::shared_ptr<const ParticipantResults>;
+
+                std::map<std::string, Ptr> byParticipant;
+                std::map<std::string, std::vector<ConstPtr>> byTeam;
+                std::vector<ConstPtr> allResults;
+
+            public:
+                Monitor() = default;
+                Monitor(const Monitor&) = delete;
+                Monitor& operator=(const Monitor&) = delete;
+
+                Ptr RegisterParticipant(const std::string& login, const std::string& team) {
+                    if (byParticipant.contains(login)) {
+                        throw std::invalid_argument("Participant is already registered");
+                    }
+                    // Добавить новую запись об участнике и вернуть её
+                    Ptr part = std::make_shared<ParticipantResults>(login, team);
+                    byParticipant.emplace(login, part);
+                    byTeam[team].push_back(part);
+                    allResults.push_back(part);
+
+                    return part;
+                }
+
+                Ptr GetParticipantResults(const std::string& login) {
+                    return byParticipant.at(login);
+                }
+
+                ConstPtr GetParticipantResults(const std::string& login) const {
+                    return byParticipant.at(login);
+                }
+
+                std::vector<ConstPtr> GetTeamResults(const std::string& team) const {
+                    return byTeam.at(team);
+                }
+
+                std::vector<ConstPtr> GetAllResults() const {
+                    return allResults;
+                }
+            };
+
+        };
+
+    }; // End namespace IdiomRaii
 
 }; // End namespace HandbookIdioms

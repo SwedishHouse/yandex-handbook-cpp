@@ -3676,5 +3676,75 @@ namespace IdiomsCppTest
 
     }; // End namespace TestExceptions
 
+    // Задачи раздела "Идиома RAII"
+    namespace TestRAII
+    {
+        using HandbookIdioms::IdiomRaii::B::ParticipantResults;
+        using HandbookIdioms::IdiomRaii::B::Monitor;
+
+        typedef struct 
+        {
+            std::string login;
+            std::string team;
+        } part_t;
+
+        class MonitorFixture : public ::testing::Test {
+
+        public:
+            // Создаем тестируемый объект
+            Monitor monitor;
+            part_t first;
+            part_t second;
+
+            // Настройка перед каждым тестом
+            void SetUp() override {
+                // Инициализация объекта с параметрами
+                first.login = "Ivanov Ivan";
+                first.team = "201-1";
+
+                second.login = "Petrov Petr";
+                second.team = "201-2";
+
+                Test::SetUp();
+
+            }
+
+            // Очистка после каждого теста
+            void TearDown() override {
+                Test::TearDown();
+            }
+        }; // End class MonitorFixture
+
+        TEST_F(MonitorFixture, RegisterFirstPart)
+        {
+            auto ptr = monitor.RegisterParticipant(first.login, first.team);
+            ptr->scores["A"] = 10;
+            ptr->scores["B"] = 8;
+
+            auto team = monitor.GetTeamResults(first.team);
+            const auto& p = *(team.back().get());
+
+            EXPECT_EQ(p.scores.at("A"), 10);
+            EXPECT_EQ(p.scores.at("B"), 8);
+
+        }
+
+        TEST_F(MonitorFixture, RegisterSecondPart)
+        {
+            auto ptr = monitor.RegisterParticipant(second.login, second.team);
+            ptr->scores["A"] = 5;
+            ptr->scores["B"] = 10;
+
+            auto team = monitor.GetTeamResults(second.team);
+            const auto& p = *(team.back().get());
+
+            EXPECT_EQ(p.scores.at("A"), 5);
+            EXPECT_EQ(p.scores.at("B"), 10);
+        }
+
+
+       
+
+    }
 
 }; // End IdiomsCpp namespace
