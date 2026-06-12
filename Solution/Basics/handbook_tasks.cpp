@@ -1113,3 +1113,50 @@ std::ostream& operator << (std::ostream& out, HandbookIdioms::Classes::TicTacToe
     }
     return out;
 }
+
+using namespace HandbookIdioms::IdiomRaii::D;
+
+int ConstExpr::Evaluate() const {
+    return value;
+}
+
+std::string ConstExpr::ToString() const {
+    return std::to_string(value);
+}
+
+int SumExpr::Evaluate() const {
+    return left->Evaluate() + right->Evaluate();
+}
+
+std::string SumExpr::ToString() const {
+    return left->ToString() + " + " + right->ToString();
+}
+
+std::string ProductExpr::Parentheses(ExpressionPtr ex) {
+    if (dynamic_cast<SumExpr*>(ex.get())) {
+        return std::string("(") + ex->ToString() + ")";
+    }
+    else {
+        return ex->ToString();
+    }
+}
+
+int ProductExpr::Evaluate() const {
+    return left->Evaluate() + right->Evaluate();
+}
+
+std::string ProductExpr::ToString() const {
+    return Parentheses(left) + " * " + Parentheses(right);
+}
+
+ExpressionPtr Const(int x) {
+    return ExpressionPtr(new ConstExpr(x));
+}
+
+ExpressionPtr Sum(ExpressionPtr l, ExpressionPtr r) {
+    return ExpressionPtr(new SumExpr(l, r));
+}
+
+ExpressionPtr Product(ExpressionPtr l, ExpressionPtr r) {
+    return ExpressionPtr(new ProductExpr(l, r));
+}

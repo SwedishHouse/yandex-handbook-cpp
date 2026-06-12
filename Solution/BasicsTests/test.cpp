@@ -3742,9 +3742,6 @@ namespace IdiomsCppTest
             EXPECT_EQ(p.scores.at("B"), 10);
         }
 
-
-       
-
-    }
+    } // End namespace TestRAII
 
 }; // End IdiomsCpp namespace

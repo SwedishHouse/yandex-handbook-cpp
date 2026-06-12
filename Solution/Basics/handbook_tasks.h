@@ -2302,6 +2302,60 @@ namespace HandbookIdioms
 
         }; // end namespace D
 
+        namespace D {
+
+            class Expression {
+            public:
+                virtual int Evaluate() const = 0;
+                virtual std::string ToString() const = 0;
+                virtual ~Expression() {}
+            };
+
+            using ExpressionPtr = std::shared_ptr<Expression>;
+
+            class ConstExpr : public Expression {
+            private:
+                int value;
+
+            public:
+                ConstExpr(int v) : value(v) {}
+                int Evaluate() const override;
+                std::string ToString() const override;
+            };
+
+            class BinaryOperation : public Expression {
+            protected:
+                ExpressionPtr left;
+                ExpressionPtr right;
+
+            public:
+                BinaryOperation(ExpressionPtr l, ExpressionPtr r) : left(l), right(r) {}
+            };
+
+            class SumExpr : public BinaryOperation {
+            public:
+                SumExpr(ExpressionPtr l, ExpressionPtr r) : BinaryOperation(l, r) {}
+                int Evaluate() const override;
+                std::string ToString() const override;
+            };
+
+            class ProductExpr : public BinaryOperation {
+            private:
+                static std::string Parentheses(ExpressionPtr ex);
+                
+            public:
+                ProductExpr(ExpressionPtr l, ExpressionPtr r) : BinaryOperation(l, r) {}
+
+                int Evaluate() const override;
+
+                std::string ToString() const override;
+            };
+
+            
+
+
+        }; // End namespace D
+
         
 
     }; // End namespace IdiomRaii
