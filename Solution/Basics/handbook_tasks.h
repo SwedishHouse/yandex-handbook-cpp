@@ -2098,6 +2098,7 @@ namespace HandbookIdioms
                         catch (const std::out_of_range& ex)
                         {
                             // Значения нет, можно работать дальше
+                            (void)ex;
                         }
                     }
 
@@ -2351,12 +2352,37 @@ namespace HandbookIdioms
                 std::string ToString() const override;
             };
 
-            
-
-
         }; // End namespace D
 
-        
+        namespace F {
+            class Document {
+            protected:
+                const std::string Content;
+            public:
+                Document(const std::string& s) : Content(s) {}
+                virtual void Save() const {}
+                virtual ~Document() = default; 
+            };
+
+            class PlainTextDocument : public Document {
+            public:
+                PlainTextDocument(const std::string& s) : Document(s) {}
+                void Save() const override;
+            };
+
+            class HTMLDocument : public Document {
+            public:
+                HTMLDocument(const std::string& s) : Document(s) {}
+                void Save() const override;
+            };
+
+            using DocumentCollection = std::vector<std::unique_ptr<Document>>;
+
+            void AddDocument(const std::string& content, const std::string& type, DocumentCollection& collection);
+
+            void PrintCollection(const DocumentCollection& collection);
+
+        } // End namespace F
 
     }; // End namespace IdiomRaii
 

@@ -1160,3 +1160,29 @@ ExpressionPtr Sum(ExpressionPtr l, ExpressionPtr r) {
 ExpressionPtr Product(ExpressionPtr l, ExpressionPtr r) {
     return ExpressionPtr(new ProductExpr(l, r));
 }
+
+using namespace HandbookIdioms::IdiomRaii::F;
+
+void PlainTextDocument::Save() const {
+    std::cout << Content << "\n";
+}
+
+void HTMLDocument::Save() const {
+    std::cout << "<HTML><BODY>" << Content << "</BODY></HTML>\n";
+}
+
+
+void HandbookIdioms::IdiomRaii::F::AddDocument(const std::string& content, const std::string& type, DocumentCollection& collection) {
+    if (type == "plain") {
+        collection.emplace_back(std::make_unique<PlainTextDocument>(PlainTextDocument(content)));
+    }
+    else if (type == "html") {
+        collection.emplace_back(std::make_unique<HTMLDocument>(HTMLDocument(content)));
+    }
+}
+
+void HandbookIdioms::IdiomRaii::F::PrintCollection(const DocumentCollection& collection) {
+    for (const auto& doc : collection) {
+        doc->Save();
+    }
+}
